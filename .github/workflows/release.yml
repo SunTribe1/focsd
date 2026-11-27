@@ -63,7 +63,7 @@ jobs:
       # With pending changesets this opens a "Version packages" pull request; once it is merged, it
       # publishes. Every package shares one version, so publishing makes no per-package git tags
       # (release:publish passes --no-git-tag) and the next step makes one tag and one GitHub release.
-      - uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
+      - uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
         id: changesets
         with:
           version: pnpm release:version
