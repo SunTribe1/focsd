@@ -1,0 +1,36 @@
+{
+  "sys": {
+    "font": {
+      "$type": "fontFamily",
+      "sans": {
+        "$value": [
+          "Red Hat Text",
+          "ui-sans-serif",
+          "system-ui",
+          "sans-serif"
+        ]
+      }
+    },
+    "radius": {
+      "$type": "dimension",
+      "control": {
+        "$value": {
+          "value": 4,
+          "unit": "px"
+        }
+      },
+      "surface": {
+        "$value": {
+          "value": 6,
+          "unit": "px"
+        }
+      },
+      "tag": {
+        "$value": {
+          "value": 3,
+          "unit": "px"
+        }
+      }
+    }
+  }
+}

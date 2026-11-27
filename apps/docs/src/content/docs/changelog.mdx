@@ -1,0 +1,11 @@
+---
+title: Changelog
+description: What changed in each Focsd release, newest first. Every package shares one version.
+---
+
+import Changelog from '../../components/Changelog.astro';
+import { REPO_URL } from '../../data/site.js';
+
+Focsd follows [Semantic Versioning](/getting-started/versioning/): breaking changes only in a **major** release, new features in a **minor** one, fixes in a **patch**. All packages share one version number. Each release is also on <a href={`${REPO_URL}/releases`}>GitHub releases</a>, and this page updates with every release.
+
+<Changelog />

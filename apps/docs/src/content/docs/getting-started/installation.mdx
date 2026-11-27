@@ -1,0 +1,97 @@
+---
+title: Installation
+description: Add Focsd to a project with a package manager and a bundler.
+---
+
+import { Aside, Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+import componentsPackage from '../../../../../../packages/components/package.json';
+
+{/* Shown only until the first release sets a real version. */}
+{componentsPackage.version === '0.0.0' && (
+  <Aside type="caution" title="Pre-release">
+    Focsd is not published to npm yet. Until the first release, install the packages from the repository's workspace.
+  </Aside>
+)}
+
+The core of Focsd is two packages:
+
+- `@focsd-dev/tokens`: design tokens as CSS custom properties, plus self-hosted fonts.
+- `@focsd-dev/components`: the styled components, built on headless primitives from `@focsd-dev/primitives`. With parts such as `focsd-option` and `focsd-tab`, that is 136 custom elements (152 across all Focsd packages). The data grid, charts, rich text editor and AI chat kit are separate packages: `@focsd-dev/data-grid`, `@focsd-dev/charts`, `@focsd-dev/editor` and `@focsd-dev/ai`.
+
+<Steps>
+
+1. Install the packages.
+
+   <Tabs syncKey="pm">
+     <TabItem label="pnpm">
+
+     ```sh
+     pnpm add @focsd-dev/components @focsd-dev/tokens
+     ```
+
+     </TabItem>
+     <TabItem label="npm">
+
+     ```sh
+     npm install @focsd-dev/components @focsd-dev/tokens
+     ```
+
+     </TabItem>
+     <TabItem label="yarn">
+
+     ```sh
+     yarn add @focsd-dev/components @focsd-dev/tokens
+     ```
+
+     </TabItem>
+   </Tabs>
+
+2. Load the tokens once, at the top of your app's CSS or entry file. The fonts are optional; without them the system font stack is used.
+
+   ```js
+   import '@focsd-dev/tokens/fonts.css';
+   import '@focsd-dev/tokens/tokens.css';
+   ```
+
+3. Register the components. Import everything:
+
+   ```js
+   import '@focsd-dev/components';
+   ```
+
+   Or import only the elements you use: each element has its own module, `focsd-<tag>.js`, which registers that element and the parts it needs (`focsd-tabs.js` also registers `focsd-tab` and `focsd-tab-panel`). Each component page shows its module in the **Usage** section:
+
+   ```js
+   import '@focsd-dev/components/focsd-button.js';
+   import '@focsd-dev/components/focsd-date-picker.js'; // registers focsd-calendar too
+   ```
+
+   Grouped modules such as `focsd-date.js` (calendar, date pickers, time field, file upload) still register a whole family at once.
+
+4. Use the elements in your markup.
+
+   ```html
+   <focsd-button variant="action">Save changes</focsd-button>
+   ```
+
+</Steps>
+
+## Prevent layout shift
+
+A custom element draws nothing until its script registers it, so for a moment the browser shows its raw content: every tab panel at once, a closed dialog's text, an empty space where a text field will be. When the script runs, the page moves. Load `upgrade.css` before first paint and each element keeps the space it will take, with nothing unstyled on screen:
+
+```js
+import '@focsd-dev/tokens/tokens.css';
+import '@focsd-dev/components/upgrade.css';
+```
+
+Or link it in `<head>`, next to the tokens. The rules apply only until each element is defined. For an element that draws its content from data, such as a chart or a data grid, set its height on the element or its container for no shift at all.
+
+## Requirements
+
+- The latest two versions of Chrome, Edge, Firefox and Safari (see [Browser support](/getting-started/browser-support/)). Components use native `<dialog>`, the Popover API, CSS anchor positioning (with a fallback) and form-associated custom elements.
+- A bundler or an import map that resolves bare module specifiers (`lit`, `@focsd-dev/*`).
+
+## Editor support
+
+`@focsd-dev/components` ships a [custom elements manifest](https://github.com/webcomponents/custom-elements-manifest) (`custom-elements.json`) listing every element's attributes, properties, events, slots and CSS parts. Editors and framework tools use it for autocomplete and type checking.

@@ -1,0 +1,220 @@
+---
+title: Frameworks
+description: Use Focsd in React, Vue, Angular and Svelte, with typed templates, editor autocomplete and server rendering.
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+Focsd elements are standard custom elements, so they work in any framework that renders HTML. Import the components once (for example in your app entry), then use the tags.
+
+<Tabs syncKey="framework">
+<TabItem label="React">
+
+React 19 renders custom elements directly, passing attributes and properties through.
+
+```jsx
+import '@focsd-dev/components';
+
+export function Settings() {
+  return <focsd-text-field label="Workspace name" required></focsd-text-field>;
+}
+```
+
+**Events:** `onChange` and `onInput` work on the elements directly. For `focsd-*` events, attach a listener with a ref:
+
+```jsx
+import { useEffect, useRef } from 'react';
+
+export function SaveMenu() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    const onSelect = (event) => console.log(event.detail.value);
+    el.addEventListener('focsd-select', onSelect);
+    return () => el.removeEventListener('focsd-select', onSelect);
+  }, []);
+  return (
+    <focsd-menu ref={ref} label="Save options">
+      <focsd-menu-item value="draft">Save as draft</focsd-menu-item>
+      <focsd-menu-item value="template">Save as template</focsd-menu-item>
+    </focsd-menu>
+  );
+}
+```
+
+**Wrappers:** `@focsd-dev/react` gives every element in `@focsd-dev/components` a typed React component with `onChange`-style props. Custom events become `onFocsd*` props with a typed `event.detail`.
+
+```jsx
+import { Select, Option, Menu } from '@focsd-dev/react';
+// One element on its own: import its path.
+import { DatePicker } from '@focsd-dev/react/date-picker';
+
+<Menu onFocsdSelect={(event) => console.log(event.detail.value)} />;
+```
+
+Only the components you use are bundled. The data grid, chart, rich text editor and AI chat elements have wrappers on their own paths only. Install their package first:
+
+| Wrapper | Package to install |
+| --- | --- |
+| `@focsd-dev/react/data-grid` | `@focsd-dev/data-grid` |
+| `@focsd-dev/react/chart` | `@focsd-dev/charts` |
+| `@focsd-dev/react/rich-text` | `@focsd-dev/editor` |
+| `@focsd-dev/react/chat-thread` (and the other AI elements) | `@focsd-dev/ai` |
+
+</TabItem>
+<TabItem label="Vue">
+
+Tell Vue's compiler that `focsd-*` tags are custom elements:
+
+```js
+// vite.config.js
+import vue from '@vitejs/plugin-vue';
+
+export default {
+  plugins: [vue({ template: { compilerOptions: { isCustomElement: (tag) => tag.startsWith('focsd-') } } })],
+};
+```
+
+```vue
+<script setup>
+import '@focsd-dev/components';
+import { ref } from 'vue';
+
+const region = ref('eu');
+</script>
+
+<template>
+  <focsd-select label="Data region" :value="region" @change="region = $event.target.value">
+    <focsd-option value="eu">EU (Frankfurt)</focsd-option>
+    <focsd-option value="us">US (Virginia)</focsd-option>
+  </focsd-select>
+</template>
+```
+
+</TabItem>
+<TabItem label="Angular">
+
+Add `CUSTOM_ELEMENTS_SCHEMA` to components that use `focsd-*` tags:
+
+```ts
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import '@focsd-dev/components';
+
+@Component({
+  selector: 'app-region',
+  standalone: true,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  template: `
+    <focsd-select label="Data region" [value]="region" (change)="region = $any($event.target).value">
+      <focsd-option value="eu">EU (Frankfurt)</focsd-option>
+      <focsd-option value="us">US (Virginia)</focsd-option>
+    </focsd-select>
+  `,
+})
+export class RegionComponent {
+  region = 'eu';
+}
+```
+
+</TabItem>
+<TabItem label="Svelte">
+
+Svelte renders custom elements natively and sets properties when they exist.
+
+```svelte
+<script>
+  import '@focsd-dev/components';
+  let region = $state('eu');
+</script>
+
+<focsd-select label="Data region" value={region} onchange={(e) => (region = e.target.value)}>
+  <focsd-option value="eu">EU (Frankfurt)</focsd-option>
+  <focsd-option value="us">US (Virginia)</focsd-option>
+</focsd-select>
+```
+
+</TabItem>
+</Tabs>
+
+## TypeScript and editors
+
+Every package ships type declarations. `document.createElement('focsd-button')` and `querySelector('focsd-select')` return the element's class, with its properties and methods.
+
+Turn on autocomplete and type checking in templates once per project. The `/react`, `/jsx`, `/vue` and `/svelte` subpaths hold types only, with no JavaScript behind them, so import them with `import type` from a `.d.ts` file, never from code that runs:
+
+<Tabs syncKey="framework">
+<TabItem label="React">
+
+```ts
+// src/focsd.d.ts
+import type {} from '@focsd-dev/components/react';
+import type {} from '@focsd-dev/data-grid/react';
+```
+
+Unknown attributes on `focsd-*` elements are now type errors in JSX.
+
+</TabItem>
+<TabItem label="Vue">
+
+```ts
+// src/focsd.d.ts
+import type {} from '@focsd-dev/components/vue';
+```
+
+</TabItem>
+<TabItem label="Angular">
+
+Add `CUSTOM_ELEMENTS_SCHEMA` to the components that use `focsd-*` tags. Element properties are typed through `HTMLElementTagNameMap` when you use `@ViewChild` or `querySelector`.
+
+</TabItem>
+<TabItem label="Svelte">
+
+```ts
+// src/focsd.d.ts
+import type {} from '@focsd-dev/components/svelte';
+```
+
+</TabItem>
+</Tabs>
+
+**Editors.** For HTML autocomplete and hover docs in VS Code, add to `.vscode/settings.json`:
+
+```json
+{
+  "html.customData": ["./node_modules/@focsd-dev/components/vscode.html-custom-data.json"],
+  "css.customData": ["./node_modules/@focsd-dev/components/vscode.css-custom-data.json"]
+}
+```
+
+JetBrains IDEs (WebStorm, IntelliJ) read the packages' `web-types.json` automatically.
+
+## Server rendering
+
+Components render on the server with [Lit SSR](https://lit.dev/docs/ssr/overview/) (`@lit-labs/ssr`). The output uses declarative shadow DOM, so styled components show before any JavaScript runs, and they hydrate when the script loads. Every element in `@focsd-dev/components`, `@focsd-dev/data-grid` and `@focsd-dev/charts` is tested to render on the server, and a sample form is tested to hydrate in Chromium, Firefox and WebKit.
+
+```js
+// Server (Node)
+import '@lit-labs/ssr/lib/install-global-dom-shim.js';
+import { render } from '@lit-labs/ssr';
+import { collectResult } from '@lit-labs/ssr/lib/render-result.js';
+import { html } from 'lit';
+import '@focsd-dev/components';
+
+const body = await collectResult(render(html`<focsd-button variant="action">Save</focsd-button>`));
+```
+
+```js
+// Browser: load hydration support before the components.
+import '@lit-labs/ssr-client/lit-element-hydrate-support.js';
+import '@focsd-dev/components';
+```
+
+Content that comes from children (options, tabs, menu items) renders on the server as slotted light DOM, and the components read it once they hydrate. The rich text editor (`@focsd-dev/editor`) is client-only: its editing engine needs a browser, so load it in the browser and give the page a plain fallback until it upgrades.
+
+Without server rendering, hide undefined elements until they upgrade to avoid a flash of unstyled content:
+
+```css
+:not(:defined) {
+  visibility: hidden;
+}
+```

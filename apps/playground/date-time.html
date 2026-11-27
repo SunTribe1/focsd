@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Date and time picker · Focsd test bench</title>
+    <script type="module" src="/src/date-time.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Date and time picker"></pg-header>
+    <main class="pg-stack">
+      <form id="f" class="pg-stack">
+        <focsd-date-time-picker
+          id="m"
+          label="Meeting"
+          name="meeting"
+          value="2026-03-16T09:30"
+          step="15"
+          min="2026-03-01T08:00"
+          max="2026-03-31T18:00"
+          hour-cycle="h23"
+        ></focsd-date-time-picker>
+        <focsd-date-time-picker id="r" label="Reminder" name="reminder" required></focsd-date-time-picker>
+        <div class="pg-row">
+          <focsd-button type="submit" variant="action">Submit</focsd-button>
+          <focsd-button type="reset">Reset</focsd-button>
+        </div>
+      </form>
+      <output id="out"></output>
+    </main>
+  </body>
+</html>

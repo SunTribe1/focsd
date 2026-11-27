@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Consistent inputs · Focsd test bench</title>
+    <script type="module" src="/src/consistent-inputs.js"></script>
+  </head>
+  <body>
+    <main class="pg-stack">
+      <h1>Consistent inputs</h1>
+      <focsd-error-summary id="summary"></focsd-error-summary>
+      <div id="stage" class="pg-stack" style="inline-size: 48rem; max-inline-size: 100%">
+        <form id="f" class="pg-stack" style="max-inline-size: none">
+          <focsd-text-field id="tf" label="Full name" name="name" value="Ada Lovelace"></focsd-text-field>
+          <focsd-textarea id="ta" label="Bio" name="bio" value="Mathematician and writer"></focsd-textarea>
+          <focsd-number-field id="nf" label="Seats" name="seats" value="3"></focsd-number-field>
+          <focsd-search-field id="sf" label="Search people" name="q" value="ada"></focsd-search-field>
+          <focsd-password-field id="pf" label="Password" name="password" value="correct horse"></focsd-password-field>
+          <focsd-currency-field id="cf" label="Price" name="price" currency="EUR" value="12.50"></focsd-currency-field>
+          <focsd-otp-field id="otp" label="Code" name="code" length="6" value="123456"></focsd-otp-field>
+          <focsd-select id="sel" label="Region" name="region" value="eu">
+            <focsd-option value="eu">Europe</focsd-option>
+            <focsd-option value="us">United States</focsd-option>
+          </focsd-select>
+          <focsd-combobox id="cb" label="Country" name="country" value="ie">
+            <focsd-option value="ie">Ireland</focsd-option>
+            <focsd-option value="fr">France</focsd-option>
+          </focsd-combobox>
+          <focsd-multi-select id="ms" label="Languages" name="langs" value="en">
+            <focsd-option value="en">English</focsd-option>
+            <focsd-option value="ga">Irish</focsd-option>
+          </focsd-multi-select>
+          <focsd-checkbox id="chk" name="news" checked>Send me the newsletter</focsd-checkbox>
+          <focsd-radio-group id="rg" label="Plan" name="plan" value="pro">
+            <focsd-radio value="free">Free</focsd-radio>
+            <focsd-radio value="pro">Pro</focsd-radio>
+          </focsd-radio-group>
+          <focsd-segmented-control id="seg" label="View" name="view" value="week">
+            <focsd-segment value="day">Day</focsd-segment>
+            <focsd-segment value="week">Week</focsd-segment>
+          </focsd-segmented-control>
+          <focsd-switch id="sw" name="alerts" checked>Email alerts</focsd-switch>
+          <focsd-slider id="sl" label="Volume" name="volume" value="40"></focsd-slider>
+          <focsd-rating id="rt" label="Rating" name="rating" value="4"></focsd-rating>
+          <focsd-toggle-group id="tg" label="Alignment" name="align" value="left">
+            <focsd-toggle value="left">Left</focsd-toggle>
+            <focsd-toggle value="center">Center</focsd-toggle>
+          </focsd-toggle-group>
+          <focsd-time-field id="tm" label="Start time" name="start" value="09:30"></focsd-time-field>
+          <focsd-date-picker id="dp" label="Start date" name="day" value="2026-03-15"></focsd-date-picker>
+          <focsd-date-range-picker
+            id="dr"
+            label="Trip"
+            name="trip"
+            value-start="2026-03-15"
+            value-end="2026-03-20"
+          ></focsd-date-range-picker>
+          <focsd-file-upload id="fu" label="Attachments" name="files"></focsd-file-upload>
+          <focsd-color-picker id="cp" label="Brand color" name="brand" value="#3366ff"></focsd-color-picker>
+          <focsd-tag-input id="ti" label="Skills" name="skills" value="CSS,HTML"></focsd-tag-input>
+          <focsd-phone-field id="ph" label="Mobile" name="mobile" default-country="GB" value="+447400123456"></focsd-phone-field>
+          <focsd-signature-pad id="sig" label="Signature" name="signature"></focsd-signature-pad>
+          <div style="display: flex; gap: 0.75rem">
+            <focsd-button type="submit" variant="action">Submit</focsd-button>
+            <focsd-button type="reset">Reset</focsd-button>
+          </div>
+        </form>
+      </div>
+      <output id="out"></output>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,30 @@
+/* Layout only. Color, type and spacing come from @focsd-dev/tokens. */
+body {
+  margin: 0;
+  font-family: var(--focsd-font-sans, system-ui, sans-serif);
+  color: var(--focsd-ink);
+  background: var(--focsd-ground);
+}
+
+.page {
+  display: grid;
+  gap: var(--focsd-space-5);
+  max-inline-size: 48rem;
+}
+
+.page h1 {
+  margin: 0;
+}
+
+focsd-empty-state [slot='actions'] {
+  align-self: center;
+}
+
+.status {
+  margin: 0;
+  color: var(--focsd-ink-muted);
+}
+
+.status:empty {
+  display: none;
+}

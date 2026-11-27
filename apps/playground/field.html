@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Field · Focsd test bench</title>
+    <script type="module" src="/src/field.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Field"></pg-header>
+    <main class="pg-stack">
+      <focsd-error-summary id="summary"></focsd-error-summary>
+      <div id="stage" class="pg-stack pg-w-field">
+        <form id="f" class="pg-stack pg-w-none">
+          <focsd-field id="email-field" label="Email" hint="We reply within one working day">
+            <input type="email" name="email" value="ada@example.com" />
+          </focsd-field>
+          <focsd-field id="size-field" label="Size" required>
+            <select name="size">
+              <option>Small</option>
+              <option>Medium</option>
+            </select>
+          </focsd-field>
+          <focsd-field id="notes-field" label="Delivery notes">
+            <div slot="control" id="notes" role="textbox" contenteditable="true" aria-multiline="true"></div>
+          </focsd-field>
+          <div class="pg-row">
+            <focsd-button type="submit" variant="action">Submit</focsd-button>
+            <focsd-button type="reset">Reset</focsd-button>
+          </div>
+        </form>
+      </div>
+      <output id="out"></output>
+    </main>
+  </body>
+</html>

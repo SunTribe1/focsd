@@ -1,0 +1,107 @@
+---
+title: Forms
+description: Focsd form controls behave like native inputs, from FormData to validation and reset.
+---
+
+Every value-bearing component is a [form-associated custom element](https://html.spec.whatwg.org/multipage/custom-elements.html#form-associated-custom-elements). It joins the surrounding `<form>` like a native input.
+
+```html
+<form id="settings">
+  <focsd-text-field label="Workspace name" name="workspace" required></focsd-text-field>
+  <focsd-select label="Data region" name="region" value="eu">
+    <focsd-option value="eu">EU (Frankfurt)</focsd-option>
+    <focsd-option value="us">US (Virginia)</focsd-option>
+  </focsd-select>
+  <focsd-multi-select label="Labels" name="labels" value="bug,docs">
+    <focsd-option value="bug">Bug</focsd-option>
+    <focsd-option value="docs">Docs</focsd-option>
+  </focsd-multi-select>
+  <focsd-button type="submit" variant="action">Save</focsd-button>
+  <focsd-button type="reset">Reset</focsd-button>
+</form>
+
+<script type="module">
+  document.getElementById('settings').addEventListener('submit', (event) => {
+    event.preventDefault();
+    console.log([...new FormData(event.target)]);
+    // [["workspace", "…"], ["region", "eu"], ["labels", "bug"], ["labels", "docs"]]
+  });
+</script>
+```
+
+## What works like native
+
+| Feature | Behavior |
+| --- | --- |
+| `name` + `FormData` | Values are submitted under `name`. Multi-value controls submit one entry per value; the date range picker submits `<name>-start` and `<name>-end`. |
+| Validation | `required`, `min`/`max` and custom errors block submission and report through `checkValidity()`, `reportValidity()` and `:invalid`. |
+| `error` attribute | Shows your own message, marks the field invalid (`aria-invalid`) and blocks submission. See [Labels, hints and messages](#labels-hints-and-messages). |
+| Reset | `<button type="reset">` or `form.reset()` restores each control's initial value. |
+| Disabled fieldsets | `<fieldset disabled>` disables every control inside it. |
+| Back/forward | Values are restored when people navigate back (files excepted). |
+| Implicit submission | Enter in a text-like field submits the form. |
+
+## Showing errors
+
+Show field errors with the `error` attribute, and summarize them at the top of the form with [Error summary](/components/error-summary/) after a failed submit. The summary takes focus, and each link moves focus to its field.
+
+## Labels, hints and messages
+
+Every form control takes the same five attributes.
+
+| Attribute | Values | Effect |
+| --- | --- | --- |
+| `label-position` | `top`, `start`, `end` | Puts the label above the control (the default) or beside it. Checkbox and switch default to `end`. On groups such as radio group, phone field and date range picker, it moves the group's label. |
+| `hint` | text | Help text under the control. |
+| `error` | text | An error message. It blocks submission from the moment it is set. |
+| `warning` | text | A warning message. It never blocks. |
+| `success` | text | A success message. It never blocks. |
+
+Only one message shows at a time: `error` wins over `warning`, and `warning` wins over `success`. Remove the higher one and the next one shows. Each kind has its own icon and color, and screen readers hear the kind before the text ("Warning: …"). The hint and the shown message are part of the control's description. A message that appears or changes after the page loads is announced politely, once.
+
+```html
+<focsd-text-field
+  label="Username"
+  name="username"
+  label-position="start"
+  hint="Letters, numbers and dashes."
+  success="That username is free."
+></focsd-text-field>
+```
+
+`error` is its own validity source. While it is set, `checkValidity()` returns `false`, `validationMessage` is the error text, and the form does not submit. When you remove it, the control's own checks (such as `required`) apply again. `warning` and `success` never change validity.
+
+`error` also sets `aria-invalid`. ARIA does not support it on a group, so group controls put it on their inner inputs (the OTP cells, the time segments, the range picker's two inputs, the phone number input). Toggle group and file upload only hold buttons, so their error reaches screen readers through the group's description.
+
+Side labels sit beside the control while there is room, and stack above it in narrow containers. Two custom properties set the widths:
+
+| Property | Default | Meaning |
+| --- | --- | --- |
+| `--focsd-field-label-width` | `12rem` | The width of a side label. |
+| `--focsd-field-side-min` | `32rem` | Below this width, the label stacks above the control. |
+
+### Built-in validation
+
+Put an [Error summary](/components/error-summary/) in the form and give each field an `error-message`. No script is needed: on submit every field checks itself (`required`, `type`, `pattern`, `min`, `max`...), each invalid field shows its message (a 1px critical border, an icon and the text), the summary lists them with links and takes focus, and the submit stops. Each error clears as soon as its field is fixed, and a reset clears them all. Without `error-message`, a field shows the browser's localized message.
+
+```html
+<form action="/teams" method="post">
+  <focsd-error-summary></focsd-error-summary>
+  <focsd-text-field name="team" label="Team name" required error-message="Enter a team name"></focsd-text-field>
+  <focsd-text-field name="email" type="email" label="Work email" required
+    error-message="Enter an email address, like ana@example.com"></focsd-text-field>
+  <focsd-button type="submit" variant="action">Create team</focsd-button>
+</form>
+```
+
+Your own `submit` listeners run only when the form is valid, as with native validation.
+
+For advice that should not block, add `warning-pattern` and `warning-message`: while the value does not match the pattern, the field shows the warning (a 1px caution border) and the form still submits.
+
+```html
+<focsd-text-field name="display" label="Display name"
+  warning-pattern="[A-Za-z0-9 ]*"
+  warning-message="Some apps cannot show special characters. You can still save it."></focsd-text-field>
+```
+
+Errors from a server, or rules the browser cannot check: set `error` on the field (it is kept until you clear it), then call `collect()` on the summary. Add `manual` to the summary to turn the automatic checks off. `validate()` on any field runs its checks on demand.

@@ -1,0 +1,48 @@
+---
+title: Accessibility
+description: What Focsd handles for you, how it is tested, and what remains your responsibility.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Focsd targets **WCAG 2.2 level AA**. Accessibility is the starting point of every component, not a later audit.
+
+## What every component does
+
+- **Follows its WAI-ARIA pattern.** Roles, states and keyboard behavior come from the [ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/). Each component page lists its pattern, ARIA details and keyboard table.
+- **Keeps references in one tree.** Labels, hints, errors and list options are rendered in the same shadow root as the control they describe, so `aria-labelledby`, `aria-describedby` and `aria-activedescendant` always resolve.
+- **Manages focus.** Overlays move focus in and return it to the opener; composite widgets (tabs, menus, grids, trees, radio groups) use one tab stop with arrow keys, mirrored in right-to-left pages.
+- **Meets target sizes.** 36px controls by default (44px at comfortable density), never below 24px (WCAG 2.5.8).
+- **Shows focus.** A two-tone focus ring with at least 3:1 contrast on any background (WCAG 2.4.11, 2.4.13).
+- **Respects preferences.** Reduced motion, forced colors (Windows High Contrast), and dark and high-contrast themes.
+- **Never relies on color alone.** Status carries icons and words; links are underlined; disabled controls are hatched and explained.
+- **Offers alternatives to dragging.** Sliders, splitters and file upload all work with the keyboard and plain buttons (WCAG 2.5.7).
+
+## How it is tested
+
+Every component has automated tests in Chromium, Firefox and WebKit:
+
+- accessibility tree checks (ARIA snapshots and accessible-name assertions);
+- keyboard scripts for every documented key;
+- form participation tests (submit, validation, reset, restore);
+- [axe-core](https://github.com/dequelabs/axe-core) scans with the WCAG 2.2 AA rules, in light, dark and high-contrast themes, including open overlays.
+
+These docs run the same axe scan on the home page, the main guides and every component page.
+
+<Aside type="caution" title="Automated testing is not enough">
+  Automated tools cannot catch every issue, such as unclear labels or a confusing reading order. A manual screen-reader pass (NVDA, JAWS, VoiceOver on macOS and iOS, TalkBack) is part of the release checklist and has not been completed for this release yet.
+</Aside>
+
+## What stays your job
+
+Components can't know your content. You still need to:
+
+- write clear labels, error messages that say how to fix the problem, and button text that names the outcome;
+- give every page a logical heading structure and landmarks, with one `focsd-header` at the top level;
+- provide text alternatives (`alt`, `label`) for images and icon-only buttons;
+- announce results of actions that happen away from focus (for example with `live` on `focsd-alert`, or a toast);
+- check contrast when you change tokens.
+
+## Reporting a problem
+
+If something does not work with your assistive technology, open an issue on [GitHub](https://github.com/SunTribe1/focsd/issues) with the component, browser, assistive technology, what you expected and what was announced.

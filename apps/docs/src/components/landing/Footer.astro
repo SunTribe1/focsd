@@ -1,0 +1,85 @@
+---
+import lockup from '../../../../../docs/brand/logo/svg/focsd-horizontal-ink.svg?raw';
+import { REPO_URL } from '../../data/site.js';
+import { COMPONENT_COUNT } from '../../data/landing.js';
+
+const mark = lockup.replace(/<title>.*?<\/title>/, '').replace(/fill="#[0-9A-Fa-f]{6}"/g, 'fill="currentColor"');
+
+const columns = [
+  {
+    title: 'Get started',
+    links: [
+      { label: 'Installation', href: '/getting-started/installation/' },
+      { label: 'Usage in HTML', href: '/getting-started/usage/' },
+      { label: 'Frameworks', href: '/getting-started/frameworks/' },
+      { label: 'Forms', href: '/getting-started/forms/' },
+      { label: 'Browser support', href: '/getting-started/browser-support/' },
+    ],
+  },
+  {
+    title: 'Components',
+    links: [
+      { label: `All ${COMPONENT_COUNT} components`, href: '/components/' },
+      { label: 'Patterns', href: '/guides/patterns/' },
+      { label: 'Blocks', href: '/guides/blocks/' },
+      { label: 'Charts', href: '/guides/charts/' },
+      { label: 'Data grid', href: '/guides/data-grid/' },
+      { label: 'Chat UI', href: '/guides/chat-ui/' },
+    ],
+  },
+  {
+    title: 'Design',
+    links: [
+      { label: 'Design language', href: '/foundations/design-language/' },
+      { label: 'Theming and tokens', href: '/foundations/theming/' },
+      { label: 'Theme presets', href: '/foundations/presets/' },
+      { label: 'Theme builder', href: '/foundations/theme-builder/' },
+      { label: 'Icons', href: '/foundations/icons/' },
+    ],
+  },
+  {
+    title: 'Accessibility',
+    links: [
+      { label: 'Overview', href: '/foundations/accessibility/' },
+      { label: 'Conformance', href: '/guides/accessibility-conformance/' },
+      { label: 'Screen reader testing', href: '/guides/screen-reader-testing/' },
+      { label: 'Keyboard shortcuts', href: '/guides/keyboard-shortcuts/' },
+    ],
+  },
+  {
+    title: 'Resources',
+    links: [
+      { label: 'AI assistants (MCP)', href: '/getting-started/ai-assistants/' },
+      { label: 'llms.txt', href: '/llms.txt' },
+      { label: 'Versioning and upgrades', href: '/getting-started/versioning/' },
+      { label: 'Troubleshooting', href: '/guides/troubleshooting/' },
+      { label: 'GitHub', href: REPO_URL },
+    ],
+  },
+];
+---
+
+<footer class="lp-footer">
+  <div class="lp-wrap lp-footer-inner">
+    <div class="lp-footer-brand">
+      <a class="lp-brand" href="/" aria-label="Focsd home">
+        <span class="lp-lockup" aria-hidden="true" set:html={mark} />
+      </a>
+      <p>Accessible web components for every framework. Free and MIT licensed.</p>
+    </div>
+    <nav class="lp-footer-nav" aria-label="Footer">
+      {columns.map((col) => (
+        <div>
+          <h2 class="lp-footer-title">{col.title}</h2>
+          <ul>
+            {col.links.map((l) => (
+              <li>
+                <a href={l.href}>{l.label}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </nav>
+  </div>
+</footer>

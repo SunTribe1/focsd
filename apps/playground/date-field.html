@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Date field · Focsd test bench</title>
+    <script type="module" src="/src/date-field.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Date field"></pg-header>
+    <main class="pg-stack">
+      <form id="f" class="pg-stack">
+        <focsd-date-field id="d" label="Date of birth" name="dob" value="1990-03-15" locale="en-US"></focsd-date-field>
+        <focsd-date-field id="dgb" label="Start date" name="start" locale="en-GB" min="2026-01-01" max="2026-12-31"></focsd-date-field>
+        <focsd-date-field id="dr" label="Deadline" name="deadline" required locale="en-US"></focsd-date-field>
+        <div class="pg-row">
+          <focsd-button type="submit" variant="action">Submit</focsd-button>
+          <focsd-button type="reset">Reset</focsd-button>
+        </div>
+      </form>
+      <output id="out"></output>
+    </main>
+  </body>
+</html>

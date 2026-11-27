@@ -1,0 +1,52 @@
+{
+  "sys": {
+    "color": {
+      "$type": "color",
+      "ground": {
+        "$value": "{ref.color.harbor.grey.19}"
+      },
+      "focus-inner": {
+        "$value": "{ref.color.harbor.grey.19}"
+      },
+      "surface": {
+        "$value": "{ref.color.harbor.grey.23}"
+      },
+      "surface-sunk": {
+        "$value": "{ref.color.harbor.grey.16}"
+      },
+      "surface-raised": {
+        "$value": "{ref.color.harbor.grey.23}"
+      },
+      "ink": {
+        "$value": "{ref.color.harbor.grey.94}"
+      },
+      "focus-outer": {
+        "$value": "{ref.color.harbor.grey.94}"
+      },
+      "ink-muted": {
+        "$value": "{ref.color.harbor.grey.75}"
+      },
+      "edge": {
+        "$value": "{ref.color.harbor.grey.57}"
+      },
+      "edge-quiet": {
+        "$value": "{ref.color.harbor.grey.32}"
+      },
+      "action": {
+        "$value": "{ref.color.harbor.navy.82}"
+      },
+      "action-hover": {
+        "$value": "{ref.color.harbor.navy.88}"
+      },
+      "action-press": {
+        "$value": "{ref.color.harbor.navy.76}"
+      },
+      "on-action": {
+        "$value": "{ref.color.harbor.navy.20}"
+      },
+      "route": {
+        "$value": "{ref.color.harbor.teal.78}"
+      }
+    }
+  }
+}

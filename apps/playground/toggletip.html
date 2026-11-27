@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Toggletip · Focsd test bench</title>
+    <script type="module" src="/src/toggletip.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Toggletip"></pg-header>
+    <main class="pg-stack">
+      <p>
+        Storage used <focsd-toggletip id="tt">Includes files in the trash. <a href="#billing">See billing</a></focsd-toggletip>
+      </p>
+      <p>
+        Retention <focsd-toggletip id="tt2" label="About retention" placement="bottom">Deleted items are kept for 30 days.</focsd-toggletip>
+      </p>
+      <button id="outside">Outside</button>
+    </main>
+  </body>
+</html>

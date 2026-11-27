@@ -1,0 +1,98 @@
+---
+title: Styling
+description: Four layers for styling Focsd components, from one token to one element, without breaking accessibility.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Components keep their structure and accessibility inside a shadow root, so page CSS cannot accidentally break them. You can still change anything that is meant to change. Reach for the first layer that does the job:
+
+| Layer | Changes | Example |
+|---|---|---|
+| 1. Tokens | The whole system, or one section | `--focsd-action: #0b5cff;` |
+| 2. Component properties | One kind of component | `--focsd-button-radius: 999px;` |
+| 3. Parts | Any internal element | `focsd-select::part(listbox) { … }` |
+| 4. Slots | Your own markup inside a component | `<focsd-icon-button label="Settings"><svg>…</svg></focsd-icon-button>` |
+
+## 1. Tokens
+
+Every color, size, radius, font and duration is a `--focsd-*` custom property. Set tokens on `:root` to re-brand everything, or on any element to change one section. See [Theming and tokens](/foundations/theming/).
+
+```css
+:root {
+  --focsd-action: oklch(0.55 0.2 260);
+  --focsd-radius-control: 8px;
+}
+.marketing {
+  --focsd-font-sans: 'Inter', system-ui, sans-serif;
+}
+```
+
+## 2. Component properties
+
+Some components read their own custom properties first and fall back to tokens. They inherit, so you can set them per instance, per section or globally.
+
+| Property | Component |
+|---|---|
+| `--focsd-button-background`, `--focsd-button-background-hover`, `--focsd-button-color`, `--focsd-button-border-color`, `--focsd-button-radius` | Button, icon button, toggle |
+| `--focsd-field-background`, `--focsd-field-border-color`, `--focsd-field-radius` | Text fields, select, combobox, date fields |
+| `--focsd-card-padding` | Card |
+| `--focsd-dialog-padding` | Dialog, alert dialog, drawer |
+| `--focsd-fieldset-gap` | Fieldset, checkbox group |
+| `--focsd-progress-color` | Progress bar |
+| `--focsd-bottom-sheet-max-width`, `--focsd-bottom-sheet-z` | Bottom sheet |
+| `--focsd-tab-indicator` | Tabs |
+| `--focsd-link-color` | Link |
+| `--focsd-icon-size` | Icons |
+
+```css
+.danger-zone focsd-button {
+  --focsd-button-border-color: var(--focsd-critical);
+}
+```
+
+## 3. Parts
+
+Every internal element you might want to style is a named part. Each component page lists its parts under **API**.
+
+```css
+focsd-select::part(listbox) {
+  max-block-size: 24rem;
+}
+focsd-text-field::part(label) {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+```
+
+**Components inside components.** When a component contains another, the inner parts are re-exported with a prefix:
+
+```css
+/* The calendar inside the date picker's dialog */
+focsd-date-picker::part(calendar-day) {
+  border-radius: 999px;
+}
+/* The pagination in the data grid's footer */
+focsd-data-grid::part(pagination-page) {
+  min-inline-size: 2.5rem;
+}
+```
+
+<Aside>
+`::part()` styles the element itself, not its children, and does not support structural pseudo-classes such as `:first-child`. State is exposed as extra part names (for example `selected`, `today`, `disabled`), so `focsd-date-picker::part(calendar-selected)` targets the selected day.
+</Aside>
+
+## 4. Slots
+
+Slots take your own markup, which stays in your page, so your CSS (including utility classes and icon fonts) applies directly:
+
+```html
+<focsd-icon-button label="Settings"><i class="fa-solid fa-gear"></i></focsd-icon-button>
+<focsd-disclosure summary="Details"><svg slot="icon" class="my-chevron">…</svg>…</focsd-disclosure>
+```
+
+## What you cannot change, and why
+
+- **Roles, labels and keyboard behavior.** These live inside the component so a restyle can never break them.
+- **Elements that are not parts.** If you need to style something that has no part name, [open an issue](https://github.com/SunTribe1/focsd/issues/new) and we will add one.
+- **Tailwind classes on internals.** Use parts in your CSS, or `@apply` inside a `::part()` rule.

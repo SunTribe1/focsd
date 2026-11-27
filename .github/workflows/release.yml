@@ -1,0 +1,122 @@
+name: Release
+
+# Runs only after CI has passed on a push to main, so nothing is published from a red commit.
+# Branch protection on main (required CI checks) is the second gate; see RELEASING.md.
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+
+concurrency: release
+
+permissions: {}
+
+jobs:
+  release:
+    name: Version pull request or publish to npm
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write # npm provenance
+    timeout-minutes: 30
+    # A push to this repository's main that CI passed (a pull request from a fork's "main" does not
+    # count), and still the tip of main: changesets resets its version branch to the tip, and a newer
+    # push gets its own CI run and its own release.
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_repository.full_name == github.repository &&
+      github.event.workflow_run.head_sha == github.sha
+    steps:
+      # The commit CI tested, not whatever main points to now.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          # changesets pushes the "Version packages" branch; with RELEASE_TOKEN that push starts CI.
+          token: ${{ secrets.RELEASE_TOKEN || github.token }}
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+          # No registry-url: it writes an .npmrc auth token line, and any token stops npm trusted
+          # publishing (OIDC) from being used.
+      - run: pnpm install --frozen-lockfile
+      - name: Check the packages as npm will see them
+        run: pnpm check:packages
+      # Written after the package checks, so only the publish step can read it.
+      # First publish only: npm trusted publishing can only be set up on a package that already exists,
+      # so 1.0.0 goes out with NPM_TOKEN. Once every package trusts this workflow (RELEASING.md), delete
+      # the secret and pnpm publishes through OIDC with a short-lived token.
+      - name: Use the first-publish npm token, if set
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -n "$NPM_TOKEN" ]; then
+            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > "$HOME/.npmrc"
+            echo "Publishing with NPM_TOKEN (first publish)."
+          else
+            echo "Publishing with npm trusted publishing (OIDC)."
+          fi
+      # With pending changesets this opens a "Version packages" pull request; once it is merged, it
+      # publishes. Every package shares one version, so publishing makes no per-package git tags
+      # (release:publish passes --no-git-tag) and the next step makes one tag and one GitHub release.
+      - uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
+        id: changesets
+        with:
+          version: pnpm release:version
+          publish: pnpm release:publish
+          title: 'chore: version packages'
+          commit: 'chore: version packages'
+          createGithubReleases: false
+        env:
+          # Optional RELEASE_TOKEN (a fine-grained token or GitHub App token) lets CI run on the
+          # "Version packages" pull request; with the default token, CI does not run on it.
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
+          NPM_CONFIG_PROVENANCE: 'true'
+      # Decides for itself whether a version went out: changesets/action 1.x looks for "New tag:" lines
+      # that Changesets 3 no longer prints, so its `published` output stays false. Safe to rerun.
+      - name: Create the GitHub release for this version
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
+          SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          if find .changeset -name '*.md' ! -name README.md | grep -q .; then
+            echo "Changesets are pending, so this run opened the version pull request and published nothing."
+            exit 0
+          fi
+          version="$(node -p "require('./packages/components/package.json').version")"
+          tag="v${version}"
+          if ! npm view "@focsd-dev/components@${version}" version > /dev/null 2>&1; then
+            echo "@focsd-dev/components@${version} is not on npm, so there is nothing to release."
+            exit 0
+          fi
+          if gh release view "$tag" > /dev/null 2>&1; then
+            echo "Release $tag already exists."
+            exit 0
+          fi
+          node scripts/release-notes.mjs "$version" > "$RUNNER_TEMP/release-notes.md"
+          gh release create "$tag" --target "$SHA" --title "Focsd ${version}" \
+            --notes-file "$RUNNER_TEMP/release-notes.md" --latest
+      # release:publish writes the API baseline (api/) for what it published. main is protected, so the
+      # baseline arrives as a pull request.
+      - name: Open a pull request with the API baseline
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
+          SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          if [ -z "$(git status --porcelain api)" ]; then
+            echo "API baseline unchanged."
+            exit 0
+          fi
+          branch="chore/api-baseline-${SHA::7}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add api
+          git commit -m "chore: update the API baseline"
+          git push origin "$branch"
+          gh pr create --base main --head "$branch" --title "chore: update the API baseline" \
+            --body "The published custom-elements manifests, which the API compatibility check compares against."

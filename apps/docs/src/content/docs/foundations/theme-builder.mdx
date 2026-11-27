@@ -1,0 +1,20 @@
+---
+title: Theme builder
+description: Pick brand colors, a neutral tint, status colors, fonts, corner radius and density, check their contrast, and copy the CSS or the tokens.
+---
+
+import ThemeBuilder from '../../../components/ThemeBuilder.astro';
+
+Choose **Start from** to begin with Wayfinding or one of the [theme presets](/foundations/presets/), then set:
+
+- **Color:** a brand color for each theme, a **neutral tint** for grounds, cards, text and edges (slate, sage, sand, stone or mauve, on the same lightness steps as the presets), and optionally your own **status colors** for success, caution and errors. Each status color is fitted to each theme: darker on light grounds, lighter on dark ones, with a soft tint for message backgrounds.
+- **Typography:** the text and code fonts. A named font is not loaded for you: load it in your app, or the stack falls back to the system font.
+- **Shape and density:** the corner radius and the density.
+
+ The previews update as you go, every changed color pair is checked against WCAG 2.2 AA, and the CSS at the bottom is ready to paste after `@focsd-dev/tokens/tokens.css`. It begins with the layer order, `@layer focsd.tokens, focsd.preset, focsd.brand;`, so it also wins over any preset.
+
+Button text switches between white and near-black, whichever contrasts more with your color. Links keep the theme's own color unless you tick **Links use the brand color**; a pale brand color then fails the link check, so choose a darker shade for the light theme. The high-contrast theme keeps its own colors.
+
+<ThemeBuilder />
+
+**Copy tokens (JSON)** copies every token the theme sets, shared and per theme, for a design tool or a token pipeline. **Copy for agents** copies the same theme as Markdown: palette roles, the measured contrast ratios, radius, density and fonts in words, followed by the CSS. Paste it into an assistant's context so it styles with your theme.

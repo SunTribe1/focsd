@@ -1,0 +1,30 @@
+---
+import { Code } from '@astrojs/starlight/components';
+import { blocks } from '../data/blocks.js';
+
+interface Props {
+  name: string;
+}
+
+const block = blocks.find((b) => b.name === Astro.props.name);
+
+if (!block) throw new Error(`No block "${Astro.props.name}" in packages/cli/blocks.`);
+
+const command = `npx focsd add block ${block.name}`;
+const install = `npm install ${block.packages.join(' ')}`;
+---
+
+<p>{block.description}</p>
+<div class="focsd-example not-content" data-block-preview={block.name}>
+  <iframe
+    class="focsd-example-frame focsd-block-frame"
+    src={`/blocks/${block.name}/`}
+    title={`${block.title} block preview`}
+    loading="lazy"
+    style="block-size: 34rem"
+  ></iframe>
+</div>
+<Code code={command} lang="sh" title="Copy it into your project" />
+<p>
+  Needs: <code>{install}</code>. Uses {block.elements.length} elements: {block.elements.map((e) => e.replace('focsd-', '')).join(', ')}.
+</p>

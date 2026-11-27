@@ -1,0 +1,46 @@
+---
+import { Code } from 'astro:components';
+import { BUTTON_BUDGET_KB, CODE_THEMES, FRAMEWORKS } from '../../data/landing.js';
+---
+
+<section class="lp-section" aria-labelledby="lp-frameworks-title">
+  <div class="lp-wrap lp-split">
+    <div class="lp-split-text">
+      <h2 id="lp-frameworks-title">Write it once. Use it in every stack.</h2>
+      <p>
+        Focsd components are standard custom elements built with Lit. Import them once, then use the tags in plain HTML or any framework.
+      </p>
+      <ul class="lp-points">
+        <li>
+          <strong>React 19</strong> renders them directly; <code>@focsd-dev/react</code> adds typed wrappers.
+        </li>
+        <li>
+          <strong>Vue, Svelte and Angular</strong> need one line of config at most.
+        </li>
+        <li>
+          <strong>Native forms:</strong> values reach <code>FormData</code>, and validation and reset work like built-in inputs.
+        </li>
+        <li>
+          <strong>Small:</strong> a button with Lit stays under {BUTTON_BUDGET_KB} KB gzip, checked by a size test.
+        </li>
+      </ul>
+      <a class="lp-text-link" href="/getting-started/frameworks/">
+        Framework guide
+      </a>
+    </div>
+    <div class="lp-code-tabs" data-lp-reveal>
+      <focsd-tabs label="Framework">
+        {FRAMEWORKS.map((f) => (
+          <focsd-tab>{f.label}</focsd-tab>
+        ))}
+        {FRAMEWORKS.map((f) => (
+          <focsd-tab-panel>
+            <div class="lp-code">
+              <Code code={f.code} lang={f.lang} themes={CODE_THEMES} defaultColor={false} />
+            </div>
+          </focsd-tab-panel>
+        ))}
+      </focsd-tabs>
+    </div>
+  </div>
+</section>

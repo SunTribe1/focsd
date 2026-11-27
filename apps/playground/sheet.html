@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Bottom sheet · Focsd test bench</title>
+    <script type="module" src="/src/sheet.js"></script>
+    <style>
+      #inner {
+        block-size: 6rem;
+        overflow: auto;
+        border: 1px solid;
+      }
+      .inner-long {
+        block-size: 30rem;
+      }
+      .long-filters {
+        block-size: 150vh;
+      }
+    </style>
+  </head>
+  <body>
+    <pg-header heading="Bottom sheet"></pg-header>
+    <main class="pg-stack pg-w-40">
+      <focsd-button id="open-sheet">Filters</focsd-button>
+      <focsd-bottom-sheet id="s" label="Filters" snap-points="40%,90%">
+        <div id="long" class="pg-stack">
+          <focsd-checkbox>In stock</focsd-checkbox>
+          <focsd-checkbox>On sale</focsd-checkbox>
+          <focsd-slider id="price" label="Max price" min="0" max="100" value="50"></focsd-slider>
+          <div id="inner">
+            <p class="inner-long">An inner list that scrolls on its own.</p>
+          </div>
+          <p class="long-filters">A long list of filters scrolls inside the sheet.</p>
+          <focsd-button data-dialog-close value="apply">Apply</focsd-button>
+        </div>
+      </focsd-bottom-sheet>
+      <focsd-button id="open-terms">Terms</focsd-button>
+      <focsd-bottom-sheet id="nd" label="Terms" persistent>
+        <p>Read and accept to continue.</p>
+        <focsd-button data-dialog-close value="accept">Accept</focsd-button>
+      </focsd-bottom-sheet>
+      <focsd-bottom-sheet id="nm" label="Now playing" non-modal snap-points="25%,60%" open>
+        <p>Track 3 · 2:14</p>
+      </focsd-bottom-sheet>
+    </main>
+  </body>
+</html>

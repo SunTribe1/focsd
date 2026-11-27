@@ -1,0 +1,541 @@
+---
+import presetData from '@focsd-dev/tokens/presets.json';
+import { byCategory } from '../data/catalogue.js';
+import { examples } from '../data/examples/index.js';
+import { FORM_GROUPS } from '../data/sidebar.js';
+import { THUMBS } from '../data/thumbnails.js';
+import Register from './Register.astro';
+import '@focsd-dev/tokens/presets.css';
+
+type Item = { name: string; slug: string; tag: string };
+
+const missing = byCategory.flatMap(({ items }) => items).filter((c) => !THUMBS[c.slug]);
+
+if (missing.length) throw new Error(`ComponentGallery: add thumbnails for ${missing.map((c) => c.slug).join(', ')}.`);
+
+const sections = byCategory.flatMap(({ category, items }) =>
+  category === 'Forms'
+    ? FORM_GROUPS.map(({ label, slugs }) => ({
+        id: `forms-${label.toLowerCase().replaceAll(/[^a-z]+/g, '-')}`,
+        title: `Forms: ${label}`,
+        items: slugs.flatMap((slug) => items.filter((c: Item) => c.slug === slug)),
+      }))
+    : [{ id: category.toLowerCase(), title: category, items }],
+);
+
+const props = Object.fromEntries(Object.entries(THUMBS).flatMap(([slug, t]) => (t.props ? [[slug, t.props]] : [])));
+
+const presets = [['', presetData.default.label], ...Object.entries(presetData.presets).map(([id, p]) => [id, p.label])];
+---
+
+<div class="gp not-content">
+  <div class="gp-bar" role="group" aria-label="Preview every component with">
+    <focsd-select class="gp-preset" label="Preset" value="">
+      {presets.map(([id, label]) => (
+        <focsd-option value={id}>{label}</focsd-option>
+      ))}
+    </focsd-select>
+    <focsd-theme-toggle class="gp-theme" label="Theme" target=".gp-theme-target" storage-key-prefix="gallery-"></focsd-theme-toggle>
+    <focsd-select class="gp-density" label="Density" value="default">
+      <focsd-option value="compact">Compact</focsd-option>
+      <focsd-option value="default">Default</focsd-option>
+      <focsd-option value="comfortable">Comfortable</focsd-option>
+    </focsd-select>
+  </div>
+
+  <div class="gp-theme-target not-content" data-gp-stage>
+    <script is:inline>
+      // Apply the stored theme, preset and density before first paint, so a reload does not flash the defaults.
+      (() => {
+        try {
+          const stage = document.currentScript.parentElement;
+          const t = localStorage.getItem('gallery-theme');
+
+          if (t === 'light' || t === 'dark' || t === 'contrast') stage.dataset.focsdTheme = t;
+          const b = localStorage.getItem('gallery-preset');
+
+          if (b && /^[a-z]+$/.test(b)) stage.dataset.focsdBrand = b;
+          const d = localStorage.getItem('gallery-density');
+
+          if (d === 'compact' || d === 'comfortable') stage.dataset.focsdDensity = d;
+        } catch {
+          // Storage blocked (private mode): the defaults apply, and the controls still work for this page.
+        }
+      })();
+    </script>
+    {sections.map(({ id, title, items }) => (
+      <section aria-labelledby={`gp-${id}`}>
+        <h2 id={`gp-${id}`}>
+          {title} <span class="gp-count">{items.length}</span>
+        </h2>
+        <ul class="gp-grid">
+          {items.map((c: Item) => (
+            <li class="gp-card" data-gp-card={c.slug}>
+              <div class:list={['gp-thumb', { 'gp-zoom': THUMBS[c.slug].zoom }]} inert aria-hidden="true" set:html={THUMBS[c.slug].html} />
+              <a class="gp-name" href={`/components/${c.slug}/`}>
+                {c.name}
+              </a>
+              <p class="gp-summary">{examples[c.slug]?.summary}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+  <script type="application/json" id="gp-props" set:html={JSON.stringify(props)} />
+</div>
+
+<Register />
+
+<script>
+  import type { Thumb } from '../data/thumbnails.js';
+
+  const stage = document.querySelector<HTMLElement>('[data-gp-stage]');
+  const preset = document.querySelector<HTMLElement & { value: string }>('.gp-preset');
+  const density = document.querySelector<HTMLElement & { value: string }>('.gp-density');
+
+  /** Remember a choice for the next visit (the inline script in the stage applies it before paint). */
+  const remember = (key: string, value: string) => {
+    try {
+      if (value) localStorage.setItem(key, value);
+      else localStorage.removeItem(key);
+    } catch {
+      // Storage blocked (private mode): the choice lasts for this page only.
+    }
+  };
+
+  /**
+   * Apply a stage change as one crossfade: switching a preset restyles every card at once (fonts,
+   * corners, colors), which otherwise reads as a jolt. Skipped under reduced motion and where View
+   * Transitions are not supported.
+   */
+  const transition = (change: () => void) => {
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (reduced || !('startViewTransition' in document)) change();
+    else document.startViewTransition(change);
+  };
+
+  // Show the remembered choices in the controls once they are defined.
+  customElements.whenDefined('focsd-select').then(() => {
+    if (preset && stage) preset.value = stage.dataset.focsdBrand ?? '';
+
+    if (density && stage?.dataset.focsdDensity) density.value = stage.dataset.focsdDensity;
+  });
+
+  preset?.addEventListener('change', () => {
+    if (!stage) return;
+    remember('gallery-preset', preset.value);
+    transition(() => {
+      if (preset.value) stage.dataset.focsdBrand = preset.value;
+      else delete stage.dataset.focsdBrand;
+    });
+  });
+
+  density?.addEventListener('change', () => {
+    if (!stage || !density) return;
+    remember('gallery-density', density.value === 'default' ? '' : density.value);
+    transition(() => {
+      stage.dataset.focsdDensity = density.value;
+    });
+  });
+
+  /** Data some thumbnails take from script (rows, series, values), set once each element is defined. */
+  const props: Record<string, NonNullable<Thumb['props']>> = JSON.parse(document.getElementById('gp-props')?.textContent ?? '{}');
+
+  for (const [slug, bySelector] of Object.entries(props)) {
+    const card = document.querySelector(`[data-gp-card="${slug}"]`);
+
+    for (const [selector, values] of Object.entries(bySelector)) {
+      const el = card?.querySelector(selector);
+
+      if (!el) continue;
+
+      customElements.whenDefined(el.localName).then(() => Object.assign(el, values));
+    }
+  }
+</script>
+
+<style>
+  .gp {
+    display: grid;
+    gap: var(--focsd-space-6);
+  }
+  /* The bar stays in reach while the gallery scrolls under it. */
+  .gp-bar {
+    position: sticky;
+    inset-block-start: calc(var(--sl-nav-height, 4rem) + var(--focsd-space-2));
+    z-index: 2;
+    /* A collar in the page color fills the gap between the site header and the bar, so cards
+       scrolling under it never show through above the bar. */
+    box-shadow: 0 calc(-1 * var(--focsd-space-2) - 1px) 0 var(--focsd-space-2) var(--sl-color-bg, var(--focsd-ground));
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: var(--focsd-space-3) var(--focsd-space-5);
+    padding: var(--focsd-space-3) var(--focsd-space-4);
+    border: var(--focsd-border-width) solid var(--focsd-edge-quiet);
+    border-radius: var(--focsd-radius-surface);
+    background: var(--focsd-surface);
+  }  /* On phones the bar wraps to several rows: sticky, it would cover a third of the screen. */
+  @media (max-width: 48rem) {
+    .gp-bar {
+      position: static;
+    }
+  }
+
+  .gp-bar focsd-select {
+    min-inline-size: 10rem;
+  }
+  /* The area the bar themes: its own ground, so a light preview on a dark page still reads as light. */
+  .gp-theme-target {
+    display: grid;
+    gap: var(--focsd-space-7);
+    padding: var(--focsd-space-5);
+    border-radius: var(--focsd-radius-surface);
+    background: var(--focsd-ground);
+    color: var(--focsd-ink);
+  }
+  /* The preview's own ink: the docs page's heading color belongs to the page's theme. */
+  .gp-theme-target h2 {
+    margin: 0 0 var(--focsd-space-3);
+    color: var(--focsd-ink);
+    font-size: var(--focsd-text-heading-size);
+  }
+  .gp-count {
+    color: var(--focsd-ink-muted);
+    font-family: var(--focsd-font-mono);
+    font-size: var(--focsd-text-small-size);
+    font-weight: normal;
+  }
+  .gp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+    gap: var(--focsd-space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .gp-card {
+    position: relative;
+    display: grid;
+    grid-template-rows: 14rem auto 1fr;
+    gap: var(--focsd-space-2);
+    min-inline-size: 0;
+    margin: 0;
+    padding: var(--focsd-space-3);
+    border: var(--focsd-border-width) solid var(--focsd-edge-quiet);
+    border-radius: var(--focsd-radius-surface);
+    background: var(--focsd-surface);
+    transition: border-color var(--focsd-duration-quick) var(--focsd-ease-move);
+  }
+  .gp-card:hover {
+    border-color: var(--focsd-edge);
+  }
+  /* The thumbnail is the real component, but inert: the card opens its page. */
+  .gp-thumb {
+    display: grid;
+    place-items: center;
+    min-inline-size: 0;
+    overflow: hidden;
+    padding: var(--focsd-space-3);
+    border-radius: var(--focsd-radius-control);
+    background: var(--focsd-ground);
+    color: var(--focsd-ink);
+    font-family: var(--focsd-font-sans);
+    font-size: var(--focsd-text-small-size);
+  }
+  .gp-thumb > :global(*) {
+    max-inline-size: 100%;
+  }
+  /* Page-sized components (header, footer, grid) at a little under three quarters of their size. */
+  .gp-zoom > :global(*) {
+    zoom: 0.72;
+    max-inline-size: 138%;
+  }
+  .gp-name {
+    color: var(--focsd-ink);
+    font-weight: var(--focsd-text-label-weight);
+    text-decoration: none;
+  }
+  /* The whole card is the link's target. */
+  .gp-name::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--focsd-radius-surface);
+  }
+  .gp-name:focus-visible {
+    outline: none;
+  }
+  .gp-card:has(.gp-name:focus-visible) {
+    box-shadow: var(--focsd-focus-ring);
+  }
+  .gp-card:hover .gp-name {
+    text-decoration: underline;
+  }
+  .gp-summary {
+    margin: 0;
+    color: var(--focsd-ink-muted);
+    font-size: var(--focsd-text-small-size);
+  }
+
+  /* Thumbnail helpers */
+  .gp-thumb :global(.row) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--focsd-space-2);
+  }
+  .gp-thumb :global(.row.end) {
+    justify-content: end;
+  }
+  .gp-thumb :global(.stack) {
+    display: grid;
+    gap: var(--focsd-space-2);
+  }
+  .gp-thumb :global(.center) {
+    margin: 0;
+    text-align: center;
+  }
+  .gp-thumb :global(.gp-big) {
+    font-size: var(--focsd-text-heading-size);
+  }
+  /* The gallery's own code style: the docs' inline code colors belong to the page's theme, not the preview's. */
+  .gp-thumb :global(code) {
+    padding: 2px var(--focsd-space-1);
+    border-radius: var(--focsd-radius-tag);
+    background: var(--focsd-surface-sunk);
+    color: var(--focsd-ink);
+    font-family: var(--focsd-font-mono);
+    font-size: 0.8em;
+  }
+  .gp-thumb :global(.gp-tile) {
+    display: grid;
+    place-items: center;
+    border-radius: var(--focsd-radius-control);
+    background: var(--focsd-surface-sunk);
+    color: var(--focsd-ink-muted);
+  }
+
+  /* Drawn surfaces for components that cannot be open in a card */
+  .gp-thumb :global(.gp-mock) {
+    display: grid;
+    gap: var(--focsd-space-1);
+    padding: var(--focsd-space-2) var(--focsd-space-3);
+    border: var(--focsd-border-width) solid var(--focsd-edge-quiet);
+    border-radius: var(--focsd-radius-surface);
+    background: var(--focsd-surface-raised);
+    box-shadow: var(--focsd-shadow-overlay);
+    text-align: start;
+  }
+  .gp-thumb :global(.gp-mock span) {
+    color: var(--focsd-ink-muted);
+  }
+  .gp-thumb :global(.gp-mock-dialog) {
+    position: relative;
+    inline-size: 13rem;
+    gap: var(--focsd-space-2);
+  }
+  .gp-thumb :global(.gp-mock-x) {
+    position: absolute;
+    inset-block-start: var(--focsd-space-1);
+    inset-inline-end: var(--focsd-space-2);
+    color: var(--focsd-ink-muted);
+    font-size: 1rem;
+    line-height: 1;
+  }
+  .gp-thumb :global(.gp-pop) {
+    display: grid;
+    justify-items: center;
+    gap: var(--focsd-space-1);
+  }
+  .gp-thumb :global(.gp-pop-up) {
+    grid-auto-flow: row;
+  }
+  .gp-thumb :global(.gp-pop-up > .gp-mock) {
+    order: -1;
+  }
+  .gp-thumb :global(.gp-mock-bubble) {
+    padding: var(--focsd-space-1) var(--focsd-space-2);
+    border-color: var(--focsd-ink);
+    background: var(--focsd-ink);
+    color: var(--focsd-ground);
+    box-shadow: none;
+  }
+  .gp-thumb :global(.gp-mock-bubble.wide) {
+    max-inline-size: 11rem;
+    border-color: var(--focsd-edge-quiet);
+    background: var(--focsd-surface-raised);
+    color: var(--focsd-ink);
+    box-shadow: var(--focsd-shadow-overlay);
+  }
+  .gp-thumb :global(.gp-mock-menu) {
+    min-inline-size: 8rem;
+    padding: var(--focsd-space-1);
+  }
+  .gp-thumb :global(.gp-mock-menu span),
+  .gp-thumb :global(.gp-mock-command span:not(.gp-mock-input)),
+  .gp-thumb :global(.gp-mock-toc span) {
+    padding: 2px var(--focsd-space-2);
+    border-radius: var(--focsd-radius-control);
+    color: var(--focsd-ink);
+  }
+  .gp-thumb :global(.gp-mock-menu span:first-child),
+  .gp-thumb :global(.gp-mock .active) {
+    background: var(--focsd-surface-sunk);
+    font-weight: var(--focsd-text-label-weight);
+  }
+  .gp-thumb :global(.gp-mock-area) {
+    padding: var(--focsd-space-3);
+    border-style: dashed;
+    box-shadow: none;
+  }
+  .gp-thumb :global(.gp-mock-page) {
+    position: relative;
+    inline-size: 13rem;
+    block-size: 7.5rem;
+    padding: 0;
+    overflow: hidden;
+    background: var(--focsd-surface-sunk);
+    box-shadow: none;
+  }
+  .gp-thumb :global(.gp-mock-side) {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
+    inline-size: 55%;
+    border-radius: var(--focsd-radius-surface) 0 0 var(--focsd-radius-surface);
+  }
+  .gp-thumb :global(.gp-mock-sheet) {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    justify-items: start;
+    border-radius: var(--focsd-radius-surface) var(--focsd-radius-surface) 0 0;
+  }
+  .gp-thumb :global(.gp-mock-sheet i) {
+    justify-self: center;
+    inline-size: 2rem;
+    block-size: 3px;
+    border-radius: 2px;
+    background: var(--focsd-edge);
+  }
+  .gp-thumb :global(.gp-mock-float) {
+    position: absolute;
+    inset-block-start: 1rem;
+    inset-inline-start: 1.5rem;
+    inline-size: 55%;
+  }
+  .gp-thumb :global(.gp-mock-skip) {
+    display: grid;
+    place-items: start;
+    padding: var(--focsd-space-2);
+  }
+  .gp-thumb :global(.gp-mock-chip) {
+    padding: var(--focsd-space-1) var(--focsd-space-2);
+    border-radius: var(--focsd-radius-control);
+    background: var(--focsd-action);
+    color: var(--focsd-on-action) !important;
+    box-shadow: var(--focsd-focus-ring);
+  }
+  .gp-thumb :global(.gp-mock-command) {
+    inline-size: 13rem;
+    padding: var(--focsd-space-1);
+  }
+  .gp-thumb :global(.gp-mock-input) {
+    padding: var(--focsd-space-1) var(--focsd-space-2);
+    border-block-end: var(--focsd-border-width) solid var(--focsd-edge-quiet);
+  }
+  .gp-thumb :global(.gp-mock-lightbox) {
+    justify-items: center;
+    padding: var(--focsd-space-2);
+    background: var(--focsd-scrim);
+  }
+  .gp-thumb :global(.gp-mock-lightbox img) {
+    inline-size: 9rem;
+    border-radius: var(--focsd-radius-control);
+  }
+  /* Text on the scrim: the scrim is dark in every theme, so use light ink, as the lightbox does. */
+  .gp-thumb :global(.gp-mock-lightbox span) {
+    color: oklch(97% 0 0);
+  }
+  .gp-thumb :global(.gp-mock-editor) {
+    inline-size: 13rem;
+    box-shadow: none;
+  }
+  .gp-thumb :global(.gp-mock-editor p) {
+    margin: 0;
+  }
+  .gp-thumb :global(.gp-mock-toolbar) {
+    display: flex;
+    gap: var(--focsd-space-2);
+    padding-block-end: var(--focsd-space-1);
+    border-block-end: var(--focsd-border-width) solid var(--focsd-edge-quiet);
+  }
+  .gp-thumb :global(.gp-mock-error) {
+    inline-size: 13rem;
+    border: 2px solid var(--focsd-critical);
+    box-shadow: none;
+  }
+  .gp-thumb :global(.gp-mock-link) {
+    color: var(--focsd-route) !important;
+    text-decoration: underline;
+  }
+  .gp-thumb :global(.gp-mock-toast) {
+    grid-auto-flow: column;
+    align-items: center;
+    gap: var(--focsd-space-3);
+  }
+  .gp-thumb :global(.gp-mock-card) {
+    inline-size: 11rem;
+    block-size: 5rem;
+    box-shadow: none;
+  }
+  .gp-thumb :global(.gp-mock-toc) {
+    box-shadow: none;
+    border: 0;
+    border-inline-start: 2px solid var(--focsd-edge-quiet);
+    border-radius: 0;
+    background: transparent;
+  }
+  .gp-thumb :global(.gp-mock-shell) {
+    display: grid;
+    grid-template-columns: 4rem 1fr;
+    grid-template-rows: auto 1fr;
+    inline-size: 13rem;
+    block-size: 7.5rem;
+    padding: 0;
+    gap: 0;
+    overflow: hidden;
+    box-shadow: none;
+  }
+  .gp-thumb :global(.gp-mock-bar) {
+    grid-column: 1 / -1;
+    padding: var(--focsd-space-1) var(--focsd-space-2);
+    border-block-end: var(--focsd-border-width) solid var(--focsd-edge-quiet);
+  }
+  .gp-thumb :global(.gp-mock-nav) {
+    display: grid;
+    align-content: start;
+    gap: 2px;
+    padding: var(--focsd-space-1);
+    border-inline-end: var(--focsd-border-width) solid var(--focsd-edge-quiet);
+  }
+  .gp-thumb :global(.gp-mock-nav span) {
+    padding: 2px var(--focsd-space-1);
+    border-radius: var(--focsd-radius-control);
+  }
+  .gp-thumb :global(.gp-mock-main) {
+    display: grid;
+    align-content: start;
+    gap: var(--focsd-space-1);
+    padding: var(--focsd-space-2);
+  }
+  .gp-thumb :global(.gp-mock-main span) {
+    block-size: 0.75rem;
+    border-radius: 2px;
+    background: var(--focsd-surface-sunk);
+  }
+</style>

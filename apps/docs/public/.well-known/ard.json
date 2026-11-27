@@ -1,0 +1,35 @@
+{
+  "specVersion": "1.0",
+  "entries": [
+    {
+      "identifier": "urn:air:focsd.dev:server:focsd",
+      "displayName": "Focsd MCP server",
+      "type": "application/mcp-server-card+json",
+      "description": "Search Focsd's accessible web components, read their full reference (attributes, events, parts, keyboard and accessibility notes), look up design tokens, get framework setup and check markup.",
+      "version": "0.1.0",
+      "tags": ["design-system", "web-components", "accessibility", "ui"],
+      "capabilities": ["list_components", "search_components", "get_component", "get_tokens", "get_setup", "validate_markup"],
+      "representativeQueries": [
+        "which Focsd component is a dropdown with search",
+        "show the attributes and keyboard support of focsd-date-picker",
+        "check this Focsd markup for accessibility mistakes"
+      ],
+      "data": {
+        "name": "focsd",
+        "title": "Focsd",
+        "description": "Focsd component catalogue, tokens, setup and markup checks for AI coding assistants.",
+        "packages": [
+          {
+            "registryType": "npm",
+            "identifier": "@focsd-dev/mcp",
+            "transport": {
+              "type": "stdio"
+            },
+            "command": "npx -y @focsd-dev/mcp"
+          }
+        ],
+        "documentation": "https://focsd.dev/getting-started/ai-assistants/"
+      }
+    }
+  ]
+}

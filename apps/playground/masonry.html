@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Masonry · Focsd test bench</title>
+    <script type="module" src="/src/masonry.js"></script>
+    <style>
+      .pg-card {
+        box-sizing: border-box;
+        padding: 0.75rem;
+        border: 1px solid var(--focsd-edge);
+        border-radius: var(--focsd-radius-surface);
+        background: var(--focsd-surface);
+      }
+      .pg-card {
+        block-size: var(--pg-h);
+      }
+      .h-50 {
+        --pg-h: 50px;
+      }
+      .h-60 {
+        --pg-h: 60px;
+      }
+      .h-70 {
+        --pg-h: 70px;
+      }
+      .h-80 {
+        --pg-h: 80px;
+      }
+      .h-90 {
+        --pg-h: 90px;
+      }
+      .h-100 {
+        --pg-h: 100px;
+      }
+      .h-110 {
+        --pg-h: 110px;
+      }
+      .h-120 {
+        --pg-h: 120px;
+      }
+      .h-140 {
+        --pg-h: 140px;
+      }
+      .h-160 {
+        --pg-h: 160px;
+      }
+      .h-180 {
+        --pg-h: 180px;
+      }
+      .h-200 {
+        --pg-h: 200px;
+      }
+      #flex {
+        display: flex;
+        gap: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <pg-header heading="Masonry"></pg-header>
+    <main class="pg-stack pg-w-60">
+      <focsd-button id="force-fallback">Use the fallback layout</focsd-button>
+      <focsd-masonry id="m">
+        <article class="pg-card h-120"><a href="#c1">Card 1</a></article>
+        <article class="pg-card h-60"><a href="#c2">Card 2</a></article>
+        <article class="pg-card h-180"><a href="#c3">Card 3</a></article>
+        <article class="pg-card h-90"><a href="#c4">Card 4</a></article>
+        <article class="pg-card h-140"><a href="#c5">Card 5</a></article>
+        <article class="pg-card h-70"><a href="#c6">Card 6</a></article>
+        <article class="pg-card h-200"><a href="#c7">Card 7</a></article>
+        <article class="pg-card h-100"><a href="#c8">Card 8</a></article>
+        <article class="pg-card h-80"><a href="#c9">Card 9</a></article>
+        <article class="pg-card h-160"><a href="#c10">Card 10</a></article>
+        <article class="pg-card h-110"><a href="#c11">Card 11</a></article>
+        <article class="pg-card h-50"><a href="#c12">Card 12</a></article>
+      </focsd-masonry>
+      <div id="flex">
+        <focsd-masonry id="mf" min-column-width="10rem">
+          <article class="pg-card h-80">One</article>
+          <article class="pg-card h-120">Two</article>
+          <article class="pg-card h-60">Three</article>
+        </focsd-masonry>
+      </div>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "name": "settings",
+  "title": "Settings",
+  "description": "App shell with a tabbed settings form: profile, notifications and security, an error summary and a Saved announcement.",
+  "files": ["index.html", "settings.js", "settings.css"],
+  "packages": ["@focsd-dev/components", "@focsd-dev/tokens"],
+  "elements": [
+    "focsd-app-shell",
+    "focsd-button",
+    "focsd-error-summary",
+    "focsd-fieldset",
+    "focsd-header",
+    "focsd-option",
+    "focsd-select",
+    "focsd-sidebar",
+    "focsd-sidebar-item",
+    "focsd-switch",
+    "focsd-tab",
+    "focsd-tab-panel",
+    "focsd-tabs",
+    "focsd-text-field",
+    "focsd-theme-toggle"
+  ]
+}

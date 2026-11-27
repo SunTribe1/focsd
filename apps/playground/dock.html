@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dock · Focsd test bench</title>
+    <script type="module" src="/src/dock.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Dock"></pg-header>
+    <main class="pg-stack">
+      <section class="pg-stack" aria-labelledby="form-heading">
+        <h2 id="form-heading">In a form</h2>
+        <form id="form" class="pg-stack">
+          <focsd-dock id="folders" label="Mail folders" name="folder" value="starred" label-display="shown">
+            <focsd-dock-item value="starred" icon="star">Starred</focsd-dock-item>
+            <focsd-dock-item value="search" icon="search">Search</focsd-dock-item>
+            <focsd-dock-item value="schedule" icon="calendar" disabled>Schedule</focsd-dock-item>
+            <focsd-dock-item value="drafts" icon="edit">Drafts</focsd-dock-item>
+          </focsd-dock>
+          <div class="pg-row">
+            <button type="submit">Submit</button>
+            <button type="reset">Reset</button>
+          </div>
+          <output id="out" for="folders"></output>
+        </form>
+      </section>
+      <section class="pg-stack" aria-labelledby="sizes-heading">
+        <h2 id="sizes-heading">Sizes, custom icons and tooltip labels (the default)</h2>
+        <focsd-dock id="small" label="Layout" size="s" value="grid">
+          <focsd-dock-item value="grid">
+            <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="3" y="3" width="7" height="7" rx="1" />
+              <rect x="14" y="3" width="7" height="7" rx="1" />
+              <rect x="3" y="14" width="7" height="7" rx="1" />
+              <rect x="14" y="14" width="7" height="7" rx="1" />
+            </svg>
+            Grid
+          </focsd-dock-item>
+          <focsd-dock-item value="list" icon="menu">List</focsd-dock-item>
+        </focsd-dock>
+        <focsd-dock id="large" label="Sort" size="l" value="up">
+          <focsd-dock-item value="up" icon="arrow-up">Ascending</focsd-dock-item>
+          <focsd-dock-item value="down" icon="arrow-down">Descending</focsd-dock-item>
+        </focsd-dock>
+        <focsd-dock id="hidden" label="Text alignment" value="left">
+          <focsd-dock-item value="left" icon="arrow-left">Align left</focsd-dock-item>
+          <focsd-dock-item value="right" icon="arrow-right">Align right</focsd-dock-item>
+        </focsd-dock>
+      </section>
+      <section class="pg-stack" aria-labelledby="rtl-heading" dir="rtl">
+        <h2 id="rtl-heading">Right to left</h2>
+        <focsd-dock id="rtl" label="Views" value="a">
+          <focsd-dock-item value="a" icon="star">A</focsd-dock-item>
+          <focsd-dock-item value="b" icon="search">B</focsd-dock-item>
+        </focsd-dock>
+      </section>
+    </main>
+  </body>
+</html>

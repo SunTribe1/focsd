@@ -1,0 +1,117 @@
+{
+  "name": "@focsd-dev/components",
+  "version": "1.0.0",
+  "description": "Focsd styled web components (Wayfinding theme).",
+  "license": "MIT",
+  "homepage": "https://focsd.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SunTribe1/focsd.git",
+    "directory": "packages/components"
+  },
+  "bugs": {
+    "url": "https://github.com/SunTribe1/focsd/issues"
+  },
+  "keywords": [
+    "a11y",
+    "accessibility",
+    "angular",
+    "component-library",
+    "custom-elements",
+    "design-system",
+    "framework-agnostic",
+    "free",
+    "frontend",
+    "lit",
+    "react",
+    "svelte",
+    "ui",
+    "ui-components",
+    "ui-library",
+    "vue",
+    "wcag",
+    "web-components"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "development": "./src/index.js",
+      "default": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./types/react.d.ts"
+    },
+    "./jsx": {
+      "types": "./types/jsx.d.ts"
+    },
+    "./vue": {
+      "types": "./types/vue.d.ts"
+    },
+    "./svelte": {
+      "types": "./types/svelte.d.ts"
+    },
+    "./*.js": {
+      "types": "./types/*.d.ts",
+      "development": "./src/*.js",
+      "default": "./dist/*.js"
+    },
+    "./upgrade.css": {
+      "development": "./src/upgrade.css",
+      "default": "./dist/upgrade.css"
+    },
+    "./custom-elements.json": "./custom-elements.json",
+    "./vscode.html-custom-data.json": "./vscode.html-custom-data.json",
+    "./vscode.css-custom-data.json": "./vscode.css-custom-data.json",
+    "./web-types.json": "./web-types.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "custom-elements.json",
+    "dist",
+    "src",
+    "types",
+    "vscode.css-custom-data.json",
+    "vscode.html-custom-data.json",
+    "web-types.json"
+  ],
+  "customElements": "custom-elements.json",
+  "scripts": {
+    "check": "tsc -p tsconfig.check.json",
+    "prepack": "pnpm run build",
+    "build": "node ../../scripts/build-dist.mjs && pnpm analyze && pnpm types",
+    "analyze": "cd ../.. && cem analyze --globs \"packages/primitives/src/**/*.js\" \"packages/components/src/**/*.js\" --litelement --outdir packages/components",
+    "test": "vitest run && tsc -p test/types && tsc -p test/types/per-file",
+    "types": "node ../../scripts/emit-types.mjs && node ../../scripts/type-integrations.mjs"
+  },
+  "dependencies": {
+    "@focsd-dev/primitives": "workspace:*",
+    "@focsd-dev/tokens": "workspace:*",
+    "lit": "^3.3.3"
+  },
+  "devDependencies": {
+    "@custom-elements-manifest/analyzer": "0.11.0",
+    "@lit-labs/ssr": "4.1.0",
+    "@types/react": "19.3.0",
+    "esbuild": "0.28.2",
+    "svelte": "5.57.1",
+    "vitest": "5.0.3",
+    "vue": "3.5.43"
+  },
+  "sideEffects": [
+    "./src/index.js",
+    "./src/focsd-*.js",
+    "./dist/index.js",
+    "./dist/focsd-*.js",
+    "./src/upgrade.css",
+    "./dist/upgrade.css"
+  ],
+  "web-types": "./web-types.json",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}

@@ -1,0 +1,30 @@
+# Cloudflare Pages response headers (https://developers.cloudflare.com/pages/configuration/headers/).
+# Scripts: every page also carries a <meta> CSP listing the SHA-256 of its own inline scripts
+# (src/integrations/csp-hashes.mjs). Browsers enforce both policies, so 'unsafe-inline' below never
+# lets an injected script run; it stays only because one header cannot list every page's hashes.
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://cloudflareinsights.com; frame-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self' https://codepen.io https://stackblitz.com; object-src 'none'; upgrade-insecure-requests
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  Cross-Origin-Opener-Policy: same-origin
+
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.txt
+  Content-Type: text/plain; charset=utf-8
+
+# Agent files (wave 15): per-element contracts, JSON Schemas and DTCG token files.
+/AGENTS.md
+  Content-Type: text/markdown; charset=utf-8
+
+/components/*.md
+  Content-Type: text/markdown; charset=utf-8
+
+/schema/components/*
+  Content-Type: application/schema+json
+
+/schema/tokens/*
+  Content-Type: application/json

@@ -1,0 +1,47 @@
+---
+title: Choosing a toggle
+description: How the segmented control, dock, radio group, toggle group, switch and tabs differ, and which one to pick by what the choice does.
+---
+
+Six components look alike (a row of things you press), but they mean different things to a keyboard and a screen reader. Pick by what the choice does, not by how it looks.
+
+| | Segmented control | Radio group | Toggle group | Switch | Tabs |
+| --- | --- | --- | --- | --- | --- |
+| The choice is | One value | One value | On or off buttons | One setting | A panel |
+| Role | Radio group | Radio group | Pressed buttons | Switch | Tab list |
+| Takes effect | At once | After Submit, or at once | At once | At once | At once |
+| In a form | Yes | Yes | Yes, with `name` | Yes | No |
+| Several at once | No | No | `type="multiple"` | n/a | No |
+| Best for | Day, Week, Month | Options with explanations | Bold, italic, underline | Email updates | Sections of a page |
+
+The dock (`focsd-dock` with `focsd-dock-item`) is a segmented control drawn compactly as icons over short labels: everything in its column holds for it too. The tags are `focsd-segmented-control`, `focsd-radio-group`, `focsd-toggle-group` (with `focsd-toggle`), `focsd-switch` and `focsd-tabs`. The segmented control, dock, radio group and tabs move and select with the arrow keys; the toggle group moves focus with the arrows and presses with Space or Enter.
+
+## How to choose
+
+- **The person is picking a value and it applies at once** (a calendar view, a sort order, a billing period): `focsd-segmented-control`. Keep it to two to five short labels. When the labels are long or there are more than five, use `focsd-radio-group` or `focsd-select`.
+- **The person switches between views or categories shown as icons with short labels** (a filter bar, a tool palette, a category row): `focsd-dock`. It is a segmented control drawn compactly, icon over label; set `label-display="hidden"` only for icons everyone knows. For links between pages, use `focsd-bottom-nav` or `focsd-nav-menu` instead.
+- **The person is picking a value and confirms later**, or each option needs a description: `focsd-radio-group`. The segmented control is a radio group underneath, so it submits the same way, but it has no room for a sentence under each option.
+- **Each button is its own on or off state**, and several can be on together: `focsd-toggle-group` with `type="multiple"`, or a single `focsd-toggle`. Think of a text formatting bar.
+- **One setting that is on or off**: `focsd-switch`. Use `focsd-checkbox` instead when the choice is submitted with a form and applied after pressing a button.
+- **The choice shows a different panel of content**: `focsd-tabs`. A segmented control changes a value; tabs change what is on screen, and each tab owns a panel.
+
+A segmented control that switches a view looks like tabs, but if the "views" are really different pages of content with their own headings, use tabs: they give a screen reader the tab-to-panel relationship that a radio group lacks.
+
+## Same labels, different meaning
+
+```html
+<!-- A value, applied at once, submitted with the form -->
+<focsd-segmented-control label="Calendar view" name="view" value="week">
+  <focsd-segment value="day">Day</focsd-segment>
+  <focsd-segment value="week">Week</focsd-segment>
+  <focsd-segment value="month">Month</focsd-segment>
+</focsd-segmented-control>
+
+<!-- Independent on/off buttons -->
+<focsd-toggle-group label="Text style" type="multiple">
+  <focsd-toggle value="bold">Bold</focsd-toggle>
+  <focsd-toggle value="italic">Italic</focsd-toggle>
+</focsd-toggle-group>
+```
+
+A screen reader says "Week, radio button, 2 of 3, selected" for the first and "Bold, toggle button, pressed" for the second. If that description is wrong for your control, pick a different component.

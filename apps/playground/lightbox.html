@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lightbox · Focsd test bench</title>
+    <script type="module" src="/src/lightbox.js"></script>
+    <style>
+      .lightbox-layout {
+        display: grid;
+        gap: var(--focsd-space-6);
+        max-inline-size: 64rem;
+      }
+      .lightbox-layout section {
+        display: grid;
+        gap: var(--focsd-space-3);
+      }
+      .lightbox-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--focsd-space-3);
+      }
+      .lightbox-grid figure {
+        display: grid;
+        gap: var(--focsd-space-1);
+        margin: 0;
+        font-size: var(--focsd-text-small-size);
+      }
+      .lightbox-grid img {
+        display: block;
+        inline-size: 10rem;
+        block-size: auto;
+        border-radius: var(--focsd-radius-control);
+      }
+    </style>
+  </head>
+  <body>
+    <pg-header heading="Lightbox"></pg-header>
+    <main class="lightbox-layout">
+      <section aria-labelledby="gallery-heading">
+        <h2 id="gallery-heading">Gallery</h2>
+        <focsd-lightbox id="gallery" label="Landscapes">
+          <div class="lightbox-grid">
+            <figure>
+              <a href="/media/lake.svg"><img src="/media/lake.svg" alt="A lake under a pale sky" width="160" height="120" /></a>
+              <figcaption>Lake at dawn</figcaption>
+            </figure>
+            <figure>
+              <a href="/media/hill.svg"><img src="/media/hill.svg" alt="Green hills in summer" width="160" height="120" /></a>
+              <figcaption>Hills near the coast</figcaption>
+            </figure>
+            <a href="/media/road.svg"><img src="/media/road.svg" alt="A road into the hills" width="160" height="120" /></a>
+            <a href="/media/dunes.svg"><img src="/media/dunes.svg" alt="Sand dunes at noon" width="160" height="120" /></a>
+          </div>
+        </focsd-lightbox>
+        <p><button type="button" id="after-gallery">A button after the gallery</button></p>
+      </section>
+      <section aria-labelledby="rtl-heading" dir="rtl">
+        <h2 id="rtl-heading">Right to left</h2>
+        <focsd-lightbox id="rtl" lang="en">
+          <div class="lightbox-grid">
+            <a href="/media/lake.svg"><img src="/media/lake.svg" alt="Lake" width="160" height="120" /></a>
+            <a href="/media/hill.svg"><img src="/media/hill.svg" alt="Hills" width="160" height="120" /></a>
+            <a href="/media/road.svg"><img src="/media/road.svg" alt="Road" width="160" height="120" /></a>
+          </div>
+        </focsd-lightbox>
+      </section>
+    </main>
+  </body>
+</html>

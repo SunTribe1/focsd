@@ -1,0 +1,60 @@
+---
+title: Own the source (CLI)
+description: Copy Focsd components into your project to change their look freely, and keep getting their fixes.
+---
+
+Most teams use Focsd from npm and theme it with [tokens](/foundations/theming/), component properties and `::part()`. When you want to change a component's markup or CSS outright, copy it into your project with the `focsd` CLI.
+
+```sh
+npx focsd init --install      # focsd.json, plus lit, @focsd-dev/primitives and @focsd-dev/tokens
+npx focsd add button select   # copies src/focsd/focsd-button.js and focsd-select.js
+```
+
+Run `init` in your project's root. The other commands also work from any subfolder: they use the nearest `focsd.json` above it, up to the repository root (the folder with `.git`), and paths they print are relative to that folder. They never use a `focsd.json` in your home folder or above it from a subfolder, and outside a repository they only look upwards while inside your home folder, so run them from the project root there. Running `init` again keeps your `--dir` unless you pass a new one.
+
+Then import your copies where you register components:
+
+```js
+import './src/focsd/focsd-button.js';
+import './src/focsd/focsd-select.js';
+```
+
+## What is copied, and what is not
+
+Only the **styled layer** is copied: the component module (its template styles, parts and variants) and the local modules it imports, which are the modules of its parts (`focsd add tabs` also copies `focsd-tab.js` and `focsd-tab-panel.js`). Shared style rules (buttons, dialogs, fields, listboxes, surfaces and motion) are not copied: they come from `@focsd-dev/primitives/styles/*.js` (for example `@focsd-dev/primitives/styles/field.js`). To change one, copy that module into your project and point the component's import at your copy. Keyboard support, ARIA, focus management and form behavior stay in `@focsd-dev/primitives`, an npm dependency, so accessibility fixes keep arriving with `npm update`, even for copied components.
+
+**Import your copies before `@focsd-dev/components`, or instead of it.** A copy registers the same tag (`focsd-button`), and the first registration of a tag wins: if `@focsd-dev/components` loads first, your copy is ignored.
+
+## Staying up to date
+
+```sh
+npx focsd diff button        # your edits, and what the new version changes
+npx focsd update --all       # bring every copy to this version
+```
+
+`diff` and `update` need the components to work on, or `--all`. `update` compares each file with the copy Focsd delivered (kept in `.focsd/pristine/`):
+
+- files you have not edited are replaced;
+- files you edited are merged with the new version;
+- when a merge conflicts, your file is kept and the new version is written next to it as `<file>.focsd-new` (or use `--merge` for conflict markers);
+- files the new version no longer uses are deleted, unless you edited them: then they are kept, and no longer tracked.
+
+It never overwrites an edit without telling you, and it refuses to go back to an older version unless you pass `--force`. The version in `focsd.json` moves only once every component is updated and every file has landed, so run `update` again after resolving a conflict. Commit `focsd.json` and `.focsd/` so your teammates can update too.
+
+The delivered copies end in `.pristine`, not `.js`, so linters, type checkers and bundlers skip them. If a tool still scans them (Tailwind CSS 4 scans every text file), ignore the folder: `@source not "../.focsd";` in your CSS, `ignores: ['.focsd/']` in ESLint, `"exclude": [".focsd"]` in tsconfig.json. `.focsd/README.md` says the same.
+
+Every path in `focsd.json` must stay inside the project: the CLI refuses absolute paths, `..` and symlinks that lead out of it, so an edited `focsd.json` cannot make it write or delete files elsewhere. The same goes for `focsd.json` itself: the CLI refuses one that is a symlink leading out of the project.
+
+## Commands
+
+| Command | What it does |
+| --- | --- |
+| `init [--dir src/focsd] [--install]` | Create `focsd.json`; optionally install the runtime packages |
+| `init --agent` | Write `AGENTS.md` and `.claude/skills/focsd/SKILL.md` for AI coding agents and print the MCP connect commands. Never overwrites a file that exists |
+| `add <name…> [--overwrite]` | Copy components (`button`, `date-picker`, `focsd-select`) |
+| `add block <name> [--out dir]` | Copy a page block (`dashboard`, `settings`…) into `blocks/<name>/`. Never overwrites; `--overwrite` is refused |
+| `list` | Every component; ✓ marks the ones you added, and the ones they brought along |
+| `list --blocks` | Every block |
+| `diff <name…> \| --all` | Your edits and the new version's changes |
+| `update <name…> \| --all [--merge] [--force]` | Bring copies to this version |
+| `remove <name…>` | Delete copied files you have not edited; edited ones are kept and no longer tracked |

@@ -1,0 +1,36 @@
+{
+  "sys": {
+    "font": {
+      "$type": "fontFamily",
+      "sans": {
+        "$value": [
+          "IBM Plex Sans",
+          "ui-sans-serif",
+          "system-ui",
+          "sans-serif"
+        ]
+      }
+    },
+    "radius": {
+      "$type": "dimension",
+      "control": {
+        "$value": {
+          "value": 2,
+          "unit": "px"
+        }
+      },
+      "surface": {
+        "$value": {
+          "value": 4,
+          "unit": "px"
+        }
+      },
+      "tag": {
+        "$value": {
+          "value": 2,
+          "unit": "px"
+        }
+      }
+    }
+  }
+}

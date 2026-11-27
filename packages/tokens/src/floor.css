@@ -1,0 +1,64 @@
+/* @focsd-dev/tokens floor.css: accessibility floor adopted by every primitive's shadow root.
+   Works without tokens.css (built-in fallbacks). Not themeable away by design. */
+
+/* The ring tokens, composed again in every shadow root: a custom property resolves the var()s inside
+   it where it is declared, so this keeps per-element focus colors (a wrapper that sets
+   --focsd-focus-outer) reaching the ring. tokens.css declares the same values for light DOM. */
+:host {
+  --focsd-focus-ring: 0 0 0 1px var(--focsd-focus-inner, #f4f6f5), 0 0 0 2px var(--focsd-focus-outer, #141a18);
+  --focsd-focus-ring-inset: inset 0 0 0 1px var(--focsd-focus-outer, #141a18), inset 0 0 0 2px var(--focsd-focus-inner, #f4f6f5);
+}
+
+:host(:focus-visible),
+[part~="control"]:focus-visible {
+  outline: 2px solid transparent; /* becomes visible in forced-colors mode if box-shadow is dropped */
+  box-shadow: var(--focsd-focus-ring, 0 0 0 1px var(--focsd-focus-inner, #f4f6f5), 0 0 0 2px var(--focsd-focus-outer, #141a18));
+}
+
+/* Every other focusable element inside a component gets the same ring, at zero specificity so
+   components can still refine it (e.g. inset rings in grid cells). */
+:where(button, a[href], input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid transparent;
+  box-shadow: var(--focsd-focus-ring, 0 0 0 1px var(--focsd-focus-inner, #f4f6f5), 0 0 0 2px var(--focsd-focus-outer, #141a18));
+}
+
+[part~="control"] {
+  min-block-size: var(--focsd-target-min, 24px);
+  min-inline-size: var(--focsd-target-min, 24px);
+}
+
+@media (forced-colors: active) {
+  :host(:focus-visible),
+  [part~="control"]:focus-visible {
+    outline: 3px solid Highlight;
+    outline-offset: 2px;
+    box-shadow: none;
+  }
+}
+
+/* Durations are already 0ms in tokens.css under reduced motion; this clamp covers pages without it.
+   The spinner is exempt: its reduced-motion rule swaps the spin for a slow opacity pulse, the only
+   cue that something is still busy. Every [part~="spinner"] must therefore ship its own
+   reduced-motion rule (checked in packages/components/test/styles.test.mjs). */
+@media (prefers-reduced-motion: reduce) {
+  *:not([part~="spinner"]),
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.focsd-visually-hidden {
+  position: absolute !important;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

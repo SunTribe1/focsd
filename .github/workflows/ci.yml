@@ -1,0 +1,213 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  secrets:
+    name: Secret scan (full history)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+      # Free for personal accounts; an organisation needs GITLEAKS_LICENSE (see RELEASING.md).
+      - uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7 # v2.3.9
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+
+  commits:
+    name: Commit messages
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # Pull requests merge as one squash commit named after the title, so the title and every commit
+    # must follow Conventional Commits (commitlint.config.js).
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Pull request title
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: printf '%s\n' "$TITLE" | pnpm exec commitlint
+      - name: Commits in the pull request
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: pnpm exec commitlint --from "$BASE" --to "$HEAD"
+
+  check:
+    name: Lint, types, unit tests and size budgets
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # pnpm check reads the built custom-elements manifests (the docs catalogue, the screen-reader
+      # checklist, the lit analyzer), which are build output and not committed.
+      - run: pnpm exec turbo run build --filter="./packages/*"
+      - run: pnpm check
+      # Nothing published may depend on a package with a known vulnerability.
+      - run: pnpm audit --prod --audit-level=low
+      # The CLI's smoke test renders a copied component in Chromium.
+      - run: pnpm --filter ./packages/cli exec playwright install --with-deps chromium
+      # Two packages at a time: the timing tests (chart render cost, data grid pipeline) starve when
+      # every package's suite shares the runner's four cores at once.
+      - run: pnpm exec turbo run test --filter="./packages/*" --concurrency=2
+      # The docs site's own unit tests (CSP hashes, sandboxes) are plain node:test files.
+      - run: pnpm --filter @focsd-dev/docs test
+
+  visual:
+    name: Visual regression (Chromium, Linux baselines)
+    # The browser jobs start only once lint, types and unit tests pass: a failure there means a fix
+    # and a new run anyway.
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # The same image as the "Update visual baselines" workflow, so the screenshots match pixel for pixel.
+    container:
+      # v1.63.0-noble (multi-arch index digest); matches @playwright/test 1.63.0.
+      image: mcr.microsoft.com/playwright:v1.63.0-noble@sha256:eff16c30e6f3f4af0a03fa4b706120d5e9b0891c344a27d64559aff5900a4a27
+      # Chromium runs out of shared memory in a container without the host's IPC namespace.
+      options: --ipc=host
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      # Missing baselines fail the job: a skipped visual job would pass with nothing compared.
+      - name: Require the Linux baselines
+        shell: bash
+        run: |
+          if ! compgen -G 'apps/playground/e2e/__screenshots__/linux/*.png' > /dev/null; then
+            echo "::error::No Linux visual baselines are committed. Run Actions → Update visual baselines on this pull request's branch. Without RELEASE_TOKEN its commit starts no CI: push an empty commit (git commit --allow-empty) or close and reopen the PR. Re-running this job only re-tests the old commit."
+            exit 1
+          fi
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec turbo run build --filter="./packages/*"
+      # The image already has the Playwright 1.63.0 browsers.
+      - run: pnpm --filter @focsd-dev/playground test:visual
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: failure()
+        with:
+          name: visual-diffs
+          path: apps/playground/test-results
+
+  coverage:
+    name: End-to-end coverage of the packages (Chromium)
+    needs: check
+    runs-on: ubuntu-latest
+    # About 30 minutes on a hosted runner with coverage on; the limit leaves headroom.
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec turbo run build --filter="./packages/*"
+      - run: pnpm --filter @focsd-dev/playground exec playwright install --with-deps chromium
+      - run: pnpm --filter @focsd-dev/playground coverage
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: e2e-coverage
+          path: apps/playground/coverage
+
+  playground:
+    name: Components in ${{ matrix.label }}
+    needs: check
+    runs-on: ubuntu-latest
+    # One job per engine, in parallel: the three together (about 5,700 tests) ran past an hour.
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { browser: chromium, label: Chromium, projects: --project=chromium --project=chrome-webmcp }
+          - { browser: firefox, label: Firefox, projects: --project=firefox }
+          - { browser: webkit, label: WebKit, projects: --project=webkit }
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec turbo run build --filter="./packages/*"
+      - run: pnpm --filter @focsd-dev/playground exec playwright install --with-deps ${{ matrix.browser }}
+      - run: pnpm --filter @focsd-dev/playground exec playwright test ${{ matrix.projects }}
+      # The token output (themes, densities, forced colours) in the same engine.
+      - run: pnpm --filter @focsd-dev/tokens test:e2e --project=${{ matrix.browser }}
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: failure()
+        with:
+          name: playground-report-${{ matrix.browser }}
+          path: apps/playground/test-results
+          retention-days: 7
+
+  smoke:
+    name: Packed install and SSR hydration (Chromium)
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec turbo run build --filter="./packages/*"
+      - run: pnpm --filter @focsd-dev/playground exec playwright install --with-deps chromium
+      # Pack once, then install the tarballs twice: offline (links the monorepo's third-party deps)
+      # and online (third-party deps from the registry, @focsd-dev/* overridden to the local tarballs).
+      - run: node scripts/smoke/consumer.mjs --offline --online
+      # publint and Are the Types Wrong? on the packed tarballs.
+      - run: node scripts/check-packages.mjs
+      - run: pnpm --filter @focsd-dev/playground exec playwright test --project=chromium e2e/ssr-hydrate.spec.js
+
+  docs:
+    name: Docs site
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @focsd-dev/docs exec playwright install --with-deps chromium firefox webkit
+      - run: pnpm --filter @focsd-dev/docs test:e2e

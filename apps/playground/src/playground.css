@@ -1,0 +1,129 @@
+/* Media queries cannot read custom properties, so the breakpoints live here, in rem so they follow
+   the reader's text size: --pg-bp-phone 30rem (480px), --pg-bp-stack 45rem (720px).
+   Page widths: --pg-main-max is the default column; .pg-w-N narrows a page to N rem. */
+:root {
+  --pg-main-max: 68.75rem;
+  --pg-stack-max: 30rem;
+}
+body {
+  margin: 0;
+  background: var(--focsd-ground);
+  color: var(--focsd-ink);
+  font-family: var(--focsd-font-sans);
+  font-size: var(--focsd-text-body-size);
+  line-height: var(--focsd-text-body-line-height);
+}
+/* The test pages' own plain buttons (not Focsd components) take the theme's colors. Left to the
+   browser, Linux WebKit paints them from the GTK theme, which ignores color-scheme: dark, so they
+   failed contrast in the dark theme there (Safari and the other engines follow the theme). */
+:where(button) {
+  border: var(--focsd-border-width) solid var(--focsd-edge);
+  border-radius: var(--focsd-radius-control);
+  background: var(--focsd-surface);
+  color: var(--focsd-ink);
+  font: inherit;
+}
+.pg-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--focsd-space-4);
+  align-items: end;
+  justify-content: space-between;
+  padding: var(--focsd-space-5);
+  border-block-end: var(--focsd-border-width) solid var(--focsd-edge-quiet);
+  background: var(--focsd-surface);
+}
+.pg-header h1 {
+  margin: 0;
+  font-size: var(--focsd-text-heading-size);
+  letter-spacing: var(--focsd-text-heading-tracking);
+}
+.pg-switches {
+  display: flex;
+  gap: var(--focsd-space-4);
+}
+.pg-switches label {
+  display: grid;
+  gap: var(--focsd-space-1);
+  font-size: var(--focsd-text-label-size);
+  font-weight: var(--focsd-text-label-weight);
+}
+.pg-switches select {
+  min-block-size: var(--focsd-control-height);
+  font: inherit;
+}
+main {
+  display: grid;
+  gap: var(--focsd-space-7);
+  padding: var(--focsd-space-6) var(--focsd-space-5);
+  max-inline-size: var(--pg-main-max);
+}
+section h2 {
+  margin: 0 0 var(--focsd-space-4);
+  font-size: var(--focsd-text-subheading-size);
+}
+.pg-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--focsd-space-3);
+  align-items: center;
+}
+pg-header {
+  display: contents;
+}
+.pg-stack {
+  display: grid;
+  gap: var(--focsd-space-4);
+  max-inline-size: var(--pg-stack-max);
+}
+output {
+  font-family: var(--focsd-font-mono);
+  white-space: pre-wrap;
+}
+@media (max-width: 30rem) {
+  main,
+  .pg-header {
+    padding-inline: var(--focsd-space-4);
+  }
+}
+.pg-target {
+  padding: var(--focsd-space-5);
+  border: var(--focsd-border-width) dashed var(--focsd-edge);
+  border-radius: var(--focsd-radius-surface);
+}
+.pg-shell {
+  display: grid;
+  grid-template-columns: auto 1fr;
+}
+@media (max-width: 45rem) {
+  .pg-shell {
+    grid-template-columns: 1fr;
+  }
+}
+/* Page width modifiers: a single column of N rem, or the full width. */
+.pg-w-18 {
+  max-inline-size: 18rem;
+}
+.pg-w-30 {
+  max-inline-size: 30rem;
+}
+.pg-w-36 {
+  max-inline-size: 36rem;
+}
+.pg-w-40 {
+  max-inline-size: 40rem;
+}
+.pg-w-48 {
+  max-inline-size: 48rem;
+}
+.pg-w-60 {
+  max-inline-size: 60rem;
+}
+.pg-w-none {
+  max-inline-size: none;
+}
+/* A fixed width wide enough for a side label (a field stacks its label below 32rem). */
+.pg-w-field {
+  inline-size: min(48rem, calc(100vw - 3rem));
+  max-inline-size: none;
+}

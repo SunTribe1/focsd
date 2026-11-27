@@ -1,0 +1,16 @@
+import { html } from 'lit';
+
+export const text = html`<button>Save changes</button>`;
+
+export const attributes = html`<input aria-label="Search" placeholder="Type here" title="Find" /><img alt="A cat" src=${url} />`;
+
+export const mixed = html`<span>${count} items</span>`;
+
+export const multiline = html`
+  <div>
+    <p>Fine ${name}</p>
+    <p>
+      Second line of copy
+    </p>
+  </div>
+`;

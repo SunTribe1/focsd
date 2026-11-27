@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Focsd test bench: native parity</title>
+    <script type="module" src="/src/parity.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Native parity"></pg-header>
+    <main id="pg-main" class="pg-stack">
+      <form id="pf" class="pg-stack">
+        <label for="pt-name">External label</label>
+        <focsd-text-field id="pt-name" label="Name" name="name" value="Ada"></focsd-text-field>
+        <focsd-text-field id="pt-ro" label="Account number" name="account" readonly required></focsd-text-field>
+        <focsd-text-field id="pt-aria" label="Visible" aria-label="Override name" aria-describedby="pt-outside-hint"></focsd-text-field>
+        <p id="pt-outside-hint">Described from outside the component.</p>
+        <focsd-textarea id="pt-notes" label="Notes" name="notes"></focsd-textarea>
+        <focsd-number-field id="pt-qty" label="Quantity" name="qty" value="2"></focsd-number-field>
+        <focsd-checkbox id="pt-terms" name="terms" checked>Accept terms</focsd-checkbox>
+        <focsd-switch id="pt-alerts" name="alerts">Alerts</focsd-switch>
+        <focsd-select id="pt-region" label="Region" name="region" value="eu">
+          <focsd-option value="eu">Europe</focsd-option>
+          <focsd-option value="us">Americas</focsd-option>
+        </focsd-select>
+        <focsd-select id="pt-size" label="Size" name="size">
+          <focsd-option value="s">Small</focsd-option>
+          <focsd-option value="m" selected>Medium</focsd-option>
+          <focsd-option value="l" label="Large (L)">Large</focsd-option>
+        </focsd-select>
+        <focsd-select id="pt-langs" label="Languages" name="langs" multiple>
+          <focsd-option value="en" selected>English</focsd-option>
+          <focsd-option value="de">German</focsd-option>
+          <focsd-option value="fr" selected>French</focsd-option>
+        </focsd-select>
+        <focsd-combobox id="pt-country" label="Country" name="country">
+          <focsd-option value="de">Germany</focsd-option>
+          <focsd-option value="fr">France</focsd-option>
+        </focsd-combobox>
+        <focsd-radio-group id="pt-plan" label="Plan" name="plan">
+          <focsd-radio value="a">A</focsd-radio>
+          <focsd-radio value="b">B</focsd-radio>
+        </focsd-radio-group>
+        <focsd-slider id="pt-vol" label="Volume" name="vol" value="40"></focsd-slider>
+        <focsd-rating id="pt-stars" label="Stars" name="stars"></focsd-rating>
+        <focsd-date-picker id="pt-date" label="Date" name="date" locale="en-GB"></focsd-date-picker>
+        <focsd-time-field id="pt-time" label="Time" name="time" hour-cycle="h23"></focsd-time-field>
+        <focsd-file-upload id="pt-file" label="File" name="file"></focsd-file-upload>
+        <focsd-otp-field id="pt-otp" label="Code" name="otp" length="4"></focsd-otp-field>
+        <focsd-toggle-group id="pt-align" label="Align" name="align">
+          <focsd-toggle value="l">Left</focsd-toggle>
+          <focsd-toggle value="r">Right</focsd-toggle>
+        </focsd-toggle-group>
+        <focsd-multi-select id="pt-tags" label="Tags" name="tags">
+          <focsd-option value="a">A</focsd-option>
+          <focsd-option value="b">B</focsd-option>
+        </focsd-multi-select>
+        <focsd-date-range-picker id="pt-range" label="Range" name="range" locale="en-GB"></focsd-date-range-picker>
+        <focsd-button id="pt-submit" type="submit" variant="action">Submit</focsd-button>
+        <focsd-button id="pt-reset" type="reset">Reset</focsd-button>
+        <output id="pt-result"></output>
+      </form>
+      <section class="pg-stack" aria-label="Actions and media">
+        <form id="pf2">
+          <focsd-text-field id="pt2-req" label="Required note" name="req" required></focsd-text-field>
+          <focsd-button
+            id="pt2-save"
+            type="submit"
+            name="op"
+            value="draft"
+            formaction="/drafts"
+            formmethod="post"
+            formnovalidate
+            formtarget="_self"
+            >Save draft</focsd-button
+          >
+          <output id="pt2-result"></output>
+        </form>
+        <focsd-button id="pt-pop-btn" popovertarget="pt-pop">Toggle popover</focsd-button>
+        <div id="pt-pop" popover>Native popover</div>
+        <focsd-icon-button id="pt-cmd-pop" icon="x" label="Hide popover" commandfor="pt-pop" command="hide-popover"></focsd-icon-button>
+        <focsd-button id="pt-cmd-custom" commandfor="pt-cmd-target" command="--refresh">Refresh</focsd-button>
+        <div id="pt-cmd-target">Command target</div>
+        <focsd-button id="pt-cmd-show" commandfor="pt-dlg" command="show-modal">Open dialog</focsd-button>
+        <dialog id="pt-dlg">
+          <p>Native dialog</p>
+          <focsd-button id="pt-dlg-close" commandfor="pt-dlg" command="close" value="done">Done</focsd-button>
+        </dialog>
+        <focsd-link
+          id="pt-link"
+          href="/report.pdf"
+          target="_blank"
+          download="report.pdf"
+          hreflang="en"
+          type="application/pdf"
+          referrerpolicy="no-referrer"
+          ping="/ping"
+          >Report</focsd-link
+        >
+        <focsd-image
+          id="pt-img"
+          src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20'/%3E"
+          srcset="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20'/%3E 1x"
+          sizes="40px"
+          alt="Bar"
+          width="40"
+          height="20"
+          decoding="sync"
+          fetchpriority="high"
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer"
+        ></focsd-image>
+      </section>
+      <section class="pg-stack" aria-label="Overlays and disclosure">
+        <focsd-button id="pt-dialog-open" commandfor="pt-dialog" command="show-modal">Open settings</focsd-button>
+        <focsd-dialog id="pt-dialog" headline="Settings">
+          <p>Settings body</p>
+          <focsd-select id="pt-dialog-select" label="Theme">
+            <focsd-option value="light">Light</focsd-option>
+            <focsd-option value="dark">Dark</focsd-option>
+          </focsd-select>
+          <form id="pt-dialog-form">
+            <focsd-button id="pt-dialog-save" type="submit" formmethod="dialog" value="saved">Save</focsd-button>
+          </form>
+          <focsd-button slot="actions" data-dialog-close value="ok">OK</focsd-button>
+        </focsd-dialog>
+        <focsd-select id="pt-aria-select" aria-label="Country">
+          <focsd-option value="ca">Canada</focsd-option>
+          <focsd-option value="mx">Mexico</focsd-option>
+        </focsd-select>
+        <focsd-link id="pt-rel-link" href="/a" target="_blank" rel="nofollow">Rel link</focsd-link>
+        <focsd-disclosure id="pt-faq1" name="faq" summary="Question one" open>Answer one</focsd-disclosure>
+        <focsd-disclosure id="pt-faq2" name="faq" summary="Question two">Answer two</focsd-disclosure>
+        <focsd-disclosure id="pt-other" summary="Unrelated" open>Stays open</focsd-disclosure>
+        <focsd-accordion-item id="pt-acc1" name="steps" heading="Step one" open>One</focsd-accordion-item>
+        <focsd-accordion-item id="pt-acc2" name="steps" heading="Step two">Two</focsd-accordion-item>
+      </section>
+      <form id="pf3" class="pg-stack" aria-label="Fieldset">
+        <focsd-fieldset id="pt-fs" label="Shipping" name="ship">
+          <focsd-text-field id="pt-fs-text" label="Street" name="street" required></focsd-text-field>
+          <label>Zip <input id="pt-fs-native" name="zip" value="123" /></label>
+          <focsd-checkbox id="pt-fs-gift" name="gift" checked disabled>Gift wrap</focsd-checkbox>
+          <focsd-button id="pt-fs-btn">Check address</focsd-button>
+        </focsd-fieldset>
+      </form>
+    </main>
+  </body>
+</html>

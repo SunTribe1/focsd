@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Badge indicator · Focsd test bench</title>
+    <script>
+      // Runs before the module script defines the element, so the first warning is recorded too.
+      window.__warn = [];
+      const warn = console.warn.bind(console);
+      console.warn = (...args) => {
+        window.__warn.push(args.map(String).join(' '));
+        warn(...args);
+      };
+    </script>
+    <script type="module" src="/src/badge-indicator.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Badge indicator"></pg-header>
+    <main class="pg-stack">
+      <p>
+        <a id="inbox" href="#inbox"
+          >Inbox<focsd-badge id="b1" count="3" label="unread"><focsd-icon name="info"></focsd-icon></focsd-badge
+        ></a>
+      </p>
+      <p>
+        <focsd-button id="msgs"
+          ><focsd-badge id="b2" count="120" label="unread"><focsd-icon name="menu"></focsd-icon></focsd-badge>Messages</focsd-button
+        >
+      </p>
+      <p>
+        <focsd-badge id="b3" dot label="Online"><focsd-avatar name="Ada Lovelace"></focsd-avatar></focsd-badge>
+        <focsd-badge id="b4" dot><focsd-avatar name="Grace Hopper"></focsd-avatar></focsd-badge>
+        <focsd-badge id="b5" count="0" label="unread"><focsd-avatar name="Alan Turing"></focsd-avatar></focsd-badge>
+      </p>
+      <p><focsd-badge id="plain" tone="positive">Active</focsd-badge></p>
+    </main>
+  </body>
+</html>

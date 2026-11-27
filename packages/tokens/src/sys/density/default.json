@@ -1,0 +1,54 @@
+{
+  "sys": {
+    "control": {
+      "height": {
+        "$type": "dimension",
+        "$value": {
+          "value": 36,
+          "unit": "px"
+        }
+      },
+      "indicator": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1,
+          "unit": "rem"
+        }
+      },
+      "height-inner": {
+        "$type": "dimension",
+        "$description": "Buttons inside a control (clear, step, toolbar): the control height minus 8px.",
+        "$value": {
+          "value": 28,
+          "unit": "px"
+        }
+      }
+    },
+    "text": {
+      "body": {
+        "size": {
+          "$type": "dimension",
+          "$value": {
+            "value": 0.9375,
+            "unit": "rem"
+          }
+        }
+      },
+      "small": {
+        "size": {
+          "$type": "dimension",
+          "$value": {
+            "value": 0.875,
+            "unit": "rem"
+          }
+        }
+      }
+    },
+    "space": {
+      "inline-control": {
+        "$type": "dimension",
+        "$value": "{ref.space.4}"
+      }
+    }
+  }
+}

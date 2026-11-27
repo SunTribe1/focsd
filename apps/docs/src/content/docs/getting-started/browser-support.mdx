@@ -1,0 +1,37 @@
+---
+title: Browser support
+description: Which browsers Focsd supports, how it is tested, and the platform features it relies on.
+---
+
+Focsd supports the **latest two versions** of Chrome, Edge, Firefox and Safari, on desktop and on phones and tablets. Every change is tested in Chromium, Firefox and WebKit (the engine of Safari) before it is merged.
+
+## Platform features Focsd relies on
+
+| Feature | Used for | Chrome / Edge | Firefox | Safari |
+| --- | --- | --- | --- | --- |
+| Custom elements and shadow DOM | Every component | ✓ | ✓ | ✓ |
+| `ElementInternals` (form-associated elements) | Form controls submit, validate and reset like native ones | 77+ | 93+ | 16.4+ |
+| Popover API | Menus, popovers, tooltips, hover cards | 114+ | 125+ | 17+ |
+| `<dialog>` | Dialogs, alert dialogs, drawers, bottom sheets | 37+ | 98+ | 15.4+ |
+| CSS anchor positioning | Placing popups next to their trigger | 125+ | yes (tested in 155) | 26+ |
+| CSS masonry (`display: grid-lanes`) | `focsd-masonry` (optional: a built-in layout is used otherwise) | not yet | not yet | 26+ |
+| `EyeDropper` | The color picker's "Pick color from screen" (hidden where missing) | 95+ | not yet | not yet |
+
+Where an enhancement is missing, the component still works: masonry falls back to its own layout, and the eyedropper button is not shown.
+
+## Content Security Policy
+
+Focsd works under a strict style policy: `style-src 'self'`, with no `'unsafe-inline'`. Component styles are constructed stylesheets (`adoptedStyleSheets`), and positions and sizes are set through the CSSOM (`element.style.setProperty`). A policy blocks neither. An end-to-end test loads the playground under this policy in Chromium, Firefox and WebKit. It checks that no component on any playground page breaks the policy, and that progress bars, meters, sliders, splitters, trees, images, scroll areas, data grid columns and popups, and chart tooltips keep their size and position.
+
+Server-side rendering is the exception, in two ways, because server-rendered HTML cannot use constructed stylesheets or the CSSOM:
+
+- Each server-rendered component carries its styles in a `<style>` element inside its declarative shadow root. `style-src 'self'` blocks these. Allow them with `style-src-elem`: give the elements a nonce (`style-src-elem 'self' 'nonce-…'`) or allow `'unsafe-inline'`. Without that, the page shows unstyled components until they hydrate.
+- Positions and sizes are written as `style` attributes. Add `style-src-attr 'unsafe-inline'` to keep them. Without it, the browser ignores them, and positions and sizes apply when each component first updates in the browser.
+
+## Not supported
+
+Internet Explorer and the legacy (pre-Chromium) Edge are not supported. Focsd does not ship polyfills. Every supported browser has the required features above; CSS masonry and `EyeDropper` are optional enhancements.
+
+## Assistive technology
+
+Components follow the WAI-ARIA Authoring Practices and are checked automatically with axe in light, dark and high-contrast themes. They are designed for VoiceOver (macOS and iOS), NVDA and JAWS (Windows) and TalkBack (Android); the manual check with each is still to come: see [Accessibility](/foundations/accessibility/).

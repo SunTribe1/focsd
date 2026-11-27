@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Progress ring · Focsd test bench</title>
+    <script type="module" src="/src/progress-ring.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Progress ring"></pg-header>
+    <main class="pg-stack">
+      <focsd-progress id="r1" variant="ring" label="Upload" value="40" show-value></focsd-progress>
+      <focsd-progress id="r2" variant="ring" label="Syncing" indeterminate></focsd-progress>
+      <focsd-progress id="r3" variant="ring" label="Small" value="70" style="--focsd-progress-ring-size: 1.5rem"></focsd-progress>
+      <focsd-progress id="bar" label="Export" value="60"></focsd-progress>
+    </main>
+  </body>
+</html>

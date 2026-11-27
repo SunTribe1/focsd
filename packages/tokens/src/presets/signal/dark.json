@@ -1,0 +1,52 @@
+{
+  "sys": {
+    "color": {
+      "$type": "color",
+      "ground": {
+        "$value": "{ref.color.signal.grey.19}"
+      },
+      "focus-inner": {
+        "$value": "{ref.color.signal.grey.19}"
+      },
+      "surface": {
+        "$value": "{ref.color.signal.grey.23}"
+      },
+      "surface-sunk": {
+        "$value": "{ref.color.signal.grey.16}"
+      },
+      "surface-raised": {
+        "$value": "{ref.color.signal.grey.23}"
+      },
+      "ink": {
+        "$value": "{ref.color.signal.grey.94}"
+      },
+      "focus-outer": {
+        "$value": "{ref.color.signal.grey.94}"
+      },
+      "ink-muted": {
+        "$value": "{ref.color.signal.grey.75}"
+      },
+      "edge": {
+        "$value": "{ref.color.signal.grey.57}"
+      },
+      "edge-quiet": {
+        "$value": "{ref.color.signal.grey.32}"
+      },
+      "action": {
+        "$value": "{ref.color.signal.amber.82}"
+      },
+      "action-hover": {
+        "$value": "{ref.color.signal.amber.86}"
+      },
+      "action-press": {
+        "$value": "{ref.color.signal.amber.76}"
+      },
+      "on-action": {
+        "$value": "{ref.color.signal.amber.20}"
+      },
+      "route": {
+        "$value": "{ref.color.signal.blue.78}"
+      }
+    }
+  }
+}

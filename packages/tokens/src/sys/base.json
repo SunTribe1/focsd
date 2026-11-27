@@ -1,0 +1,252 @@
+{
+  "sys": {
+    "font": {
+      "$type": "fontFamily",
+      "sans": {
+        "$value": "{ref.font.atkinson-next}"
+      },
+      "mono": {
+        "$value": "{ref.font.atkinson-mono}"
+      }
+    },
+    "text": {
+      "display": {
+        "size": {
+          "$value": "clamp(2.25rem, 1.6rem + 2.2vw, 3.25rem)"
+        },
+        "line-height": {
+          "$type": "number",
+          "$value": 1.1
+        },
+        "weight": {
+          "$type": "fontWeight",
+          "$value": 800
+        },
+        "tracking": {
+          "$type": "dimension",
+          "$value": {
+            "value": -0.02,
+            "unit": "em"
+          }
+        }
+      },
+      "heading": {
+        "size": {
+          "$type": "dimension",
+          "$value": {
+            "value": 1.875,
+            "unit": "rem"
+          }
+        },
+        "line-height": {
+          "$type": "number",
+          "$value": 1.15
+        },
+        "weight": {
+          "$type": "fontWeight",
+          "$value": 750
+        },
+        "tracking": {
+          "$type": "dimension",
+          "$value": {
+            "value": -0.02,
+            "unit": "em"
+          }
+        }
+      },
+      "subheading": {
+        "size": {
+          "$type": "dimension",
+          "$value": {
+            "value": 1.375,
+            "unit": "rem"
+          }
+        },
+        "line-height": {
+          "$type": "number",
+          "$value": 1.2
+        },
+        "weight": {
+          "$type": "fontWeight",
+          "$value": 700
+        },
+        "tracking": {
+          "$type": "dimension",
+          "$value": {
+            "value": -0.01,
+            "unit": "em"
+          }
+        }
+      },
+      "body": {
+        "line-height": {
+          "$type": "number",
+          "$value": 1.55
+        },
+        "weight": {
+          "$type": "fontWeight",
+          "$value": 400
+        },
+        "tracking": {
+          "$type": "dimension",
+          "$value": {
+            "value": 0,
+            "unit": "em"
+          }
+        }
+      },
+      "small": {
+        "line-height": {
+          "$type": "number",
+          "$value": 1.5
+        },
+        "weight": {
+          "$type": "fontWeight",
+          "$value": 400
+        },
+        "tracking": {
+          "$type": "dimension",
+          "$value": {
+            "value": 0,
+            "unit": "em"
+          }
+        }
+      },
+      "label": {
+        "size": {
+          "$type": "dimension",
+          "$value": {
+            "value": 0.875,
+            "unit": "rem"
+          }
+        },
+        "line-height": {
+          "$type": "number",
+          "$value": 1.4
+        },
+        "weight": {
+          "$type": "fontWeight",
+          "$value": 600
+        },
+        "tracking": {
+          "$type": "dimension",
+          "$value": {
+            "value": 0,
+            "unit": "em"
+          }
+        }
+      }
+    },
+    "space": {
+      "$type": "dimension",
+      "1": {
+        "$value": "{ref.space.1}"
+      },
+      "2": {
+        "$value": "{ref.space.2}"
+      },
+      "3": {
+        "$value": "{ref.space.3}"
+      },
+      "4": {
+        "$value": "{ref.space.4}"
+      },
+      "5": {
+        "$value": "{ref.space.5}"
+      },
+      "6": {
+        "$value": "{ref.space.6}"
+      },
+      "7": {
+        "$value": "{ref.space.7}"
+      },
+      "8": {
+        "$value": "{ref.space.8}"
+      }
+    },
+    "radius": {
+      "$type": "dimension",
+      "control": {
+        "$value": {
+          "value": 4,
+          "unit": "px"
+        }
+      },
+      "surface": {
+        "$value": {
+          "value": 6,
+          "unit": "px"
+        }
+      },
+      "tag": {
+        "$value": {
+          "value": 3,
+          "unit": "px"
+        }
+      }
+    },
+    "target": {
+      "min": {
+        "$type": "dimension",
+        "$value": {
+          "value": 24,
+          "unit": "px"
+        }
+      }
+    },
+    "duration": {
+      "$type": "duration",
+      "quick": {
+        "$value": "{ref.duration.100}"
+      },
+      "base": {
+        "$value": "{ref.duration.160}"
+      },
+      "slow": {
+        "$value": "{ref.duration.240}"
+      }
+    },
+    "ease": {
+      "$type": "cubicBezier",
+      "enter": {
+        "$value": "{ref.ease.out}"
+      },
+      "exit": {
+        "$value": "{ref.ease.in}"
+      },
+      "move": {
+        "$value": "{ref.ease.in-out}"
+      }
+    },
+    "layer": {
+      "$type": "number",
+      "sticky": {
+        "$description": "Sticky headers and rails inside the page flow.",
+        "$value": 10
+      },
+      "popover": {
+        "$value": 100
+      },
+      "dialog": {
+        "$value": 200
+      },
+      "toast": {
+        "$value": 300
+      },
+      "skip-link": {
+        "$description": "The skip link: above every other layer while it has focus.",
+        "$value": 400
+      }
+    },
+    "selection-bar": {
+      "width": {
+        "$type": "dimension",
+        "$description": "The inline-start bar that marks a selected option, row or tab.",
+        "$value": {
+          "value": 3,
+          "unit": "px"
+        }
+      }
+    }
+  }
+}

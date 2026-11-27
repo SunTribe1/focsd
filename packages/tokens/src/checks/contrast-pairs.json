@@ -1,0 +1,66 @@
+{
+  "pairs": [
+    {
+      "fg": ["ink", "ink-muted", "route", "positive", "caution", "critical"],
+      "bg": ["ground", "surface"],
+      "min": 4.5
+    },
+    {
+      "fg": ["ink"],
+      "bg": ["surface-sunk", "surface-raised", "positive-tint", "caution-tint", "critical-tint"],
+      "min": 4.5
+    },
+    {
+      "fg": ["ink-muted", "route"],
+      "bg": ["surface-sunk", "surface-raised"],
+      "min": 4.5
+    },
+    {
+      "fg": ["positive"],
+      "bg": ["positive-tint"],
+      "min": 4.5
+    },
+    {
+      "fg": ["caution"],
+      "bg": ["caution-tint"],
+      "min": 4.5
+    },
+    {
+      "fg": ["critical"],
+      "bg": ["critical-tint"],
+      "min": 4.5
+    },
+    {
+      "fg": ["on-action"],
+      "bg": ["action", "action-hover", "action-press"],
+      "min": 4.5
+    },
+    {
+      "fg": ["action"],
+      "bg": ["ground", "surface"],
+      "min": 3
+    },
+    {
+      "fg": ["edge"],
+      "bg": ["ground", "surface", "surface-sunk", "surface-raised"],
+      "min": 3
+    },
+    {
+      "fg": ["critical"],
+      "bg": ["surface"],
+      "min": 3
+    },
+    {
+      "fg": ["focus-outer"],
+      "bg": ["focus-inner"],
+      "min": 3
+    }
+  ],
+  "anyOf": [
+    {
+      "fg": ["focus-outer", "focus-inner"],
+      "bg": ["ground", "surface"],
+      "min": 3
+    }
+  ]
+}

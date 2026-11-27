@@ -1,0 +1,4 @@
+# --no-stash: no backup entry on the stash stack, which every worktree of this repo shares (parallel
+# checkouts must not touch each other's stashes). Partly staged files are still protected: lint-staged
+# hides their unstaged hunks with a patch file in .git/lint-staged instead.
+pnpm exec lint-staged --no-stash

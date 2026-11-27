@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Signature pad · Focsd test bench</title>
+    <script type="module" src="/src/signature.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Signature pad"></pg-header>
+    <main class="pg-stack">
+      <section class="pg-stack" aria-labelledby="sign-heading">
+        <h2 id="sign-heading">Sign the agreement</h2>
+        <form id="sign-form" class="pg-stack">
+          <focsd-signature-pad
+            id="pad"
+            label="Signature"
+            name="signature"
+            hint="Draw with a mouse, finger or pen, or choose Type instead."
+            required
+          ></focsd-signature-pad>
+          <div class="pg-row">
+            <focsd-button type="submit" variant="action">Submit</focsd-button>
+            <focsd-button type="reset">Reset</focsd-button>
+          </div>
+        </form>
+        <output id="out" for="pad"></output>
+      </section>
+      <section class="pg-stack" aria-labelledby="typed-heading">
+        <h2 id="typed-heading">Typed, in a set color</h2>
+        <focsd-signature-pad
+          id="typed"
+          label="Witness"
+          name="witness"
+          typed
+          typed-name="Ada Lovelace"
+          pen-color="#1d3a8a"
+        ></focsd-signature-pad>
+      </section>
+      <section class="pg-stack" aria-labelledby="disabled-heading">
+        <h2 id="disabled-heading">Disabled</h2>
+        <focsd-signature-pad id="off" label="Approver" name="approver" disabled></focsd-signature-pad>
+      </section>
+    </main>
+  </body>
+</html>

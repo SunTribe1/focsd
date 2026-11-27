@@ -1,0 +1,157 @@
+{
+  "sys": {
+    "color": {
+      "$type": "color",
+      "ground": {
+        "$value": "{ref.color.graphite.100}"
+      },
+      "surface": {
+        "$value": "{ref.color.graphite.100}"
+      },
+      "surface-sunk": {
+        "$value": "{ref.color.graphite.100}"
+      },
+      "surface-raised": {
+        "$value": "{ref.color.graphite.100}"
+      },
+      "ink": {
+        "$value": "{ref.color.contrast.black}"
+      },
+      "ink-muted": {
+        "$value": "{ref.color.contrast.black}"
+      },
+      "edge": {
+        "$value": "{ref.color.contrast.black}"
+      },
+      "edge-quiet": {
+        "$value": "{ref.color.contrast.black}"
+      },
+      "action": {
+        "$value": "{ref.color.contrast.black}"
+      },
+      "action-hover": {
+        "$value": "{ref.color.contrast.black}"
+      },
+      "action-press": {
+        "$value": "{ref.color.contrast.black}"
+      },
+      "on-action": {
+        "$value": "{ref.color.graphite.100}"
+      },
+      "route": {
+        "$value": "{ref.color.contrast.navy}"
+      },
+      "positive": {
+        "$value": "{ref.color.contrast.green}"
+      },
+      "positive-tint": {
+        "$value": "{ref.color.graphite.100}"
+      },
+      "caution": {
+        "$value": "{ref.color.contrast.amber}"
+      },
+      "caution-tint": {
+        "$value": "{ref.color.graphite.100}"
+      },
+      "critical": {
+        "$value": "{ref.color.contrast.red}"
+      },
+      "critical-tint": {
+        "$value": "{ref.color.graphite.100}"
+      },
+      "focus-outer": {
+        "$value": "{ref.color.contrast.black}",
+        "$description": "Focus ring color: the ink, so it contrasts with any ground or surface."
+      },
+      "focus-inner": {
+        "$value": "{ref.color.graphite.100}",
+        "$description": "Focus ring gap: the page ground, between the element and the ring."
+      },
+      "scrim": {
+        "$value": "{ref.color.overlay.black-75}"
+      },
+      "hatch": {
+        "$value": "{ref.color.overlay.black-25}"
+      },
+      "info": {
+        "$value": "{ref.color.contrast.navy}"
+      },
+      "info-tint": {
+        "$value": "{ref.color.graphite.100}"
+      },
+      "accent-1": {
+        "$value": "{ref.color.contrast.black}"
+      },
+      "accent-1-tint": {
+        "$value": "{ref.color.graphite.100}"
+      },
+      "accent-2": {
+        "$value": "{ref.color.contrast.black}"
+      },
+      "accent-2-tint": {
+        "$value": "{ref.color.graphite.100}"
+      },
+      "accent-3": {
+        "$value": "{ref.color.contrast.black}"
+      },
+      "accent-3-tint": {
+        "$value": "{ref.color.graphite.100}"
+      },
+      "accent-4": {
+        "$value": "{ref.color.contrast.black}"
+      },
+      "accent-4-tint": {
+        "$value": "{ref.color.graphite.100}"
+      },
+      "accent-5": {
+        "$value": "{ref.color.contrast.black}"
+      },
+      "accent-5-tint": {
+        "$value": "{ref.color.graphite.100}"
+      },
+      "accent-6": {
+        "$value": "{ref.color.contrast.black}"
+      },
+      "accent-6-tint": {
+        "$value": "{ref.color.graphite.100}"
+      },
+      "accent-7": {
+        "$value": "{ref.color.contrast.black}"
+      },
+      "accent-7-tint": {
+        "$value": "{ref.color.graphite.100}"
+      },
+      "accent-8": {
+        "$value": "{ref.color.contrast.black}"
+      },
+      "accent-8-tint": {
+        "$value": "{ref.color.graphite.100}"
+      }
+    },
+    "focus": {
+      "ring": {
+        "$description": "The focus ring (DESIGN.md): a 1px gap in the ground color and a 1px ink ring. Redeclared per theme so a themed subtree resolves its own colors.",
+        "$value": "0 0 0 1px var(--focsd-focus-inner), 0 0 0 2px var(--focsd-focus-outer)"
+      },
+      "ring-inset": {
+        "$description": "The same ring drawn inside the element, for rows and cells that sit flush in a scrolling container.",
+        "$value": "inset 0 0 0 1px var(--focsd-focus-outer), inset 0 0 0 2px var(--focsd-focus-inner)"
+      }
+    },
+    "border": {
+      "width": {
+        "$type": "dimension",
+        "$value": {
+          "value": 2,
+          "unit": "px"
+        }
+      }
+    },
+    "shadow": {
+      "overlay": {
+        "$type": "shadow",
+        "$value": []
+      }
+    }
+  }
+}

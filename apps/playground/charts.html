@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Charts · Focsd test bench</title>
+    <script type="module" src="/src/charts.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Charts"></pg-header>
+    <main class="pg-stack pg-w-48">
+      <focsd-chart id="bar" label="Revenue by quarter" x="quarter"></focsd-chart>
+      <focsd-chart id="line" type="line" label="Weekly active users" x="week"></focsd-chart>
+      <focsd-chart id="donut" type="donut" label="Traffic sources" x="source"></focsd-chart>
+      <!-- Wave 18b: area, stacked bars, scatter and a mirrored plot. -->
+      <focsd-chart id="area" type="area" label="Sales by channel" x="month"></focsd-chart>
+      <focsd-chart id="stacked-area" type="area" stacked label="Sales by channel, stacked" x="month"></focsd-chart>
+      <focsd-chart id="stacked" type="bar" stacked label="Revenue by quarter, stacked" x="quarter"></focsd-chart>
+      <focsd-chart id="scatter" type="scatter" label="Response time by load" x="load"></focsd-chart>
+      <section dir="rtl">
+        <focsd-chart id="mirrored" type="bar" mirror label="Revenue by quarter, mirrored" x="quarter"></focsd-chart>
+      </section>
+    </main>
+  </body>
+</html>

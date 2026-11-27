@@ -1,0 +1,35 @@
+{
+  "name": "@focsd-dev/playground",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5174 --strictPort",
+    "test:e2e": "playwright test --project=chromium --project=firefox --project=webkit --project=chrome-webmcp",
+    "coverage": "COVERAGE=1 playwright test --project=chromium && node scripts/check-coverage.mjs",
+    "test:visual": "playwright test --project=visual"
+  },
+  "dependencies": {
+    "@focsd-dev/ai": "workspace:*",
+    "@focsd-dev/charts": "workspace:*",
+    "@focsd-dev/components": "workspace:*",
+    "@focsd-dev/data-grid": "workspace:*",
+    "@focsd-dev/editor": "workspace:*",
+    "@focsd-dev/primitives": "workspace:*",
+    "@focsd-dev/react": "workspace:*",
+    "@focsd-dev/tokens": "workspace:*",
+    "@focsd-dev/webmcp": "workspace:*",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@fortawesome/free-solid-svg-icons": "7.3.1",
+    "@lit-labs/ssr": "4.1.0",
+    "@lit-labs/ssr-client": "1.1.8",
+    "@playwright/test": "1.63.0",
+    "lit": "3.3.3",
+    "lucide": "1.52.0",
+    "monocart-coverage-reports": "2.13.2",
+    "vite": "8.3.8"
+  }
+}

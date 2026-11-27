@@ -1,0 +1,4 @@
+# Cloudflare Pages redirects (https://developers.cloudflare.com/pages/configuration/redirects/).
+# The site playground became the components gallery (2026-11-26).
+/playground  /components/  301
+/playground/*  /components/  301

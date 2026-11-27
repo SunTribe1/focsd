@@ -1,0 +1,23 @@
+{
+  "name": "dashboard",
+  "title": "Dashboard",
+  "description": "An app shell with a sidebar, four stat tiles, a revenue chart and a sortable, paginated orders grid.",
+  "files": ["index.html", "dashboard.js", "dashboard.css"],
+  "packages": ["@focsd-dev/components", "@focsd-dev/charts", "@focsd-dev/data-grid", "@focsd-dev/tokens"],
+  "elements": [
+    "focsd-app-shell",
+    "focsd-avatar",
+    "focsd-chart",
+    "focsd-data-grid",
+    "focsd-footer",
+    "focsd-header",
+    "focsd-icon-button",
+    "focsd-menu",
+    "focsd-menu-item",
+    "focsd-sidebar",
+    "focsd-sidebar-item",
+    "focsd-sparkline",
+    "focsd-stat",
+    "focsd-theme-toggle"
+  ]
+}

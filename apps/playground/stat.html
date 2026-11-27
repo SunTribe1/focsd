@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stat, animated number and status dot · Focsd test bench</title>
+    <script type="module" src="/src/stat.js"></script>
+    <style>
+      .stat-layout {
+        display: grid;
+        gap: var(--focsd-space-6);
+        max-inline-size: 64rem;
+      }
+      .stat-layout section {
+        display: grid;
+        gap: var(--focsd-space-3);
+      }
+      .stat-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+        gap: var(--focsd-space-4);
+      }
+      .stat-dots {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--focsd-space-4);
+        align-items: center;
+      }
+      .stat-bars {
+        display: block;
+        inline-size: 100%;
+        block-size: 2rem;
+        fill: var(--focsd-route);
+      }
+    </style>
+  </head>
+  <body>
+    <pg-header heading="Stat, animated number and status dot"></pg-header>
+    <main class="stat-layout">
+      <section aria-labelledby="stats-heading">
+        <h2 id="stats-heading">Stat tiles</h2>
+        <div class="stat-row" id="stat-row">
+          <focsd-stat
+            id="revenue"
+            label="Revenue"
+            value="48200"
+            format='{"style":"currency","currency":"USD","maximumFractionDigits":0}'
+            delta="0.12"
+          >
+            <svg slot="chart" class="stat-bars" viewBox="0 0 60 20" preserveAspectRatio="none" aria-hidden="true">
+              <rect x="0" y="12" width="8" height="8"></rect>
+              <rect x="13" y="9" width="8" height="11"></rect>
+              <rect x="26" y="10" width="8" height="10"></rect>
+              <rect x="39" y="5" width="8" height="15"></rect>
+              <rect x="52" y="2" width="8" height="18"></rect>
+            </svg>
+            <span slot="footer">Updated 15 March 2026</span>
+          </focsd-stat>
+          <focsd-stat
+            id="churn"
+            label="Churn"
+            value="0.034"
+            format='{"style":"percent","maximumFractionDigits":1}'
+            delta="0.4"
+            good="down"
+            period="last month"
+          ></focsd-stat>
+          <focsd-stat id="tickets" label="Open tickets" value="128" delta="0" period="yesterday"></focsd-stat>
+          <focsd-stat id="orders" label="Orders" value="1240" delta="-0.031" href="#stats-heading"></focsd-stat>
+          <focsd-stat id="uptime" label="Status" value="All systems normal"></focsd-stat>
+        </div>
+      </section>
+      <section aria-labelledby="animate-heading">
+        <h2 id="animate-heading">Animated number</h2>
+        <div class="stat-row">
+          <focsd-stat id="visitors" label="Visitors today" value="980" animate delta="0.05"></focsd-stat>
+        </div>
+        <p>
+          Balance:
+          <focsd-animated-number id="balance" value="1250.5" format='{"style":"currency","currency":"EUR"}'></focsd-animated-number>
+        </p>
+        <div><focsd-button id="bump">Add 500 visitors</focsd-button></div>
+      </section>
+      <section aria-labelledby="dots-heading">
+        <h2 id="dots-heading">Status dots</h2>
+        <div class="stat-dots" id="dots">
+          <focsd-status-dot status="online" label-visible></focsd-status-dot>
+          <focsd-status-dot status="offline" label-visible></focsd-status-dot>
+          <focsd-status-dot status="busy" label-visible></focsd-status-dot>
+          <focsd-status-dot status="warning" label-visible></focsd-status-dot>
+          <focsd-status-dot status="error" label-visible></focsd-status-dot>
+          <focsd-status-dot status="neutral" label-visible></focsd-status-dot>
+        </div>
+        <div class="stat-dots">
+          <focsd-status-dot id="pulse" status="online" pulse label="Ada Okafor is online"></focsd-status-dot>
+          <span>Ada Okafor</span>
+        </div>
+      </section>
+      <section aria-labelledby="rtl-heading" dir="rtl">
+        <h2 id="rtl-heading">Right to left</h2>
+        <div class="stat-row">
+          <focsd-stat id="rtl-stat" label="New accounts" value="312" delta="0.08"></focsd-stat>
+        </div>
+        <focsd-status-dot status="busy" label-visible></focsd-status-dot>
+      </section>
+    </main>
+  </body>
+</html>

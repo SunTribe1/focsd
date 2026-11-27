@@ -1,0 +1,75 @@
+---
+title: Testing with screen readers
+description: How Focsd checks what screen readers announce, automatically on every change and with a planned manual pass before each release, and how to do the same in your app.
+---
+
+Focsd tests accessibility in two layers. Automated tests run on every change in Chromium, Firefox and WebKit. Before each release, a person checks the components with a screen reader, because no tool can tell you how NVDA or VoiceOver speaks a page. The first of these passes is still to come (see [Accessibility conformance](/guides/accessibility-conformance/)).
+
+## What runs automatically
+
+| Check | What it proves | Tool |
+| --- | --- | --- |
+| Accessibility tree | Each control's role, name, value and states (expanded, checked, selected, invalid), as screen readers receive them, including inside shadow DOM | Playwright [ARIA snapshots](https://playwright.dev/docs/aria-snapshots) and accessible-name and role assertions |
+| Announcements | What live regions say and when: toasts, counters, "already added", validation messages | A recorder that watches every live region, including in shadow roots |
+| Keyboard | Every key in each component's keyboard table, and where focus goes | Playwright keyboard scripts |
+| WCAG 2.2 AA rules | Contrast, names, ARIA validity, in light, dark and high-contrast themes | [axe-core](https://github.com/dequelabs/axe-core) |
+
+We tried a browser-based "virtual screen reader" and left it out: it reads only the light DOM, so every Focsd control came out without its role.
+
+### Test your own screens the same way
+
+An ARIA snapshot describes the accessibility tree in YAML. It fails when a role, name or state changes:
+
+```js
+import { expect, test } from '@playwright/test';
+
+test('the settings form names its controls', async ({ page }) => {
+  await page.goto('/settings');
+  await expect(page.getByRole('form', { name: 'Workspace settings' })).toMatchAriaSnapshot(`
+    - textbox "Workspace name"
+    - button "Data region: EU (Frankfurt)" [expanded=false]
+    - switch "Weekly digest" [checked]
+    - button "Save changes"
+  `);
+});
+```
+
+To check announcements, observe live regions before the page loads. Focsd's recorder is in the repository at `apps/playground/e2e/fixtures/announcements.js`; copy it into your tests:
+
+```js
+import { expectAnnounced, recordAnnouncements } from './announcements.js';
+
+test('saving announces the result', async ({ page }) => {
+  await recordAnnouncements(page);
+  await page.goto('/settings');
+  await page.getByRole('button', { name: 'Save changes' }).click();
+  await expectAnnounced(page, 'Settings saved');
+});
+```
+
+## The manual pass
+
+Before each release, someone works through the [screen reader checklist](https://github.com/SunTribe1/focsd/blob/main/docs/a11y/screen-reader-checklist.md). No pass has been recorded yet; the first is still to come. It is generated from each component's accessibility notes and keyboard table on these docs pages, so it always covers every component.
+
+Use at least one desktop and one mobile pairing each release, and rotate the rest:
+
+| Screen reader | Browser | Platform |
+| --- | --- | --- |
+| NVDA | Firefox or Chrome | Windows |
+| JAWS | Chrome | Windows |
+| VoiceOver | Safari | macOS |
+| VoiceOver | Safari | iOS |
+| TalkBack | Chrome | Android |
+
+For each component:
+
+1. Tab to it and listen. Its role, name, value and state are spoken, and nothing is read twice.
+2. Move with the browse or virtual cursor too (NVDA browse mode, VoiceOver VO + arrow keys), not only with Tab.
+3. Press each key in its keyboard table and listen for the change to be announced.
+4. Check each accessibility note by ear.
+
+Record pass or fail with the screen reader, the browser and what was spoken. A transcript of the speech makes a failure easy to reproduce.
+
+## Report a problem
+
+If a Focsd component announces something wrong or misses an announcement, [open an issue](https://github.com/SunTribe1/focsd/issues) with the component, the screen reader and browser with their versions, the steps, and what was spoken compared with what you expected.

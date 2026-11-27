@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Focsd test bench: display and feedback</title>
+    <script type="module" src="/src/display.js"></script>
+  </head>
+  <body>
+    <focsd-skip-link href="#pg-main">Skip to content</focsd-skip-link>
+    <pg-header heading="Display and feedback"></pg-header>
+    <main id="pg-main" tabindex="-1">
+      <section aria-labelledby="sec-badge">
+        <h2 id="sec-badge">Badge and tag</h2>
+        <div class="pg-row" id="badges">
+          <focsd-badge>Draft</focsd-badge>
+          <focsd-badge tone="positive">Active</focsd-badge>
+          <focsd-badge tone="caution">Expiring</focsd-badge>
+          <focsd-badge tone="critical">Overdue</focsd-badge>
+          <focsd-badge tone="info">Beta</focsd-badge>
+        </div>
+        <div class="pg-row" id="tags">
+          <focsd-tag>Research</focsd-tag>
+          <focsd-tag removable id="tag-design">Design</focsd-tag>
+        </div>
+        <p>Removed: <output id="tag-removed">none</output></p>
+      </section>
+
+      <section aria-labelledby="sec-card">
+        <h2 id="sec-card">Card and separator</h2>
+        <focsd-card id="card">
+          <h3 slot="header">Northwind Studio</h3>
+          <p>26 projects, 9 members.</p>
+          <focsd-separator></focsd-separator>
+          <p slot="footer">Updated 3 October</p>
+        </focsd-card>
+        <div class="pg-row">
+          Left <focsd-separator orientation="vertical" id="sep-v"></focsd-separator> Right
+          <focsd-separator decorative id="sep-d"></focsd-separator>
+        </div>
+      </section>
+
+      <section aria-labelledby="sec-alert">
+        <h2 id="sec-alert">Alert</h2>
+        <div class="pg-stack" id="alerts">
+          <focsd-alert tone="positive" headline="Changes saved">Your workspace name now appears on new invoices.</focsd-alert>
+          <focsd-alert tone="caution" headline="Seat limit almost reached">You are using 9 of 10 seats.</focsd-alert>
+          <focsd-alert tone="critical" headline="Payment failed" live="assertive" id="alert-live"
+            >The card ending 4242 was declined.</focsd-alert
+          >
+          <focsd-alert tone="info" headline="Scheduled maintenance">Sunday 02:00–03:00 UTC.</focsd-alert>
+        </div>
+      </section>
+
+      <section aria-labelledby="sec-avatar">
+        <h2 id="sec-avatar">Avatar</h2>
+        <div class="pg-row">
+          <focsd-avatar name="Amara Okafor" id="av-initials"></focsd-avatar>
+          <focsd-avatar name="Lukas Brandt" src="/does-not-exist.png" id="av-broken"></focsd-avatar>
+          <focsd-avatar-group label="Project members" max="2" id="av-group">
+            <focsd-avatar name="Amara Okafor"></focsd-avatar>
+            <focsd-avatar name="Lukas Brandt"></focsd-avatar>
+            <focsd-avatar name="Priya Raman"></focsd-avatar>
+            <focsd-avatar name="Tomás Herrera"></focsd-avatar>
+          </focsd-avatar-group>
+        </div>
+      </section>
+
+      <section aria-labelledby="sec-progress">
+        <h2 id="sec-progress">Progress, meter and loading</h2>
+        <div class="pg-stack">
+          <focsd-progress id="progress" label="Uploading report.pdf" value="40"></focsd-progress>
+          <focsd-progress id="progress-ind" label="Preparing export" indeterminate></focsd-progress>
+          <focsd-meter
+            id="meter"
+            label="Seats used"
+            value="9"
+            min="0"
+            max="10"
+            high="8"
+            optimum="0"
+            value-text="9 of 10 seats"
+          ></focsd-meter>
+          <div class="pg-row">
+            <focsd-spinner id="spinner"></focsd-spinner><focsd-spinner label="Saving" id="spinner-saving"></focsd-spinner>
+          </div>
+          <div id="skeletons" aria-busy="true">
+            <focsd-skeleton lines="3"></focsd-skeleton><focsd-skeleton shape="circle"></focsd-skeleton>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="sec-text">
+        <h2 id="sec-text">Text utilities</h2>
+        <p id="kbd-line">Press <focsd-kbd>Ctrl</focsd-kbd> + <focsd-kbd>K</focsd-kbd> to search.</p>
+        <p id="links">
+          Read the <focsd-link href="#sec-text">guide</focsd-link> or the
+          <focsd-link href="https://example.com" external>status page</focsd-link>.
+        </p>
+        <p id="vh">Total <focsd-visually-hidden>(including tax)</focsd-visually-hidden> €120</p>
+        <p class="pg-row" id="icons">
+          <focsd-icon name="check"></focsd-icon>
+          <focsd-icon name="alert-triangle" label="Warning"></focsd-icon>
+          <focsd-icon name="search" label="Search"></focsd-icon>
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,102 @@
+---
+import Default from 'starlight-theme-black/overrides/Head.astro';
+import sansLatin from '@focsd-dev/tokens/fonts/atkinson-hyperlegible-next-latin-wght-normal.woff2?url';
+import monoLatin from '@focsd-dev/tokens/fonts/atkinson-hyperlegible-mono-latin-wght-normal.woff2?url';
+import AgentTools from './AgentTools.astro';
+import { components } from '../data/catalogue.js';
+
+const pages = JSON.stringify(components.map((c) => c.slug));
+---
+
+{/* Paint the page background before any stylesheet loads. Without it, Chrome shows its own default dark
+    canvas (#121212) for a moment on every page change, and keeps it in areas it has not repainted yet,
+    which reads as a second, lighter background. Exactly Starlight Black's --background values (oklch,
+    not hex: a rounded hex value is a visibly different shade on wide-gamut displays). */}
+<style is:inline>
+  html { background: oklch(14.5% 0 0); color-scheme: dark; }
+  html[data-theme='light'] { background: oklch(100% 0 0); color-scheme: light; }
+  @media (prefers-color-scheme: light) { html:not([data-theme='dark']) { background: oklch(100% 0 0); color-scheme: light; } }
+</style>
+{/* Hold Chrome's first paint until the page title is parsed. The header, phone menu and sidebar come
+    first in the HTML (about 70% of each page), so without this Chrome paints the header over an empty
+    page and the content pops in a moment later. Browsers without the feature ignore it. */}
+<link rel="expect" href="#_top" blocking="render" />
+<link rel="preload" href={sansLatin} as="font" type="font/woff2" crossorigin />
+<link rel="preload" href={monoLatin} as="font" type="font/woff2" crossorigin />
+<Default />
+<link rel="icon" href="/favicon.ico" sizes="48x48" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+{/* Mirror Starlight's light/dark choice to the Focsd tokens before first paint. */}
+<script is:inline>
+  (() => {
+    const root = document.documentElement;
+
+    const sync = () => {
+      const theme = root.dataset.theme === 'light' ? 'light' : 'dark';
+
+      if (root.dataset.focsdTheme !== theme) root.dataset.focsdTheme = theme;
+    };
+
+    sync();
+    new MutationObserver(sync).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+    // Package exports for examples that show `import { … } from '@focsd-dev/…'` (see Register.astro and
+    // src/global.d.ts, which documents this window contract).
+    window.focsdDocsReady = new Promise((resolve) => {
+      window.__focsdDocsResolve = resolve;
+    });
+  })();
+</script>
+{/* Keep the sidebar's scroll position across page changes. Starlight saves and restores the outer
+    pane (#starlight__sidebar), but Starlight Black scrolls the inner .sidebar-content, so the saved
+    value was always 0 and every page opened with the menu at the top. Save the inner list's position
+    when leaving a page; restore it as soon as the page title is parsed (first paint waits for it, see
+    the rel="expect" link above), so there is no visible jump. */}
+<script is:inline>
+  (() => {
+    const KEY = 'focsd-sidebar-scroll';
+    const list = () => document.querySelector('#starlight__sidebar .sidebar-content');
+
+    addEventListener('pagehide', () => {
+      const el = list();
+
+      if (el) sessionStorage.setItem(KEY, String(el.scrollTop));
+    });
+
+    const saved = Number(sessionStorage.getItem(KEY));
+
+    if (!saved) return;
+
+    const restore = () => {
+      const el = list();
+
+      if (!el || !document.getElementById('_top')) return false;
+      el.scrollTop = saved;
+      // If the page just opened is outside the visible part of the list, center it instead.
+      const current = el.querySelector('[aria-current="page"]');
+
+      if (current) {
+        const box = el.getBoundingClientRect();
+        const link = current.getBoundingClientRect();
+
+        if (link.top < box.top || link.bottom > box.bottom) el.scrollTop += link.top - box.top - box.height / 2;
+      }
+
+      return true;
+    };
+
+    if (restore()) return;
+    const watch = new MutationObserver(() => restore() && watch.disconnect());
+
+    watch.observe(document.documentElement, { childList: true, subtree: true });
+    addEventListener('DOMContentLoaded', () => {
+      restore();
+      watch.disconnect();
+    });
+  })();
+</script>
+<script type="application/json" id="focsd-agent-pages" set:html={pages} />
+<AgentTools />

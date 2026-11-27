@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dashboard block · Focsd test bench</title>
+    <script type="module">
+      // Loads the block from packages/cli/blocks/dashboard: the same index.html body and JS the CLI copies.
+      import '@focsd-dev/tokens/fonts.css';
+      import '@focsd-dev/tokens/tokens.css';
+      import '../../../packages/cli/blocks/dashboard/dashboard.css';
+      import markup from '../../../packages/cli/blocks/dashboard/index.html?raw';
+
+      const doc = new DOMParser().parseFromString(markup, 'text/html');
+
+      document.title = doc.title;
+      document.body.replaceChildren(...doc.body.childNodes);
+      await import('../../../packages/cli/blocks/dashboard/dashboard.js');
+    </script>
+  </head>
+  <body></body>
+</html>

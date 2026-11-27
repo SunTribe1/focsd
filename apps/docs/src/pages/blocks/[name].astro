@@ -1,0 +1,48 @@
+---
+import '@focsd-dev/tokens/fonts.css';
+import '@focsd-dev/tokens/tokens.css';
+import '@focsd-dev/components/upgrade.css';
+import '@focsd-dev/tokens/presets.css';
+import { blocks } from '../../data/blocks.js';
+import { blockSource, blockStylesheet } from '../../data/block-files.js';
+import { blockPaths } from '../../data/frames.js';
+
+export function getStaticPaths() {
+  return blockPaths(blocks);
+}
+
+const { name } = Astro.params;
+const { title } = Astro.props;
+
+const source = blockSource(name);
+const stylesheet = blockStylesheet(name);
+const body = /<body[^>]*>([\s\S]*)<\/body>/.exec(source)?.[1] ?? '';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>{title} block · Focsd</title>
+    {stylesheet && <link rel="stylesheet" href={stylesheet} />}
+    <script is:inline>
+      try {
+        document.documentElement.dataset.focsdTheme = parent.document.documentElement.dataset.focsdTheme || 'light';
+      } catch {
+        /* opened directly: tokens follow the system preference */
+      }
+    </script>
+  </head>
+  <body data-block={name}>
+    <Fragment set:html={body.replace(/<script[\s\S]*?<\/script>/g, '')} />
+    <script>
+      // The block's own JS, the file the CLI copies (its CSS is linked in the head).
+      const scripts = import.meta.glob('../../../../../packages/cli/blocks/*/*.js');
+      const name = document.body.dataset.block;
+
+      await scripts[`../../../../../packages/cli/blocks/${name}/${name}.js`]?.();
+    </script>
+  </body>
+</html>

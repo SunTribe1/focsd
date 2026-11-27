@@ -1,0 +1,99 @@
+---
+title: Agent-ready sites (WebMCP)
+description: Let AI agents in the browser use your Focsd forms and actions through WebMCP tools, with people still in control.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+[WebMCP](https://github.com/webmachinelearning/webmcp) lets a page offer **tools** to AI agents running in the browser: "book a table", "search flights", "add to cart". Agents call a tool with structured input instead of guessing where to click, and the person sees the result on the page. WebMCP is in an origin trial in Chrome 149+ and Edge 150+.
+
+`@focsd-dev/webmcp` turns your Focsd forms into WebMCP tools.
+
+```sh
+npm install @focsd-dev/webmcp
+```
+
+## Forms become tools
+
+Mark a form with the standard WebMCP attributes and call `enableWebMCP()` once. This form waits for the person to confirm; add `toolautosubmit` only to forms that are safe to submit without them, such as searches:
+
+```html
+<form toolname="book-table" tooldescription="Book a table at the restaurant.">
+  <focsd-text-field label="Name" name="name" required toolparamdescription="Name for the booking"></focsd-text-field>
+  <focsd-number-field label="Guests" name="guests" min="1" max="12" required></focsd-number-field>
+  <focsd-date-picker label="Date" name="date"></focsd-date-picker>
+  <focsd-select label="Area" name="area">
+    <focsd-option value="inside">Dining room</focsd-option>
+    <focsd-option value="terrace">Terrace</focsd-option>
+  </focsd-select>
+  <focsd-button type="submit" variant="action">Book</focsd-button>
+</form>
+```
+
+```js
+import { enableWebMCP } from '@focsd-dev/webmcp';
+
+const webmcp = enableWebMCP();
+
+document.querySelector('form').addEventListener('submit', (event) => {
+  event.preventDefault();
+  const booking = book(new FormData(event.target)); // a promise
+  // Tell the agent what happened (the person sees the same result on the page).
+  // Call respondWith synchronously, with the promise, not after an await.
+  if (event.agentInvoked) event.respondWith(booking);
+});
+```
+
+Browsers build declarative tools only from native inputs today. Focsd describes its own controls, so agents get option lists, number limits, date formats, ranges and multi-selects:
+
+| Control | Agents see |
+| --- | --- |
+| `focsd-select`, `focsd-listbox`, `focsd-combobox`, `focsd-radio-group`, `focsd-toggle-group` | One of the option values (with their labels) |
+| `multiple`, `focsd-multi-select` | A list of option values, up to `max` (a multiple combobox or toggle group skips option values that contain a comma, since it stores its values comma-separated) |
+| `focsd-number-field`, `focsd-slider`, `focsd-rating` | Numbers within `min`/`max` (a `[low, high]` pair for a range slider) |
+| `focsd-date-picker`, `focsd-date-field`, `focsd-date-range-picker`, `focsd-time-field` | Dates (`YYYY-MM-DD`), a `{ start, end }` range, 24-hour times |
+| `focsd-date-time-picker` | A local date and time, `YYYY-MM-DDTHH:mm` |
+| `focsd-swatch-picker` | One of the swatch colors as lower-case 6 or 8-digit hex, or any CSS color with `allow-custom` |
+| `focsd-editable` | Text |
+| `focsd-checkbox`, `focsd-switch`, `focsd-toggle` | `true` or `false`; several checkboxes sharing a `name` become one list of their values |
+| `focsd-text-field` (`type="email"`, `url`, `pattern`, lengths), `focsd-textarea`, `focsd-rich-text` | Text with its format and limits |
+| `focsd-color-picker` | Any CSS color |
+| `focsd-tag-input` | A list of tags (no separator inside a tag), up to `max` |
+| `focsd-phone-field` | An international number (E.164, `+442071838750`) |
+| `focsd-currency-field` | An amount as a dot-decimal string with the currency's decimals |
+| `focsd-password-field`, `type="password"` fields, `focsd-file-upload`, `focsd-signature-pad` (an agent must not sign for a person), hidden, disabled and read-only fields | Nothing: never exposed |
+
+Describe each field with `toolparamdescription`; without it, the field's `label` is used.
+
+## People stay in control
+
+- The form fills in on screen, field by field, exactly as if the person had typed. While a tool runs, the form has `data-focsd-tool-active`, so you can highlight it.
+- Without `toolautosubmit`, the form waits: focus moves to the submit button and the person decides. Use `toolautosubmit` only for actions that are safe to repeat, like searches.
+- Input is checked against the schema first. If something is wrong (an unknown option, a number out of range, a malformed email), the agent gets the reasons and nothing is filled in.
+
+<Aside type="caution" title="Sensitive actions">
+  Never use `toolautosubmit` for payments, deletions or anything that cannot be undone. Let the person submit.
+</Aside>
+
+## App actions
+
+For actions that are not forms, register a tool directly. Call `enableWebMCP()` once per page: each call starts a new registry and form observer, so a second call registers every form twice.
+
+```js
+// using the handle from enableWebMCP() above
+await webmcp.defineTool({
+  name: 'get-opening-hours',
+  description: 'Opening hours for a day of the week.',
+  inputSchema: { type: 'object', properties: { day: { type: 'string', enum: ['Monday', 'Tuesday'] } }, required: ['day'] },
+  annotations: { readOnlyHint: true },
+  execute: ({ day }) => hoursFor(day),
+});
+```
+
+## Try it
+
+1. In Chrome 149 or later, enable `chrome://flags/#enable-webmcp-testing`.
+2. Install the [Model Context Tool Inspector](https://github.com/GoogleChromeLabs/webmcp-tools) extension to list and call your page's tools.
+3. In production, register for the [origin trial](https://developer.chrome.com/docs/ai/webmcp) and add its token to your pages.
+
+These docs are agent-ready too: with WebMCP enabled, agents can search components, open their pages and check markup here.

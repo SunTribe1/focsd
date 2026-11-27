@@ -1,0 +1,124 @@
+{
+  "sys": {
+    "color": {
+      "$type": "color",
+      "ground": {
+        "$value": "{ref.color.prismatic.ink.15}"
+      },
+      "focus-inner": {
+        "$value": "{ref.color.prismatic.ink.15}"
+      },
+      "surface": {
+        "$value": "{ref.color.prismatic.ink.19}"
+      },
+      "surface-sunk": {
+        "$value": "{ref.color.prismatic.ink.12}"
+      },
+      "surface-raised": {
+        "$value": "{ref.color.prismatic.ink.21}"
+      },
+      "ink": {
+        "$value": "{ref.color.prismatic.ink.97}"
+      },
+      "focus-outer": {
+        "$value": "{ref.color.prismatic.blue.72}"
+      },
+      "ink-muted": {
+        "$value": "{ref.color.prismatic.ink.74}"
+      },
+      "edge": {
+        "$value": "{ref.color.prismatic.ink.53}"
+      },
+      "edge-quiet": {
+        "$value": "{ref.color.prismatic.ink.28}"
+      },
+      "action": {
+        "$value": "{ref.color.prismatic.blue.72}"
+      },
+      "action-hover": {
+        "$value": "{ref.color.prismatic.blue.79}"
+      },
+      "action-press": {
+        "$value": "{ref.color.prismatic.blue.66}"
+      },
+      "on-action": {
+        "$value": "{ref.color.prismatic.blue.20}"
+      },
+      "route": {
+        "$value": "{ref.color.prismatic.blue.76}"
+      },
+      "positive": {
+        "$value": "{ref.color.prismatic.green.80}"
+      },
+      "positive-tint": {
+        "$value": "{ref.color.prismatic.green.28}"
+      },
+      "caution": {
+        "$value": "{ref.color.prismatic.amber.84}"
+      },
+      "caution-tint": {
+        "$value": "{ref.color.prismatic.amber.29}"
+      },
+      "critical": {
+        "$value": "{ref.color.prismatic.red.73}"
+      },
+      "critical-tint": {
+        "$value": "{ref.color.prismatic.red.28}"
+      },
+      "info": {
+        "$value": "{ref.color.prismatic.blue.76}"
+      },
+      "info-tint": {
+        "$value": "{ref.color.prismatic.blue.28}"
+      },
+      "accent-1": {
+        "$value": "{ref.color.prismatic.blue.78}"
+      },
+      "accent-1-tint": {
+        "$value": "{ref.color.prismatic.blue.28}"
+      },
+      "accent-2": {
+        "$value": "{ref.color.prismatic.violet.78}"
+      },
+      "accent-2-tint": {
+        "$value": "{ref.color.prismatic.violet.28}"
+      },
+      "accent-3": {
+        "$value": "{ref.color.prismatic.pink.79}"
+      },
+      "accent-3-tint": {
+        "$value": "{ref.color.prismatic.pink.28}"
+      },
+      "accent-4": {
+        "$value": "{ref.color.prismatic.red.78}"
+      },
+      "accent-4-tint": {
+        "$value": "{ref.color.prismatic.red.28}"
+      },
+      "accent-5": {
+        "$value": "{ref.color.prismatic.orange.79}"
+      },
+      "accent-5-tint": {
+        "$value": "{ref.color.prismatic.orange.28}"
+      },
+      "accent-6": {
+        "$value": "{ref.color.prismatic.amber.79}"
+      },
+      "accent-6-tint": {
+        "$value": "{ref.color.prismatic.amber.28}"
+      },
+      "accent-7": {
+        "$value": "{ref.color.prismatic.green.79}"
+      },
+      "accent-7-tint": {
+        "$value": "{ref.color.prismatic.green.28}"
+      },
+      "accent-8": {
+        "$value": "{ref.color.prismatic.teal.79}"
+      },
+      "accent-8-tint": {
+        "$value": "{ref.color.prismatic.teal.29}"
+      }
+    }
+  }
+}

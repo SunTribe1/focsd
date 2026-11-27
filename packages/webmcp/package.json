@@ -1,0 +1,64 @@
+{
+  "name": "@focsd-dev/webmcp",
+  "version": "1.0.0",
+  "description": "Make Focsd forms and app actions WebMCP tools, so AI agents in the browser can use your site through structured tools instead of clicking around.",
+  "license": "MIT",
+  "homepage": "https://focsd.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SunTribe1/focsd.git",
+    "directory": "packages/webmcp"
+  },
+  "bugs": {
+    "url": "https://github.com/SunTribe1/focsd/issues"
+  },
+  "keywords": [
+    "a11y",
+    "accessibility",
+    "ai",
+    "component-library",
+    "custom-elements",
+    "design-system",
+    "framework-agnostic",
+    "free",
+    "frontend",
+    "lit",
+    "mcp",
+    "ui",
+    "ui-components",
+    "ui-library",
+    "wcag",
+    "web-components"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./src/index.js",
+  "module": "./src/index.js",
+  "types": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "default": "./src/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "types"
+  ],
+  "scripts": {
+    "prepack": "pnpm run build",
+    "build": "node ../../scripts/emit-types.mjs",
+    "check": "tsc -p tsconfig.check.json",
+    "test": "vitest run && tsc -p test/types"
+  },
+  "devDependencies": {
+    "happy-dom": "20.14.5",
+    "typescript": "7.0.2",
+    "vitest": "5.0.3"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}

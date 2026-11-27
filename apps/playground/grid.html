@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Focsd test bench: data grid</title>
+    <script type="module" src="/src/grid.js"></script>
+    <style>
+      #big {
+        --focsd-data-grid-max-block-size: 24rem;
+      }
+    </style>
+  </head>
+  <body>
+    <pg-header heading="Data grid"></pg-header>
+    <main id="pg-main" class="pg-stack pg-w-none">
+      <focsd-data-grid id="invoices" label="Invoices" page-size="10" selection="multiple" quick-search toolbar></focsd-data-grid>
+      <p>Selected: <output id="invoices-selected">0</output> · Last event: <output id="invoices-event">none</output></p>
+      <focsd-data-grid id="big" label="Large dataset" page-size="0"></focsd-data-grid>
+    </main>
+  </body>
+</html>

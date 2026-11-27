@@ -1,0 +1,61 @@
+---
+import { INSTALL } from '../../data/landing.js';
+
+const steps = [
+  {
+    title: 'Install',
+    body: 'One package holds the core components, with the tokens and Lit included. The data grid, charts, editor and AI kit install on their own.',
+    code: INSTALL,
+  },
+  {
+    title: 'Import once',
+    body: 'Load the tokens and register the elements in your entry file.',
+    code: "import '@focsd-dev/tokens/tokens.css';\nimport '@focsd-dev/components';",
+  },
+  {
+    title: 'Use the tags',
+    body: 'The same tags work in plain HTML, React, Vue, Svelte and Angular.',
+    code: '<focsd-button variant="action">\n  Save changes\n</focsd-button>',
+  },
+];
+---
+
+<section class="lp-cta" aria-labelledby="lp-cta-title">
+  <div class="lp-wrap lp-cta-inner" data-lp-reveal>
+    <div>
+      <h2 id="lp-cta-title">Start with one component. Add the rest when you need them.</h2>
+      <p>
+        Install the package, import it once, and every <code>focsd-</code> tag works in your page.
+      </p>
+    </div>
+    <div class="lp-cta-actions">
+      <div class="lp-install">
+        <span class="lp-install-prompt" aria-hidden="true">
+          $
+        </span>
+        <code id="lp-install-cta">{INSTALL}</code>
+        <focsd-copy-button from="lp-install-cta" label="Copy install command"></focsd-copy-button>
+      </div>
+      <div class="lp-hero-actions">
+        <a class="lp-button lp-button-primary" href="/getting-started/installation/">
+          Get started
+        </a>
+        <a class="lp-button" href="/components/">
+          Browse components
+        </a>
+      </div>
+    </div>
+  </div>
+  <ol class="lp-wrap lp-cta-steps" data-lp-reveal>
+    {steps.map((step, i) => (
+      <li class="lp-cta-step">
+        <span class="lp-cta-step-number" aria-hidden="true">
+          {String(i + 1).padStart(2, '0')}
+        </span>
+        <h3>{step.title}</h3>
+        <p>{step.body}</p>
+        <pre class="lp-cta-step-code"><code>{step.code}</code></pre>
+      </li>
+    ))}
+  </ol>
+</section>

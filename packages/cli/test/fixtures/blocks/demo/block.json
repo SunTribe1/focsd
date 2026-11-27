@@ -1,0 +1,8 @@
+{
+  "name": "demo",
+  "title": "Demo",
+  "description": "A tiny block used by the CLI tests.",
+  "files": ["index.html", "demo.js", "css/demo.css"],
+  "packages": ["@focsd-dev/components"],
+  "elements": ["focsd-button"]
+}

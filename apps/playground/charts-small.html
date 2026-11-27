@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sparkline and gauge · Focsd test bench</title>
+    <script type="module" src="/src/charts-small.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Sparkline and gauge"></pg-header>
+    <main class="pg-stack pg-w-48">
+      <section class="pg-stack" aria-labelledby="spark-h">
+        <h2 id="spark-h">Sparkline</h2>
+        <p>
+          Signups this week
+          <focsd-sparkline id="line" label="Signups per day" show-last></focsd-sparkline>
+          and revenue
+          <focsd-sparkline id="area" type="area" label="Revenue per day"></focsd-sparkline>
+          and orders
+          <focsd-sparkline id="bar" type="bar" label="Orders per day"></focsd-sparkline>
+        </p>
+        <p>
+          Falling: <focsd-sparkline id="fall" label="Errors per hour"></focsd-sparkline> No data:
+          <focsd-sparkline id="empty" label="Visits"></focsd-sparkline>
+        </p>
+      </section>
+      <section class="pg-stack" aria-labelledby="gauge-h">
+        <h2 id="gauge-h">Gauge</h2>
+        <focsd-gauge id="cpu" label="CPU load" show-value></focsd-gauge>
+        <focsd-gauge id="plain" label="Disk used" value="35" show-value></focsd-gauge>
+      </section>
+    </main>
+  </body>
+</html>

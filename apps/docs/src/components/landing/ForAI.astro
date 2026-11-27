@@ -1,0 +1,64 @@
+---
+import { Code } from 'astro:components';
+import { CODE_THEMES, MCP_CONFIG } from '../../data/landing.js';
+---
+
+<section class="lp-section" aria-labelledby="lp-ai-title">
+  <div class="lp-wrap">
+    <div class="lp-section-head">
+      <h2 id="lp-ai-title">Built for AI assistants and agents</h2>
+      <p>Your coding assistant looks up the real API instead of guessing, and agents in the browser can use your forms as tools.</p>
+    </div>
+    <div class="lp-ai">
+      <article class="lp-ai-card" aria-labelledby="lp-ai-mcp" data-lp-reveal>
+        <h3 id="lp-ai-mcp">MCP server</h3>
+        <p>
+          <code>@focsd-dev/mcp</code> gives Claude, Cursor, VS Code and other clients every component, token and setup, and checks the
+          markup they write. It runs locally and sends nothing over the network.
+        </p>
+        <div class="lp-terminal">
+          <div class="lp-terminal-line">
+            <span aria-hidden="true">$</span> <code id="lp-mcp-command">claude mcp add focsd -- npx -y @focsd-dev/mcp</code>
+          </div>
+          <focsd-copy-button from="lp-mcp-command" label="Copy MCP command"></focsd-copy-button>
+        </div>
+        <div class="lp-code lp-code-small">
+          <Code code={MCP_CONFIG} lang="json" themes={CODE_THEMES} defaultColor={false} />
+        </div>
+        <a class="lp-text-link" href="/getting-started/ai-assistants/">
+          Connect an assistant
+        </a>
+      </article>
+      <article class="lp-ai-card" aria-labelledby="lp-ai-webmcp" data-lp-reveal>
+        <h3 id="lp-ai-webmcp">WebMCP in the page</h3>
+        <p>
+          Mark a Focsd form and it becomes a WebMCP tool that waits for the person to confirm. This site offers six tools of its own, such
+          as <code>search_components</code> and <code>check_markup</code>, to agents in your browser.
+        </p>
+        <ul class="lp-files">
+          <li>
+            <a href="/llms.txt">
+              <code>/llms.txt</code>
+            </a>{' '}
+            every page, contract and schema
+          </li>
+          <li>
+            <a href="/AGENTS.md">
+              <code>/AGENTS.md</code>
+            </a>{' '}
+            project instructions for agents
+          </li>
+          <li>
+            <a href="/schema/components/focsd-button.json">
+              <code>/schema/components/*.json</code>
+            </a>{' '}
+            one JSON Schema per element
+          </li>
+        </ul>
+        <a class="lp-text-link" href="/guides/agent-ready-sites/">
+          Make your site agent-ready
+        </a>
+      </article>
+    </div>
+  </div>
+</section>
