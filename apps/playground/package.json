@@ -18,18 +18,18 @@
     "@focsd/react": "workspace:*",
     "@focsd/tokens": "workspace:*",
     "@focsd/webmcp": "workspace:*",
-    "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
   },
   "devDependencies": {
-    "@axe-core/playwright": "4.13.0",
+    "@axe-core/playwright": "4.14.1",
     "@fortawesome/free-solid-svg-icons": "7.3.1",
     "@lit-labs/ssr": "4.1.0",
     "@lit-labs/ssr-client": "1.1.8",
-    "@playwright/test": "1.63.0",
+    "@playwright/test": "1.65.1",
     "lit": "3.3.3",
-    "lucide": "1.52.0",
+    "lucide": "1.79.0",
     "monocart-coverage-reports": "2.13.2",
-    "vite": "8.3.2"
+    "vite": "8.3.8"
   }
 }

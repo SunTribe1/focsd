@@ -95,11 +95,11 @@
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "0.11.0",
     "@lit-labs/ssr": "4.1.0",
-    "@types/react": "19.3.0",
+    "@types/react": "19.3.1",
     "esbuild": "0.28.2",
-    "svelte": "5.57.1",
-    "vitest": "5.0.3",
-    "vue": "3.5.43"
+    "svelte": "5.59.1",
+    "vitest": "5.1.1",
+    "vue": "3.5.46"
   },
   "sideEffects": [
     "./src/index.js",

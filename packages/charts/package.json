@@ -84,7 +84,7 @@
     "@lit-labs/ssr": "4.1.0",
     "esbuild": "0.28.2",
     "happy-dom": "20.14.5",
-    "vitest": "5.0.3"
+    "vitest": "5.1.1"
   },
   "sideEffects": [
     "./src/index.js",
