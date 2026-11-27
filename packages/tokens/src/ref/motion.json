@@ -1,0 +1,16 @@
+{
+  "ref": {
+    "duration": {
+      "$type": "duration",
+      "100": { "$value": { "value": 100, "unit": "ms" } },
+      "160": { "$value": { "value": 160, "unit": "ms" } },
+      "240": { "$value": { "value": 240, "unit": "ms" } }
+    },
+    "ease": {
+      "$type": "cubicBezier",
+      "out": { "$value": [0.2, 0.7, 0.2, 1] },
+      "in": { "$value": [0.4, 0, 1, 1] },
+      "in-out": { "$value": [0.4, 0, 0.2, 1] }
+    }
+  }
+}

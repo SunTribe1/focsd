@@ -1,0 +1,177 @@
+---
+import { inline } from '../data/markup.js';
+import type { ComponentApi } from '../data/catalogue.js';
+
+interface PropDoc {
+  name: string;
+  type: string;
+  description: string;
+}
+
+interface Props {
+  tag: string;
+  api: ComponentApi;
+  props?: PropDoc[];
+  methods?: { name: string; description: string }[];
+}
+
+const { tag, api: rawApi, props = [], methods } = Astro.props;
+const api = methods ? { ...rawApi, methods: methods.map((m) => ({ name: m.name, params: null, description: m.description })) } : rawApi;
+const none = !api.attributes.length && !props.length && !api.methods.length && !api.events.length && !api.slots.length && !api.parts.length;
+---
+
+{/* A scroll container on narrow screens (wide tables), so it is a named region keyboard users can focus and scroll. */}
+<div class="focsd-api" role="region" aria-label={`${tag} API reference`} tabindex="0">
+  {none && <p>This element has no attributes, events or slots of its own.</p>}
+  {api.attributes.length > 0 && (
+    <>
+      <h3 id="attributes">Attributes</h3>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Attribute</th>
+            <th scope="col">Property</th>
+            <th scope="col">Type</th>
+            <th scope="col">Default</th>
+          </tr>
+        </thead>
+        <tbody>
+          {api.attributes.map((a) => (
+            <tr>
+              <td>
+                <code>{a.name}</code>
+              </td>
+              <td>
+                <code>{a.field}</code>
+              </td>
+              <td>{a.type ? <code>{a.type}</code> : '—'}</td>
+              <td>{a.default && a.default !== 'undefined' ? <code>{a.default}</code> : '—'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
+  )}
+  {props.length > 0 && (
+    <>
+      <h3 id="properties">JavaScript properties</h3>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Property</th>
+            <th scope="col">Type</th>
+            <th scope="col">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {props.map((p) => (
+            <tr>
+              <td>
+                <code>{p.name}</code>
+              </td>
+              <td>
+                <code>{p.type}</code>
+              </td>
+              <td set:html={inline(p.description)} />
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
+  )}
+  {api.methods.length > 0 && (
+    <>
+      <h3 id="methods">Methods</h3>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Method</th>
+            <th scope="col">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {api.methods.map((m) => (
+            <tr>
+              <td>
+                <code>{m.params === null ? m.name : `${m.name}(${m.params})`}</code>
+              </td>
+              <td set:html={inline(m.description || '—')} />
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
+  )}
+  {api.events.length > 0 && (
+    <>
+      <h3 id="events">Events</h3>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Event</th>
+            <th scope="col">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {api.events.map((e) => (
+            <tr>
+              <td>
+                <code>{e.name}</code>
+              </td>
+              <td set:html={inline(e.description || '—')} />
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
+  )}
+  {api.slots.length > 0 && (
+    <>
+      <h3 id="slots">Slots</h3>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Slot</th>
+            <th scope="col">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {api.slots.map((s) => (
+            <tr>
+              <td>
+                <code>{s.name}</code>
+              </td>
+              <td set:html={inline(s.description || '—')} />
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
+  )}
+  {api.parts.length > 0 && (
+    <>
+      <h3 id="css-parts">CSS parts</h3>
+      <p>
+        Style the inside of the component with <code>::part()</code>, for example <code>{`${tag}::part(${api.parts[0].name})`}</code>.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Part</th>
+            <th scope="col">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {api.parts.map((p) => (
+            <tr>
+              <td>
+                <code>{p.name}</code>
+              </td>
+              <td>{p.description || '—'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
+  )}
+</div>

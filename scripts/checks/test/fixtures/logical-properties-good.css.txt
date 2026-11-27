@@ -1,0 +1,7 @@
+.a { margin-inline-start: 4px; padding-inline-end: 4px; }
+.b { border-inline-start: 1px solid; border-start-start-radius: 2px; }
+.c { inset-inline-start: 0; text-align: start; float: inline-end; }
+.d { transform-origin: center; --gap-left: 1px; }
+/* physical: the scrollbar gutter is drawn on the left in every direction */
+.e { left: 0; }
+.f { right: 0; } /* physical: matches the page edge */

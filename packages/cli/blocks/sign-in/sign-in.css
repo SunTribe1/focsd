@@ -1,0 +1,66 @@
+/* Layout only. Color, type and spacing come from @focsd/tokens. */
+body {
+  margin: 0;
+  min-block-size: 100dvh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  font-family: var(--focsd-font-sans, system-ui, sans-serif);
+  color: var(--focsd-ink);
+  background: var(--focsd-ground);
+}
+
+.brand {
+  padding: var(--focsd-space-4) var(--focsd-space-5);
+}
+
+.brand a {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+main {
+  display: grid;
+  place-items: start center;
+  padding: var(--focsd-space-5);
+  padding-block-end: var(--focsd-space-7);
+}
+
+.card {
+  inline-size: min(100%, 26rem);
+}
+
+h1 {
+  margin: 0;
+  font-size: var(--focsd-text-heading-size, 1.5rem);
+}
+
+form {
+  display: grid;
+  gap: var(--focsd-space-5);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--focsd-space-3) var(--focsd-space-5);
+}
+
+.submit {
+  inline-size: 100%;
+}
+
+.status {
+  margin: 0;
+  color: var(--focsd-ink-muted);
+}
+
+.status:empty {
+  display: none;
+}
+
+.footer-note {
+  margin: 0;
+}

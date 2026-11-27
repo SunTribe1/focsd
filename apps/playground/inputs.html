@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Focsd test bench: complex inputs</title>
+    <script type="module" src="/src/inputs.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Complex inputs"></pg-header>
+    <main id="pg-main" class="pg-stack">
+      <form id="inputs" class="pg-stack">
+        <focsd-combobox id="cb" label="Country" name="country" placeholder="Start typing">
+          <focsd-option value="de">Germany</focsd-option>
+          <focsd-option value="dk">Denmark</focsd-option>
+          <focsd-option value="fr">France</focsd-option>
+          <focsd-option value="gb">United Kingdom</focsd-option>
+          <focsd-option value="gr">Greece</focsd-option>
+        </focsd-combobox>
+        <focsd-multi-select id="ms" label="Labels" name="labels" value="bug">
+          <focsd-option value="bug">Bug</focsd-option>
+          <focsd-option value="design">Design</focsd-option>
+          <focsd-option value="docs">Docs</focsd-option>
+          <focsd-option value="perf">Performance</focsd-option>
+        </focsd-multi-select>
+        <focsd-date-picker
+          id="dp"
+          label="Departure"
+          name="departure"
+          value="2026-03-14"
+          min="2026-03-05"
+          max="2026-12-31"
+          locale="en-GB"
+        ></focsd-date-picker>
+        <focsd-date-range-picker
+          id="drp"
+          label="Trip dates"
+          name="trip"
+          value-start="2026-05-04"
+          value-end="2026-05-08"
+          locale="en-GB"
+        ></focsd-date-range-picker>
+        <focsd-time-field id="tf" label="Meeting time" name="time" value="09:30" hour-cycle="h23" step="5"></focsd-time-field>
+        <focsd-time-field id="tf12" label="Alarm" name="alarm" value="13:05" hour-cycle="h12"></focsd-time-field>
+        <focsd-file-upload
+          id="fu"
+          label="Attachments"
+          name="files"
+          accept=".pdf,image/png"
+          multiple
+          max-size="1000000"
+          hint="PDF or PNG, up to 1 MB"
+        ></focsd-file-upload>
+        <div class="pg-row">
+          <focsd-button id="inputs-submit" type="submit" variant="action">Submit</focsd-button>
+          <focsd-button id="inputs-reset" type="reset">Reset</focsd-button>
+        </div>
+        <output id="inputs-result"></output>
+      </form>
+      <section class="pg-stack" aria-labelledby="cal-heading">
+        <h2 id="cal-heading">Calendar</h2>
+        <focsd-calendar id="cal" value="2026-03-14" min="2026-03-05" max="2026-04-20" locale="en-GB"></focsd-calendar>
+        <output id="cal-result">none</output>
+      </section>
+      <div class="pg-row">
+        <focsd-button id="cmd-open">Open command palette</focsd-button>
+        <span>or press <focsd-kbd>Ctrl</focsd-kbd> + <focsd-kbd>K</focsd-kbd></span>
+        <output id="cmd-result">none</output>
+      </div>
+      <focsd-command id="cmd" shortcut="mod+k">
+        <focsd-command-item value="new-project" group="Projects" shortcut="N">New project</focsd-command-item>
+        <focsd-command-item value="open-project" group="Projects">Open project</focsd-command-item>
+        <focsd-command-item value="invite" group="People">Invite member</focsd-command-item>
+        <focsd-command-item value="theme" group="Settings">Toggle theme</focsd-command-item>
+      </focsd-command>
+    </main>
+  </body>
+</html>

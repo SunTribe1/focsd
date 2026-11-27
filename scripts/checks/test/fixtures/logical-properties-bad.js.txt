@@ -1,0 +1,8 @@
+import { css } from 'lit';
+
+export const styles = css`
+  :host { display: block; }
+  [part='x'] { margin-right: 4px; }
+`;
+
+export const notCss = { left: 4, right: 4 };

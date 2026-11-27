@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Focsd test bench: overlays and disclosure</title>
+    <script type="module" src="/src/overlays.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Overlays and disclosure"></pg-header>
+    <main id="pg-main" class="pg-stack">
+      <section aria-labelledby="sec-popover">
+        <h2 id="sec-popover">Popover and tooltip</h2>
+        <div class="pg-row">
+          <focsd-popover id="pop" label="Filter members">
+            <focsd-button slot="trigger" id="pop-trigger">Filters</focsd-button>
+            <focsd-checkbox name="active">Active only</focsd-checkbox>
+            <focsd-button id="pop-apply" variant="action">Apply</focsd-button>
+          </focsd-popover>
+          <focsd-tooltip id="tip" text="Copies a link anyone in the workspace can open">
+            <focsd-icon-button icon="copy" label="Copy link"></focsd-icon-button>
+          </focsd-tooltip>
+        </div>
+      </section>
+
+      <section aria-labelledby="sec-menu">
+        <h2 id="sec-menu">Menus</h2>
+        <focsd-menu id="menu" label="Project actions">
+          <focsd-button slot="trigger" id="menu-trigger">Actions</focsd-button>
+          <focsd-menu-item value="rename">Rename</focsd-menu-item>
+          <focsd-menu-item value="duplicate">Duplicate</focsd-menu-item>
+          <focsd-menu-item value="archive" disabled>Archive (locked)</focsd-menu-item>
+          <focsd-menu-item value="delete" variant="critical">Delete</focsd-menu-item>
+        </focsd-menu>
+        <p>Chosen: <output id="menu-result">none</output></p>
+        <focsd-context-menu id="ctx" label="File actions">
+          <div slot="target" id="ctx-target" tabindex="0" class="pg-target">report-q3.pdf (right-click or Shift+F10)</div>
+          <focsd-menu-item value="open">Open</focsd-menu-item>
+          <focsd-menu-item value="download">Download</focsd-menu-item>
+        </focsd-context-menu>
+        <p>Context: <output id="ctx-result">none</output></p>
+      </section>
+
+      <section aria-labelledby="sec-dialogs">
+        <h2 id="sec-dialogs">Alert dialog and drawer</h2>
+        <div class="pg-row">
+          <focsd-button id="ad-open" variant="critical">Delete project</focsd-button>
+          <focsd-button id="dr-open">Open settings</focsd-button>
+        </div>
+        <p>Alert: <output id="ad-result">none</output></p>
+        <focsd-alert-dialog id="ad" headline="Delete Atlas?">
+          <p>This permanently deletes 26 files. You cannot undo this.</p>
+          <focsd-button slot="actions" data-dialog-close value="cancel" data-autofocus>Keep project</focsd-button>
+          <focsd-button slot="actions" variant="critical" data-dialog-close value="delete">Delete Atlas</focsd-button>
+        </focsd-alert-dialog>
+        <focsd-drawer id="dr" headline="Workspace settings">
+          <focsd-text-field label="Workspace name" value="Northwind"></focsd-text-field>
+          <focsd-button slot="actions" data-dialog-close value="done" variant="action">Done</focsd-button>
+        </focsd-drawer>
+      </section>
+
+      <section aria-labelledby="sec-toast">
+        <h2 id="sec-toast">Toast</h2>
+        <focsd-button id="toast-btn">Save draft</focsd-button>
+        <focsd-button id="toast-sticky">Show sticky toast</focsd-button>
+      </section>
+
+      <section aria-labelledby="sec-accordion">
+        <h2 id="sec-accordion">Accordion and disclosure</h2>
+        <focsd-accordion id="acc">
+          <focsd-accordion-item heading="Billing" open><p>Invoices are sent on the 1st.</p></focsd-accordion-item>
+          <focsd-accordion-item heading="Members"><p>Up to 10 seats on this plan.</p></focsd-accordion-item>
+          <focsd-accordion-item heading="Security" disabled><p>Managed by your organization.</p></focsd-accordion-item>
+          <focsd-accordion-item heading="Data export"><p>Exports include all files.</p></focsd-accordion-item>
+        </focsd-accordion>
+        <focsd-disclosure id="disc" summary="Show advanced options"><p>Webhook retries: 3</p></focsd-disclosure>
+      </section>
+    </main>
+    <focsd-toaster id="toaster"></focsd-toaster>
+  </body>
+</html>

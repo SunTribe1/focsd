@@ -1,0 +1,90 @@
+/* Layout only: logical properties, tokens and container queries. */
+body {
+  margin: 0;
+  background: var(--focsd-surface-sunk, var(--focsd-surface));
+  color: var(--focsd-ink);
+  font-family: var(--focsd-font-sans, system-ui, sans-serif);
+}
+
+.brand {
+  color: var(--focsd-ink);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--focsd-space-3);
+}
+
+.page {
+  display: grid;
+  gap: var(--focsd-space-6);
+  padding: var(--focsd-space-5);
+  container-type: inline-size;
+}
+
+.page-head h1 {
+  margin: 0;
+}
+
+.page-head p {
+  margin-block: var(--focsd-space-2) 0;
+  color: var(--focsd-ink-muted);
+}
+
+.visually-hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* One column, then 2, then 4, by the width of the page, not the window. */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--focsd-space-4);
+}
+
+@container (min-width: 28rem) {
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@container (min-width: 60rem) {
+  .stats-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.panel {
+  display: grid;
+  gap: var(--focsd-space-3);
+  min-inline-size: 0;
+  padding: var(--focsd-space-5);
+  border: var(--focsd-border-width) solid var(--focsd-edge-quiet);
+  border-radius: var(--focsd-radius-surface);
+  background: var(--focsd-surface);
+}
+
+.panel h2 {
+  margin: 0;
+}
+
+/* The grid scrolls inside this wrapper, so a narrow screen never scrolls the page. */
+.grid-wrap {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  overflow-x: auto;
+}
+
+/* The footer sits on the page color like the main area, separated by its top border, not a lighter band. */
+focsd-footer::part(footer) {
+  background: transparent;
+}

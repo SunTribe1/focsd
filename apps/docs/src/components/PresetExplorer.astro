@@ -1,0 +1,286 @@
+---
+import presetData from '@focsd/tokens/presets.json';
+import Register from './Register.astro';
+
+const presets = [
+  { name: '', label: 'Wayfinding', swatches: presetData.default.swatches },
+  ...Object.entries(presetData.presets).map(([name, p]) => ({ name, label: p.label, swatches: p.swatches })),
+];
+---
+
+<Register />
+<div class="focsd-example focsd-example-standalone focsd-preset-explorer not-content" data-preset-explorer>
+  <div class="focsd-pe-bar">
+    <fieldset class="focsd-pe-chips">
+      <legend>Preset</legend>
+      {presets.map(({ name, label, swatches }, i) => (
+        <label class="focsd-pe-chip">
+          <input type="radio" name="focsd-pe-preset" value={name} checked={i === 0} />
+          <span class="focsd-pe-dot" aria-hidden="true" style={`--light:${swatches.light.action};--dark:${swatches.dark.action}`} />
+          {label}
+        </label>
+      ))}
+    </fieldset>
+    <focsd-theme-toggle target="#focsd-pe-stage" storage-key-prefix="docs-presets-"></focsd-theme-toggle>
+  </div>
+
+  <div class="focsd-pe-stage" id="focsd-pe-stage">
+    <script is:inline>
+      // Apply the stored theme before first paint; the toggle does the same once its script loads.
+      (() => {
+        try {
+          const t = localStorage.getItem('docs-presets-theme');
+
+          if (t === 'light' || t === 'dark' || t === 'contrast') document.currentScript.parentElement.dataset.focsdTheme = t;
+        } catch {
+          // Storage blocked (private mode): the defaults apply, and the controls still work for this page.
+        }
+      })();
+    </script>
+    <section class="focsd-pe-screen" aria-labelledby="focsd-pe-signin">
+      <h3 id="focsd-pe-signin">Sign in</h3>
+      <focsd-text-field label="Work email" type="email" value="ana@northwind.studio"></focsd-text-field>
+      <focsd-checkbox checked>Keep me signed in</focsd-checkbox>
+      <focsd-button variant="action">Continue</focsd-button>
+      <p class="focsd-pe-note">
+        New here? <a href="#focsd-pe-stage">Create a workspace</a>
+      </p>
+    </section>
+
+    <section class="focsd-pe-screen" aria-labelledby="focsd-pe-project">
+      <div class="focsd-pe-head">
+        <h3 id="focsd-pe-project">Website relaunch</h3>
+        <focsd-badge tone="positive">On track</focsd-badge>
+      </div>
+      <focsd-progress label="Tasks done" value="68" show-value></focsd-progress>
+      <focsd-checkbox checked>Write the brief</focsd-checkbox>
+      <focsd-checkbox>Review the designs</focsd-checkbox>
+      <div class="focsd-pe-row">
+        <focsd-button variant="action">Add task</focsd-button>
+        <focsd-button>Share</focsd-button>
+      </div>
+    </section>
+
+    <section class="focsd-pe-screen focsd-pe-wide" aria-labelledby="focsd-pe-notify">
+      <h3 id="focsd-pe-notify">Notifications</h3>
+      <focsd-alert tone="info" headline="Weekly digest">
+        Your first summary arrives on Monday.
+      </focsd-alert>
+      <div class="focsd-pe-settings">
+        <focsd-select label="Send to" value="email">
+          <focsd-option value="email">Email</focsd-option>
+          <focsd-option value="chat">Chat</focsd-option>
+        </focsd-select>
+        <focsd-switch checked>Mentions only</focsd-switch>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+  // A chip sets the stage's preset; the empty value is the default (no attribute).
+  for (const explorer of document.querySelectorAll('[data-preset-explorer]')) {
+    const stage = explorer.querySelector('.focsd-pe-stage');
+
+    explorer.addEventListener('change', (event) => {
+      const input = event.target;
+
+      if (!(input instanceof HTMLInputElement) || input.name !== 'focsd-pe-preset' || !stage) return;
+
+      const apply = () => {
+        if (input.value) stage.setAttribute('data-focsd-brand', input.value);
+        else stage.removeAttribute('data-focsd-brand');
+      };
+
+      // One crossfade instead of every swatch and control restyling at once (not under reduced motion).
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches || !('startViewTransition' in document)) apply();
+      else document.startViewTransition(apply);
+    });
+  }
+</script>
+
+<style>
+  .focsd-preset-explorer {
+    container-type: inline-size;
+    display: grid;
+    gap: var(--focsd-space-4);
+    padding: var(--focsd-space-4);
+  }
+
+  .focsd-example-standalone {
+    border-block-end: var(--focsd-border-width) solid var(--focsd-docs-card-border);
+    border-radius: var(--focsd-docs-card-radius);
+  }
+
+  /* Presets on the left in two rows, the theme toggle on the right; they stack on narrow screens. */
+  .focsd-pe-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--focsd-space-3) var(--focsd-space-5);
+  }
+
+  .focsd-pe-chips {
+    display: grid;
+    grid-template-columns: repeat(5, max-content);
+    gap: var(--focsd-space-2);
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  @media (width < 40rem) {
+    .focsd-pe-chips {
+      grid-template-columns: repeat(3, max-content);
+    }
+  }
+
+  .focsd-pe-chips legend {
+    grid-column: 1 / -1;
+    margin-block-end: var(--focsd-space-2);
+    padding: 0;
+    color: var(--sl-color-gray-2);
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
+
+  .focsd-pe-chip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.3rem 0.7rem 0.3rem 0.4rem;
+    border: var(--focsd-border-width) solid var(--focsd-docs-card-border);
+    border-radius: 999px;
+    color: var(--sl-color-gray-2);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      border-color 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .focsd-pe-chip:hover {
+    color: var(--sl-color-white);
+  }
+
+  .focsd-pe-chip input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .focsd-pe-chip:has(input:checked) {
+    border-color: var(--sl-color-white);
+    color: var(--sl-color-white);
+    font-weight: 600;
+  }
+
+  .focsd-pe-chip:has(input:focus-visible) {
+    outline: 2px solid var(--sl-color-text-accent);
+    outline-offset: 2px;
+  }
+
+  /* Each chip's dot: the preset's action color in light (left half) and dark (right half). */
+  .focsd-pe-dot {
+    /* Decoration: a click on it reaches the radio and its label. */
+    pointer-events: none;
+    inline-size: 1rem;
+    block-size: 1rem;
+    border-radius: 50%;
+    background: linear-gradient(90deg, var(--light) 50%, var(--dark) 50%);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 25%, transparent);
+  }
+
+  /* The stage carries its own preset and theme, so it paints its own ground. Two screens side by side,
+     the third across the full width with the alert beside its settings. */
+  .focsd-pe-stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--focsd-space-3);
+    padding: var(--focsd-space-3);
+    border-radius: var(--focsd-radius-surface);
+    background: var(--focsd-ground);
+    color: var(--focsd-ink);
+    font-family: var(--focsd-font-sans);
+    transition: background-color 0.15s ease;
+  }
+
+  .focsd-pe-screen {
+    display: grid;
+    gap: var(--focsd-space-3);
+    align-content: start;
+    padding: var(--focsd-space-4);
+    border: var(--focsd-border-width) solid var(--focsd-edge-quiet);
+    border-radius: var(--focsd-radius-surface);
+    background: var(--focsd-surface);
+  }
+
+  .focsd-pe-settings {
+    display: grid;
+    gap: var(--focsd-space-3);
+    align-content: start;
+  }
+
+  @container (min-width: 30rem) {
+    .focsd-pe-stage {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .focsd-pe-wide {
+      grid-column: 1 / -1;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: var(--focsd-space-4);
+    }
+
+    .focsd-pe-wide > h3 {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .focsd-pe-screen h3 {
+    margin: 0;
+    color: var(--focsd-ink);
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .focsd-pe-head,
+  .focsd-pe-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--focsd-space-2);
+  }
+
+  .focsd-pe-head {
+    justify-content: space-between;
+  }
+
+  .focsd-pe-note {
+    margin: 0;
+    color: var(--focsd-ink-muted);
+    font-size: 0.875rem;
+  }
+
+  .focsd-pe-note a {
+    color: var(--focsd-route);
+  }
+
+  .focsd-pe-screen > focsd-button {
+    justify-self: start;
+  }
+
+  @media (forced-colors: active) {
+    .focsd-pe-chip:has(input:checked) {
+      border-color: Highlight;
+    }
+
+    .focsd-pe-dot {
+      forced-color-adjust: none;
+    }
+  }
+</style>

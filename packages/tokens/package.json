@@ -1,0 +1,83 @@
+{
+  "name": "@focsd/tokens",
+  "version": "1.0.0",
+  "description": "Focsd design tokens: DTCG source compiled to CSS custom properties and TypeScript.",
+  "license": "MIT",
+  "homepage": "https://focsd.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SunTribe1/focsd.git",
+    "directory": "packages/tokens"
+  },
+  "bugs": {
+    "url": "https://github.com/SunTribe1/focsd/issues"
+  },
+  "keywords": [
+    "a11y",
+    "accessibility",
+    "component-library",
+    "custom-elements",
+    "design-system",
+    "design-tokens",
+    "framework-agnostic",
+    "free",
+    "frontend",
+    "lit",
+    "ui",
+    "ui-components",
+    "ui-library",
+    "wcag",
+    "web-components"
+  ],
+  "type": "module",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./tokens.css": "./dist/tokens.css",
+    "./themes/*.css": "./dist/themes/*.css",
+    "./fonts.css": "./dist/fonts.css",
+    "./presets/*.css": "./dist/presets/*.css",
+    "./presets.css": "./dist/presets.css",
+    "./presets.json": "./dist/presets.json",
+    "./floor.css": "./dist/floor.css",
+    "./resolved.json": "./dist/tokens.resolved.json",
+    "./figma/*": "./dist/figma/*",
+    "./package.json": "./package.json",
+    "./fonts/*": "./dist/fonts/*"
+  },
+  "scripts": {
+    "prepack": "pnpm run build",
+    "build": "node build.mjs",
+    "test": "vitest run",
+    "test:e2e": "node build.mjs && playwright test",
+    "check": "node scripts/check-all.mjs"
+  },
+  "devDependencies": {
+    "@capsizecss/core": "4.1.3",
+    "@capsizecss/metrics": "4.3.0",
+    "@capsizecss/unpack": "4.0.1",
+    "@fontsource-variable/atkinson-hyperlegible-mono": "5.3.0",
+    "@fontsource-variable/atkinson-hyperlegible-next": "5.3.0",
+    "@playwright/test": "1.63.0",
+    "culori": "4.0.2",
+    "style-dictionary": "5.6.0",
+    "typescript": "7.0.2",
+    "vitest": "5.0.3"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}

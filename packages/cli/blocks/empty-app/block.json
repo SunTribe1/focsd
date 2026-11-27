@@ -1,0 +1,17 @@
+{
+  "name": "empty-app",
+  "title": "Empty app",
+  "description": "App shell with header and sidebar and a first-run empty state with a primary action and a secondary link.",
+  "files": ["index.html", "empty-app.js", "empty-app.css"],
+  "packages": ["@focsd/components", "@focsd/tokens"],
+  "elements": [
+    "focsd-app-shell",
+    "focsd-button",
+    "focsd-empty-state",
+    "focsd-header",
+    "focsd-link",
+    "focsd-sidebar",
+    "focsd-sidebar-item",
+    "focsd-theme-toggle"
+  ]
+}

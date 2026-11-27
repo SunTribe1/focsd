@@ -1,0 +1,13 @@
+# Secret scanning (CI: .github/workflows/ci.yml, job "secrets"). Default rules, plus files that hold
+# long random-looking strings that are not secrets.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Generated data and lockfile hashes"
+paths = [
+  '''pnpm-lock\.yaml''',
+  '''packages/primitives/src/internal/phone-data\.js''',
+  '''packages/primitives/src/internal/lucide-paths\.js''',
+  '''apps/playground/e2e/fixtures/webmcp-polyfill\.js''',
+]

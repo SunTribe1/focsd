@@ -1,0 +1,76 @@
+---
+title: AI assistants (MCP)
+description: Give Claude, Cursor, VS Code and other AI assistants the full Focsd reference through the Model Context Protocol.
+---
+
+`@focsd/mcp` is a [Model Context Protocol](https://modelcontextprotocol.io) server. Connect it to your AI coding assistant and it can look up every Focsd component, its exact attributes, events, slots and parts, its accessibility notes and keyboard support, the design tokens, and the setup for your framework. It can also check the markup it writes, so generated UI uses real Focsd elements with labels.
+
+It runs locally over stdio, reads only the data bundled in the package, and sends nothing over the network.
+
+## Connect it
+
+### Claude Code
+
+```sh
+claude mcp add focsd -- npx -y @focsd/mcp
+# Share it with your team (writes .mcp.json in the project):
+claude mcp add --scope project focsd -- npx -y @focsd/mcp
+```
+
+### Claude Desktop, Cursor and Windsurf
+
+Add the server under `mcpServers` in the client's configuration file:
+
+- Claude Desktop: `claude_desktop_config.json` (Settings → Developer → Edit Config; on macOS `~/Library/Application Support/Claude/`, on Windows `%APPDATA%\Claude\`). Restart Claude Desktop afterward.
+- Cursor: `.cursor/mcp.json` in the project, or `~/.cursor/mcp.json` for every project.
+- Windsurf: `~/.codeium/windsurf/mcp_config.json`.
+
+```json
+{
+  "mcpServers": {
+    "focsd": { "command": "npx", "args": ["-y", "@focsd/mcp"] }
+  }
+}
+```
+
+### VS Code (GitHub Copilot)
+
+In `.vscode/mcp.json`. VS Code uses a `servers` key, not `mcpServers`:
+
+```json
+{
+  "servers": {
+    "focsd": { "type": "stdio", "command": "npx", "args": ["-y", "@focsd/mcp"] }
+  }
+}
+```
+
+Or from a terminal: `code --add-mcp '{"name":"focsd","command":"npx","args":["-y","@focsd/mcp"]}'`.
+
+## What it offers
+
+| Tool | What it does |
+| --- | --- |
+| `search_components` | Finds components for a need in plain words: "dropdown with search", "draggable card", "table with filters". |
+| `list_components` | Lists every component, optionally by category. |
+| `get_component` | The full reference for one component: import, attributes, properties, methods, events, slots, CSS parts, an example, accessibility notes and keyboard support. |
+| `get_tokens` | Design tokens and their values in the light, dark or contrast theme. |
+| `get_setup` | Install command and a minimal example for HTML, React, Vue, Svelte or Angular. |
+| `validate_markup` | Checks markup for unknown `focsd-` elements (with suggestions), unknown attributes, and form controls or icon buttons without an accessible name. |
+
+Each component is also a resource at `focsd://components/<tag>`, and every token is listed at `focsd://tokens`, for clients that let you attach resources to a conversation.
+
+## Files for agents
+
+Agents that cannot run the server can read the same facts as files:
+
+- [`/AGENTS.md`](/AGENTS.md): project instructions (setup, events, theming, forms, accessibility). `npx focsd init --agent` writes it, and a Claude skill, into your project.
+- [`/llms.txt`](/llms.txt): the index of every page, element contract and schema.
+- `/components/<tag>.md`: one element's contract, for example [`focsd-button.md`](/components/focsd-button.md).
+- `/schema/components/<tag>.json` and [`/schema/tokens/index.json`](/schema/tokens/index.json): JSON Schemas and design tokens.
+- [Hosted MCP](/getting-started/hosted-mcp/): run the server over HTTP.
+- The [theme builder](/foundations/theme-builder/) can copy your theme "for agents": a written description with measured contrast ratios, then the CSS.
+
+## Try it
+
+Ask your assistant for something like "a settings form with a region select, a notifications switch and a save button, using Focsd". It should search the components, read their references, write the markup, and check it with `validate_markup` before showing it to you.

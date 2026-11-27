@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hover card · Focsd test bench</title>
+    <script type="module" src="/src/hover-card.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Hover card"></pg-header>
+    <main class="pg-stack pg-w-40">
+      <div>
+        Written by
+        <focsd-hover-card id="hc">
+          <a slot="trigger" href="#ada">Ada Lovelace</a>
+          <focsd-avatar name="Ada Lovelace"></focsd-avatar>
+          <p>Mathematician.</p>
+          <focsd-button id="follow">Follow</focsd-button> </focsd-hover-card
+        >.
+      </div>
+      <focsd-hover-card id="hb">
+        <focsd-button slot="trigger" id="hb-trigger">Team</focsd-button>
+        <p>Platform team, 6 people.</p>
+        <focsd-button id="hb-join">Join</focsd-button>
+      </focsd-hover-card>
+      <div>
+        See the
+        <focsd-hover-card id="ht">
+          <a slot="trigger" href="#docs">docs</a>
+          <p>Guides and reference.</p>
+        </focsd-hover-card>
+      </div>
+      <p><a href="#after" id="after">After</a></p>
+      <focsd-button id="dlg-open">Open dialog</focsd-button>
+      <focsd-dialog id="dlg" headline="Reviewers">
+        <focsd-hover-card id="hd">
+          <focsd-button slot="trigger" id="hd-trigger">Grace</focsd-button>
+          <p>Compiler pioneer.</p>
+        </focsd-hover-card>
+      </focsd-dialog>
+    </main>
+  </body>
+</html>

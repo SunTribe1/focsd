@@ -1,0 +1,23 @@
+name: Accessibility issue
+description: Something is hard or impossible to use with assistive technology, the keyboard, zoom or high contrast.
+labels: [accessibility, bug]
+body:
+  - type: input
+    id: component
+    attributes:
+      label: Component
+    validations:
+      required: true
+  - type: input
+    id: at
+    attributes:
+      label: Assistive technology, browser and operating system
+      placeholder: NVDA 2026.1, Firefox 150, Windows 11
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What you did, what you heard or saw, and what you expected
+    validations:
+      required: true

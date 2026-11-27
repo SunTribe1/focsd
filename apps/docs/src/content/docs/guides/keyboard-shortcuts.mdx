@@ -1,0 +1,112 @@
+---
+title: Keyboard shortcuts
+description: Register app-level shortcuts such as Ctrl or Command + K with registerShortcut(), without stealing keys from text fields, IME input or open dialogs, and list them in a help dialog.
+---
+
+`registerShortcut()` and `listShortcuts()` in `@focsd/primitives/utils` give an app one place to bind keyboard shortcuts that stay out of text fields, IME input and open dialogs. Apart from `focsd-command`'s `shortcut` attribute, no Focsd component binds app shortcuts for you, so this is how your app opens the command palette, starts a new item or shows a help dialog.
+
+```js
+import { registerShortcut } from '@focsd/primitives/utils';
+
+const unregister = registerShortcut('mod+k', (event) => openPalette(), {
+  description: 'Open the command palette',
+});
+
+// later, for example when your view unmounts
+unregister();
+```
+
+Importing the helper is safe during server rendering. Call `registerShortcut()` in the browser only, for example in a client-side lifecycle hook, because it needs `document`.
+
+## Keys
+
+`keys` is one chord: modifiers, then one key, joined with `+`, such as `'mod+k'`, `'shift+?'`, `'alt+n'` or `'alt+shift+ArrowUp'`.
+
+| Part | Means |
+|---|---|
+| `mod` | Command on Apple platforms (macOS, iOS, iPadOS), Ctrl everywhere else. Use it for the usual app shortcut. |
+| `ctrl`, `alt`, `shift`, `meta` | That exact key. A chord matches only when exactly the modifiers you name are down. Any other modifier name (such as `cmd`, `option` or `control`) throws, so a typo cannot turn a chord into a single-key shortcut. |
+| The key | A letter, digit, symbol or key name such as `Escape` or `ArrowUp`, matched case-insensitively against `event.key`. A letter also matches the physical key, so `mod+k` works on a Cyrillic or Greek layout. Write the space bar as `space`, the plus key as `plus` (`mod+plus`) and Escape as `esc` or `Escape`. |
+
+A symbol such as `?` is typed with Shift on some layouts and without it on others, so Shift is not compared for symbols. Typing a character with AltGr (Ctrl + Alt on Windows) never counts as a chord.
+
+## When a shortcut stays quiet
+
+A shortcut does not fire, and does not call `preventDefault()`, when:
+
+- the person is typing in a text `input`, `textarea`, `select` or a `contenteditable` region (a checkbox, radio or button does not count), including a field inside a Focsd component's shadow DOM, unless you pass `allowInInputs: true`;
+- the person is composing text with an input method (IME);
+- the key is held down and repeating;
+- a component (or a shortcut in an inner scope) already handled the key and called `preventDefault()`;
+- a modal is open, such as an open `focsd-dialog`, `focsd-drawer` or `focsd-bottom-sheet` or a native modal `<dialog>`, because the page behind it is inert. A shortcut registered with a `scope` inside the modal still works.
+
+## Options
+
+| Option | Default | Does |
+|---|---|---|
+| `scope` | `document` | An element: the shortcut fires only while focus is inside it. |
+| `allowInInputs` | `false` | Also fire while typing in a field. Use it only with a modifier, for example `mod+enter` to submit. |
+| `preventDefault` | `true` | Stops the browser's own action for the key. |
+| `description` | none | Shown by `listShortcuts()`. |
+
+Registering the same chord in the same scope again replaces the first registration and warns once in development. When the same chord is registered on an element and on the page, only the element's shortcut fires while focus is inside it, because it prevents the default first (unless you pass `preventDefault: false`). An element scope is held weakly, so a view that is removed without calling `unregister()` is not kept alive, but call it anyway.
+
+## Command palette on Ctrl or Command + K
+
+```js
+import { registerShortcut } from '@focsd/primitives/utils';
+
+const palette = document.querySelector('focsd-command');
+
+registerShortcut('mod+k', () => palette.show(), { description: 'Open the command palette' });
+```
+
+`focsd-command` also has its own `shortcut` attribute for the simple case. Use `registerShortcut()` when you want the shortcut to appear in a help dialog, to let people remap it, or to share rules with the rest of your app.
+
+## A help dialog
+
+`listShortcuts()` returns `{ keys, description }` for everything registered, in registration order, so a help dialog can never drift from the code.
+
+```js
+import { listShortcuts, registerShortcut } from '@focsd/primitives/utils';
+
+const dialog = document.querySelector('#shortcut-help');
+const body = dialog.querySelector('tbody');
+
+registerShortcut('shift+?', () => {
+  body.replaceChildren(
+    ...listShortcuts().map(({ keys, description }) => {
+      const row = document.createElement('tr');
+
+      row.append(...[description, keys].map((text) => Object.assign(document.createElement('td'), { textContent: text })));
+
+      return row;
+    }),
+  );
+  dialog.show();
+}, { description: 'Show keyboard shortcuts' });
+```
+
+A `?` shortcut like this one is a character-key shortcut, so pair it with a way to turn it off (see below). Show keys the way people read them: replace `mod` with ⌘ or Ctrl, for example in `<focsd-kbd>`.
+
+## Accessibility
+
+Shortcuts that use only a character key (`j`, `?`, `shift+?`) are a risk for speech-input and screen reader users, who trigger them by accident. WCAG 2.1.4 (Character Key Shortcuts) needs at least one of these:
+
+- **Turn off or remap.** Offer a setting that unregisters the shortcut, and register it again with the person's own keys. `registerShortcut()` returns the function that removes it.
+- **Only while focused.** Pass a `scope` so the shortcut works only while focus is inside that element, for example a board or a list.
+- **Use a modifier.** `mod+k` and `alt+n` are not character-key shortcuts under the rule.
+
+In development, registering a character-only shortcut on the whole page logs a warning that says so.
+
+```js
+let off = registerShortcut('j', nextCard, { scope: board, description: 'Next card' });
+
+// A settings switch for people who want it off:
+switchEl.addEventListener('change', () => {
+  off();
+  off = switchEl.checked ? registerShortcut('j', nextCard, { scope: board, description: 'Next card' }) : () => {};
+});
+```
+
+Also: list every shortcut somewhere people can find it (a help dialog or a settings page), and do not use a chord the browser or screen readers use (`mod+t`, `mod+w`, `ctrl+alt+arrows` on some systems).

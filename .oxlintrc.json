@@ -1,0 +1,120 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "categories": {
+    "correctness": "error"
+  },
+  "ignorePatterns": [
+    ".agent/**",
+    ".agents/**",
+    ".claude/**",
+    ".codex/**",
+    ".continue/**",
+    ".cursor/**",
+    ".gemini/**",
+    ".opencode/**",
+    ".pi/**",
+    ".roo/**",
+    ".windsurf/**",
+    ".gstack/**",
+    ".superpowers/**",
+    "tools/oxlint/anti-slop/**",
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/dist-sandboxes/**",
+    "**/coverage/**",
+    "**/.astro/**",
+    "**/.turbo/**",
+    "**/test-results/**",
+    "**/playwright-report/**",
+    "**/types/**",
+    "apps/playground/e2e/fixtures/webmcp-polyfill.js",
+    "packages/primitives/src/floor.styles.js",
+    "packages/react/src/**",
+    "packages/primitives/src/internal/lucide-paths.js",
+    "packages/primitives/src/internal/phone-data.js"
+  ],
+  "jsPlugins": [
+    {
+      "name": "anti-slop",
+      "specifier": "./tools/oxlint/anti-slop/index.ts"
+    }
+  ],
+  "rules": {
+    "oxc/no-accumulating-spread": "error",
+    "anti-slop/no-array-filter-map": "error",
+    "anti-slop/no-reduce-accumulator-copy": "error",
+    "anti-slop/no-chained-type-assertions": "error",
+    "anti-slop/no-conditional-empty-object-spread": "error",
+    "anti-slop/no-known-value-widening": "error",
+    "anti-slop/no-module-mocking": "error",
+    "anti-slop/no-object-parameters": "error",
+    "anti-slop/no-reflect-apply": "error",
+    "anti-slop/no-reflect-get": "error",
+    "anti-slop/no-runtime-typeof": "error",
+    "anti-slop/no-shape-in-symbol-names": "error",
+    "anti-slop/no-unknown-parameters": "error",
+    "anti-slop/no-unknown-returns": "error",
+    "anti-slop/no-unknown-type-aliases": "error",
+    "anti-slop/no-unsafe-dictionary-type": "error",
+    "anti-slop/no-widen-then-assert": "error",
+    "anti-slop/require-readable-spacing": "error",
+    "anti-slop/require-safety-comment-for-type-assertion": "error"
+  },
+  "overrides": [
+    {
+      "files": [
+        "packages/data-grid/src/engine/state.js",
+        "packages/data-grid/src/engine/csv.js",
+        "packages/data-grid/src/engine/edit.js",
+        "packages/data-grid/src/engine/group.js",
+        "packages/data-grid/src/grid.js",
+        "packages/data-grid/src/view/filter-popover.js",
+        "packages/primitives/src/data/sorting.js",
+        "packages/primitives/src/inputs/phone-field-base.js",
+        "packages/primitives/src/internal/localize.js",
+        "packages/primitives/src/internal/icons.js",
+        "packages/primitives/src/internal/icon-sources.js",
+        "packages/primitives/src/internal/icon-adapters.js",
+        "packages/charts/src/chart.js",
+        "packages/charts/src/data.js",
+        "packages/webmcp/src/fill.js",
+        "packages/tokens/lib/**",
+        "apps/playground/e2e/webmcp-native.spec.js",
+        "apps/docs/e2e/webmcp-native.spec.js"
+      ],
+      "rules": {
+        "anti-slop/no-runtime-typeof": "off"
+      }
+    },
+    {
+      "files": ["packages/data-grid/src/mixins/host.ts"],
+      "rules": {
+        "anti-slop/no-unknown-returns": "off",
+        "anti-slop/no-unknown-parameters": "off"
+      }
+    },
+    {
+      // `shape` is a public attribute naming a visual shape (a skeleton's circle or text line, a tag's
+      // rounded or pill corners), not a data structure.
+      "files": ["packages/primitives/src/display/skeleton-base.js", "packages/primitives/src/display/tag-base.js"],
+      "rules": {
+        "anti-slop/no-shape-in-symbol-names": "off"
+      }
+    },
+    {
+      // debt: m74 — the page-side translation fixture rebuilds its arrow functions from source text,
+      // because functions cannot cross the Playwright page boundary.
+      "files": ["apps/playground/e2e/i18n.spec.js", "apps/playground/e2e/review-fixes-10.spec.js"],
+      "rules": {
+        "eslint/no-eval": "off"
+      }
+    },
+    {
+      // debt: m74 — not useless: the spread copies the live NamedNodeMap that the loop removes from or rewrites.
+      "files": ["packages/primitives/src/internal/svg-sanitize.js"],
+      "rules": {
+        "unicorn/no-useless-spread": "off"
+      }
+    }
+  ]
+}

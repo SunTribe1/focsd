@@ -1,0 +1,96 @@
+---
+title: Theme presets
+description: Five ready-made presets for Focsd, the default and four brands. Pick one with a single attribute; light, dark and high-contrast themes keep working, and your own brand layers on top.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import presetData from '@focsd/tokens/presets.json';
+import '@focsd/tokens/presets.css';
+import PresetExplorer from '../../../components/PresetExplorer.astro';
+
+export const entries = Object.entries(presetData.presets);
+export const rows = [['', { ...presetData.default, mood: 'Clear, neutral (the default)', fonts: { sans: 'Atkinson Hyperlegible Next' }, radius: null }], ...entries];
+
+A preset re-brands Focsd without touching a component: it sets the neutrals, the action colors, the link color, the corner radii and the fonts. Every preset ships a light and a dark theme, and each measured pair passes WCAG 2.2 AA. The high-contrast theme keeps its own colors in every preset.
+
+## Try them
+
+Pick a preset and a theme: the three screens below change, the rest of this page does not. To give your users the same choice, use the [theme picker](/components/theme-picker/) and [theme toggle](/components/theme-toggle/).
+
+<PresetExplorer />
+
+## Use a preset
+
+Load the preset's stylesheet after `tokens.css`, then name it on the root element. Remove the attribute to return to the default (Wayfinding).
+
+```css
+/* With a bundler, in your app's CSS */
+@import "@focsd/tokens/tokens.css";
+@import "@focsd/tokens/presets/harbor.css";
+```
+
+Without a bundler, link the files from a path your server serves, for example `/node_modules/@focsd/tokens/dist/tokens.css` and `/node_modules/@focsd/tokens/dist/presets/harbor.css`. Then set the attribute:
+
+```html
+<html data-focsd-brand="harbor"></html>
+```
+
+`@focsd/tokens/presets.css` holds all four if you switch at runtime. `setBrand('harbor')` and `setBrand(null)` from `@focsd/tokens` set and clear the attribute and reject unknown names; see [Helpers for app code](/foundations/utilities/). The preset and the theme are independent: `data-focsd-brand` picks the palette, `data-focsd-theme` picks light, dark or contrast.
+
+## Prismatic: color that carries meaning
+
+Prismatic is the colorful preset: a near-black (or near-white) canvas with a blue action color, where color marks meaning rather than decoration. Selecting it also turns on color hooks that the other presets leave unset, so the same markup looks calm in Wayfinding and colorful in Prismatic:
+
+- **Avatars** get a color from the person's name; the same name always gets the same color.
+- **Tags and badges** show their `color` (`blue`, `violet`, `pink`, `red`, `orange`, `amber`, `green`, `teal`); other presets keep the `tone`.
+- **Navigation icons** in the dock, sidebar and bottom navigation cycle through the eight hues.
+- **Progress bars and sliders** fill with a blue-to-pink gradient.
+- **Charts** draw their series in the category hues.
+- **Status tones** (positive, caution, critical, info) are more saturated, with deeper tinted backgrounds.
+
+Color is never the only signal: tags keep their text, charts keep their patterns and markers, and the high-contrast theme drops the hues for system colors. The palette is eight tokens, `--focsd-accent-1` to `--focsd-accent-8`, each with a `-tint`. Components read them through hooks only Prismatic sets, so the other presets stay calm. To turn the colors on in your own brand, set the hooks: `--focsd-hue-1` to `--focsd-hue-8` and their `-tint` (usually to your accent tokens), plus `--focsd-fill-gradient` and `--focsd-chart-1` to `--focsd-chart-6` if you want those too.
+
+## At a glance
+
+Wayfinding is the default: no attribute and no extra stylesheet. The fonts are named but not shipped; load them yourself, or the stack falls back to the system font.
+
+<div class="focsd-presets-table not-content" role="region" aria-label="Presets" tabindex="0">
+  <table>
+    <thead>
+      <tr><th scope="col">Preset</th><th scope="col">Mood</th><th scope="col">Font</th><th scope="col">Corners</th><th scope="col">Action</th><th scope="col">Attribute</th></tr>
+    </thead>
+    <tbody>
+      {rows.map(([name, p]) => (
+        <tr data-preset={name || 'default'}>
+          <th scope="row">{p.label}</th>
+          <td>{p.mood}</td>
+          <td>{p.fonts.sans.split(',')[0].replaceAll('"', '')}</td>
+          <td>{p.radius ? `${p.radius.control}, ${p.radius.surface}` : 'Default'}</td>
+          <td>
+            <span class="focsd-swatch" style={`background:${p.swatches.light.action}`} />
+            <span class="focsd-swatch" style={`background:${p.swatches.dark.action}`} />
+          </td>
+          <td>{name ? <code>{name}</code> : 'none'}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+## Remember the choice without a flash
+
+`noFlashScript` from `@focsd/tokens` is a short inline script that applies a stored theme and brand before first paint, from the default `focsd-theme` and `focsd-brand` keys. It ignores values it does not know. It reads the default `focsd-` keys only: if you set a custom `storage-key-prefix` on the toggle or picker, write your own snippet for that prefix.
+
+```html
+<script>/* replace this comment with the value of noFlashScript, exactly */</script>
+```
+
+Put the snippet in the `<head>` before your stylesheets, and keep the `<script>` tags tight around it: no space, no new line between `<script>` and the first character, or between the last character and `</script>`. A Content Security Policy hash covers the text byte for byte, so extra whitespace changes the hash and the browser blocks the script. If you use a Content Security Policy, allow it by hash with `noFlashHash`.
+
+## Layer your own brand on top
+
+Presets sit in the `focsd.preset` layer, between the tokens and your brand. The layer order is `focsd.tokens`, then `focsd.preset`, then `focsd.brand`, so a rule in `focsd.brand` (or any unlayered rule) beats the preset. Start from a preset in the [theme builder](/foundations/theme-builder/) and change one color; the generated CSS declares the order for you.
+
+<Aside type="caution" title="Check contrast after overriding">
+  The preset's contrast results hold for the preset's own colors. If you change a color, check every pair again.
+</Aside>

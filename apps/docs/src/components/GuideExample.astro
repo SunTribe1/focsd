@@ -1,0 +1,32 @@
+---
+import Example from './Example.astro';
+import previewHeights from '../data/preview-heights.json';
+import { inline } from '../data/markup.js';
+
+interface GuideExampleData {
+  id: string;
+  title: string;
+  lead: string;
+  html: string;
+  script?: string;
+  frame?: boolean;
+  imports?: { names: string[]; from: string }[];
+}
+
+interface Props {
+  guide: string;
+  examples: GuideExampleData[];
+  id: string;
+}
+
+const heights: Record<string, { desktop: number; mobile: number } | undefined> = previewHeights;
+const { guide, examples, id } = Astro.props;
+const e = examples.find((x) => x.id === id);
+
+if (!e) throw new Error(`No example "${id}" in the ${guide} guide.`);
+
+const slug = `guide-${guide}-${e.id}`;
+---
+
+<p set:html={inline(e.lead)} />
+<Example slug={slug} title={e.title} html={e.html} script={e.script} imports={e.imports} frame={e.frame} height={heights[slug]} />

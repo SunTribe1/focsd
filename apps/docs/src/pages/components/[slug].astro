@@ -1,0 +1,100 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import { Code, Tabs, TabItem } from '@astrojs/starlight/components';
+import Example from '../../components/Example.astro';
+import ApiTables from '../../components/ApiTables.astro';
+import A11yNotes from '../../components/A11yNotes.astro';
+import { components, apiFor, reactWrappers } from '../../data/catalogue.js';
+import { examples } from '../../data/examples/index.js';
+import { inline, primaryElement } from '../../data/markup.js';
+import previewHeights from '../../data/preview-heights.json';
+import { pascalCase, usageSnippets } from '../../lib/usage-snippets.js';
+import '@focsd/tokens/presets.css';
+
+const heights: Record<string, { desktop: number; mobile: number } | undefined> = previewHeights;
+
+export function getStaticPaths() {
+  return components.map((c) => ({ params: { slug: c.slug }, props: { c } }));
+}
+
+const { c } = Astro.props;
+const ex = examples[c.slug];
+const api = apiFor(c.tag);
+const element = primaryElement(ex.html, c.tag);
+const event = api.events.find((e) => e.name !== 'input')?.name;
+const wrapped = reactWrappers.has(pascalCase(c.slug));
+const usage = usageSnippets({ tag: c.tag, slug: c.slug, module: c.module, element, event, wrapped });
+
+const more = ex.more ?? [];
+
+const headings = [
+  { depth: 2, slug: 'example', text: 'Example' },
+  ...more.map((m) => ({ depth: 3, slug: `example-${m.id}`, text: m.title })),
+  { depth: 2, slug: 'usage', text: 'Usage' },
+  { depth: 2, slug: 'api', text: 'API' },
+  { depth: 2, slug: 'accessibility', text: 'Accessibility' },
+  ...more.map((m) => ({ depth: 3, slug: `accessibility-${m.id}`, text: m.title })),
+];
+---
+
+<StarlightPage frontmatter={{ title: c.name, description: ex.summary }} headings={headings}>
+  <ul class="focsd-component-meta">
+    <li>
+      Tag: <code>{c.tag}</code>
+    </li>
+    <li>Pattern: {c.pattern}</li>
+    <li>Category: {c.category}</li>
+  </ul>
+
+  <h2 id="example">Example</h2>
+  <Example slug={c.slug} title={c.name} html={ex.html} script={ex.script} frame={ex.frame} height={heights[c.slug]} />
+  {more.map((m) => (
+    <>
+      <h3 id={`example-${m.id}`}>{m.title}</h3>
+      <p set:html={inline(m.summary)} />
+      <Example
+        slug={`${c.slug}-${m.id}`}
+        title={`${c.name}: ${m.title}`}
+        html={m.html}
+        script={m.script}
+        frame={m.frame}
+        height={heights[`${c.slug}-${m.id}`]}
+      />
+    </>
+  ))}
+
+  <h2 id="usage">Usage</h2>
+  <p>
+    Import the module once, then use the tag like any HTML element. Every framework below renders the same element; see{' '}
+    <a href="/getting-started/frameworks/">Frameworks</a> for setup.
+  </p>
+  <Tabs syncKey="framework">
+    <TabItem label="HTML">
+      <Code code={usage.html} lang="html" />
+    </TabItem>
+    <TabItem label="React">
+      <Code code={usage.react} lang="jsx" />
+    </TabItem>
+    <TabItem label="Vue">
+      <Code code={usage.vue} lang="vue" />
+    </TabItem>
+    <TabItem label="Angular">
+      <Code code={usage.angular} lang="ts" />
+    </TabItem>
+    <TabItem label="Svelte">
+      <Code code={usage.svelte} lang="svelte" />
+    </TabItem>
+  </Tabs>
+
+  <h2 id="api">API</h2>
+  <ApiTables tag={c.tag} api={api} props={ex.props} methods={ex.methods} />
+
+  <h2 id="accessibility">Accessibility</h2>
+  <A11yNotes notes={ex.a11y} keyboard={ex.keyboard} id="keyboard" />
+  {more.map((m) => (
+    <>
+      <h3 id={`accessibility-${m.id}`}>{m.title}</h3>
+      <A11yNotes notes={m.a11y} keyboard={m.keyboard} id={`keyboard-${m.id}`} level={4} />
+    </>
+  ))}
+</StarlightPage>

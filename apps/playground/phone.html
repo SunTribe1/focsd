@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Phone field · Focsd test bench</title>
+    <script type="module" src="/src/phone.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Phone field"></pg-header>
+    <main class="pg-stack pg-w-40">
+      <form id="f" class="pg-stack">
+        <focsd-phone-field id="p" label="Mobile" name="mobile" default-country="GB" preferred="GB,US,IE" required></focsd-phone-field>
+        <focsd-phone-field id="pv" label="Office" name="office" value="+14155550132"></focsd-phone-field>
+        <div class="pg-row">
+          <focsd-button type="submit" variant="action">Submit</focsd-button>
+          <focsd-button type="reset">Reset</focsd-button>
+        </div>
+      </form>
+      <output id="out"></output>
+    </main>
+  </body>
+</html>

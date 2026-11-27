@@ -1,0 +1,45 @@
+---
+title: Blocks
+description: Whole pages you copy into your project with one command, built only from Focsd's public APIs.
+---
+
+import BlockPreview from '../../../components/BlockPreview.astro';
+
+A block is a complete, accessible page: plain HTML, one JS module and, for some blocks, a small CSS file. `npx focsd add block <name>` writes it into `blocks/<name>/` in your project. It is only markup and the elements it imports, so it fits any framework, but it needs a bundler or an import map (see below).
+
+```sh
+npx focsd list --blocks
+npx focsd add block dashboard
+npx focsd add block dashboard --out src/pages/overview
+```
+
+- **It never overwrites.** If any target file exists, the command writes nothing, lists the files in the way and exits with code 1. `--overwrite` is refused for blocks. Pick another folder with `--out`, which is relative to the project root.
+- **It uses the packages.** The JS imports `@focsd/components/focsd-*.js` (plus `@focsd/charts` and `@focsd/data-grid` for the dashboard). The command prints the `npm install` line for the block. A `focsd.json` is not required; if you copied components with `focsd add`, those win and the block works with them.
+- **The text is yours.** The sample content is in the HTML, so edit it in place. Block strings are not routed through `registerTranslation`.
+- **It needs a bundler or an import map.** The block's script imports bare specifiers (`@focsd/components/focsd-card.js`), which a plain static server cannot resolve: the page stays blank. Open `blocks/<name>/index.html` with Vite, Parcel, webpack or another dev server that resolves bare imports, or add an import map. The two `<link>` tags for `@focsd/tokens` point at `/node_modules/@focsd/tokens/dist/`; in a bundler setup, replace them with `import '@focsd/tokens/tokens.css'` in the block's script.
+- **It sends nothing.** Settings and sign-in validate on the page and send no request. Settings fires a cancelable `settings:save` event; the sample handler in `settings.js` resolves at once, so replace it with your own save call. Sign-in's form has an empty `action`: set your endpoint there or handle the submit in `sign-in.js`.
+- **Icons.** Sidebars use the built-in icons (`home`, `inbox`, `users`, `package`, `settings` and more). Register your own icon set to use any other icon, and change the `icon` attributes.
+
+## Dashboard
+
+<BlockPreview name="dashboard" />
+
+The sidebar becomes a drawer below 768 px, the four stat tiles wrap to two columns and then one, and the orders grid scrolls inside its own wrapper on a phone.
+
+## Settings
+
+<BlockPreview name="settings" />
+
+A tabbed form. An invalid email stops the submit and moves focus to the error summary. Saving announces "Settings saved" and sends nothing: wire your own request.
+
+## Sign in
+
+<BlockPreview name="sign-in" />
+
+A centered card with `autocomplete` tokens that password managers understand. It sends nothing; replace the `form` action and the submit handler with your sign-in call.
+
+## Empty app
+
+<BlockPreview name="empty-app" />
+
+A shell with a header and sidebar and an empty state in `main`. The skip link reaches `main`, and there is one `main` landmark.

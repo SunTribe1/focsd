@@ -1,0 +1,93 @@
+{
+  "name": "focsd-monorepo",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.29.0",
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "^22.12.0",
+      "onFail": "download"
+    }
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "test:smoke": "node scripts/smoke/consumer.mjs && pnpm --filter @focsd/playground exec playwright test --project=chromium e2e/ssr-hydrate.spec.js",
+    "test:e2e": "turbo run test:e2e --concurrency=1",
+    "check": "pnpm lint && pnpm format:check && pnpm spell && node scripts/check-release.mjs && node scripts/check-counts.mjs && node scripts/checks/api-compat.mjs && node scripts/build-sr-checklist.mjs --check && node scripts/checks/visible-strings.mjs && node scripts/checks/logical-properties.mjs && pnpm knip && pnpm dup && node --test \"scripts/checks/test/*.test.mjs\" && turbo run check && pnpm check:lit",
+    "check:lit": "turbo run build --filter=@focsd/ai --filter=@focsd/charts --filter=@focsd/components --filter=@focsd/data-grid --filter=@focsd/editor --output-logs=errors-only && node scripts/checks/lit-analyzer.mjs",
+    "check:packages": "turbo run build --filter=\"./packages/*\" --output-logs=errors-only && node scripts/check-packages.mjs",
+    "knip": "knip --no-progress",
+    "dup": "jscpd packages",
+    "docs": "turbo run dev --filter=@focsd/docs",
+    "playground": "turbo run dev --filter=@focsd/playground",
+    "lint": "eslint . --max-warnings=0 && oxlint --deny-warnings",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "spell": "cspell --no-progress --gitignore \"**/*.{js,mjs,jsx,ts,astro,md,mdx,html,css,json}\"",
+    "changeset": "changeset",
+    "release:version": "changeset version",
+    "release:publish": "turbo run build --filter=\"./packages/*\" && changeset publish --no-git-tag && node scripts/api-baseline.mjs",
+    "prepare": "node scripts/install-hooks.mjs"
+  },
+  "customElements": "packages/components/custom-elements.json",
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
+    "@changesets/cli": "3.0.3",
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
+    "@eslint-community/eslint-plugin-eslint-comments": "4.8.1",
+    "@eslint/js": "10.0.1",
+    "@oxlint/plugins": "1.88.0",
+    "@typescript/native": "npm:typescript@7.0.2",
+    "@vitest/coverage-v8": "5.0.3",
+    "@vitest/eslint-plugin": "1.6.28",
+    "acorn": "8.18.0",
+    "acorn-walk": "8.3.5",
+    "cspell": "10.3.6",
+    "custom-element-jet-brains-integration": "1.8.0",
+    "custom-element-jsx-integration": "1.6.0",
+    "custom-element-svelte-integration": "1.2.0",
+    "custom-element-vs-code-integration": "1.5.0",
+    "custom-element-vuejs-integration": "1.4.0",
+    "esbuild": "0.28.2",
+    "eslint": "10.12.0",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-plugin-astro": "3.2.1",
+    "eslint-plugin-import-x": "4.17.1",
+    "eslint-plugin-lit": "2.3.1",
+    "eslint-plugin-lit-a11y": "5.1.1",
+    "eslint-plugin-playwright": "2.12.2",
+    "eslint-plugin-unicorn": "78.0.0",
+    "eslint-plugin-wc": "3.1.0",
+    "globals": "17.13.0",
+    "husky": "9.1.7",
+    "jscpd": "4.3.0",
+    "knip": "5.88.1",
+    "lint-staged": "17.6.2",
+    "lit-analyzer": "2.0.3",
+    "oxlint": "1.88.0",
+    "prettier": "3.9.9",
+    "prettier-plugin-astro": "1.1.0",
+    "publint": "^0.3.25",
+    "turbo": "2.11.7",
+    "typescript": "npm:@typescript/typescript6@6.0.2",
+    "typescript-eslint": "8.72.1"
+  },
+  "lint-staged": {
+    "*.{js,mjs,jsx,ts}": [
+      "eslint --fix --max-warnings=0 --no-warn-ignored",
+      "oxlint --deny-warnings",
+      "prettier --write --ignore-unknown"
+    ],
+    "*.astro": [
+      "eslint --fix --max-warnings=0 --no-warn-ignored",
+      "prettier --write --ignore-unknown"
+    ],
+    "*.{json,css,html,yml,yaml}": "prettier --write --ignore-unknown"
+  }
+}

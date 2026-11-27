@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Bottom navigation · Focsd test bench</title>
+    <script type="module" src="/src/bottom-nav.js"></script>
+    <style>
+      /* A fixed bar covers what scrolls under it: keep a focused element clear of it (WCAG 2.4.11). */
+      html {
+        scroll-padding-block-end: calc(var(--focsd-bottom-nav-height, 4rem) + env(safe-area-inset-bottom, 0px));
+      }
+    </style>
+  </head>
+  <body>
+    <pg-header heading="Bottom navigation"></pg-header>
+    <main class="pg-stack">
+      <p>
+        The bar shows below 768 px. Narrow the window, or open this page on a phone. It sits fixed to the bottom of the screen, and the
+        element keeps the bar's height in the page, so the last paragraph is never covered. Put the bar last in the page, and give the page
+        <code>scroll-padding-block-end</code> the bar's height, so a focused link is never hidden behind it.
+      </p>
+      <p>Last route: <output id="routed">none</output> (<output id="calls">0</output> clicks handed to the router).</p>
+      <section class="pg-stack" aria-labelledby="filler-heading">
+        <h2 id="filler-heading">Page content</h2>
+        <p>Your starred items, search, schedule and compose are one tap away at any scroll position.</p>
+        <p>The current section is marked for screen readers as the current page, and shown with a heavier label and a bar.</p>
+        <p>A badge adds to the link's name, so "Schedule, 3 new" is read, not a bare number.</p>
+        <p>Each item has an icon and a visible label. Targets are at least 48 px.</p>
+        <p>On phones with a home indicator, the bar pads itself by the safe-area inset.</p>
+        <p>Clicks on the links go to the app's link handler, so a client-side router can take them.</p>
+        <p>Links stay real links: a new tab, a copy of the address, or a modifier click works as usual.</p>
+        <p>Wider screens hide the bar; give them a sidebar or a header navigation instead.</p>
+        <p id="last">The last paragraph of the page.</p>
+        <p><a id="last-link" href="#last-link">The last link of the page</a>, which Tab must bring into view above the bar.</p>
+      </section>
+    </main>
+    <focsd-bottom-nav id="nav">
+      <focsd-bottom-nav-item href="/bottom-nav.html" icon="home" label="Home" current></focsd-bottom-nav-item>
+      <focsd-bottom-nav-item href="/search" icon="search" label="Search"></focsd-bottom-nav-item>
+      <focsd-bottom-nav-item href="/inbox" icon="inbox" label="Inbox" badge="3"></focsd-bottom-nav-item>
+      <focsd-bottom-nav-item href="/profile" icon="user" label="Profile"></focsd-bottom-nav-item>
+    </focsd-bottom-nav>
+  </body>
+</html>

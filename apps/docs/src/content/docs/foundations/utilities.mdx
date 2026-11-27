@@ -1,0 +1,152 @@
+---
+title: Helpers for app code
+description: The small, stable helpers in @focsd/primitives/utils and @focsd/tokens, such as announce(), setTheme(), setLinkHandler(), setLocale() and the date, currency and phone parsers.
+---
+
+Two entry points hold the helpers your app code can rely on. Both are public API under semantic versioning, and both work during server rendering: nothing touches the page until you call it.
+
+| Entry | What it holds |
+|---|---|
+| `@focsd/primitives/utils` | Announcements, focus, translations, icons, keyboard shortcuts, the link handler, the default locale, and the date, currency, phone, color and file helpers the components use |
+| `@focsd/tokens` | `setTheme()`, `clearTheme()`, `setDensity()`, `setBrand()`, the theme, density and brand lists, `cssVar()` and the no-flash script |
+
+`@focsd/components` re-exports the translation and icon functions, so `import { registerIconLibrary } from '@focsd/components'` keeps working.
+
+## Themes and density
+
+```js
+import { setTheme, setDensity, themes, densities } from '@focsd/tokens';
+
+setTheme('dark'); // <html data-focsd-theme="dark">
+setDensity('compact', document.querySelector('#sidebar')); // only that section
+console.log(themes, densities); // ['light', 'dark', 'contrast'] ['default', 'comfortable', 'compact']
+```
+
+`setTheme(theme, root?)` and `setDensity(density, root?)` set the `data-focsd-theme` and `data-focsd-density` attributes described in [Theming and tokens](/foundations/theming/). They default to `<html>`. An unknown name throws, so a typo fails loudly. On the server there is no `<html>`, so pass the root element yourself.
+
+`clearTheme(root?)` removes `data-focsd-theme`, so the page follows the system setting again. `setBrand(brand, root?)` sets `data-focsd-brand` to one of `brands` (`harbor`, `signal`, `mineral`, `prismatic`), and `setBrand(null)` clears it; an unknown name throws. `noFlashScript` and `noFlashHash` apply a stored theme and preset before first paint; see [Presets](/foundations/presets/#remember-the-choice-without-a-flash).
+
+`cssVar('action')` returns `var(--focsd-action)` and throws for a token that does not exist.
+
+## Announcements and focus
+
+```js
+import { announce, deepActiveElement } from '@focsd/primitives/utils';
+
+await saveDraft();
+announce('Draft saved');
+announce('Could not save the draft', { politeness: 'assertive' });
+announce('Draft saved', { from: saveButton }); // heard even inside an open modal dialog
+```
+
+`announce(message, { politeness })` speaks a message through one shared, visually hidden live region per page, so screen reader users hear what changed after an async save, a filter or a copy. Use `assertive` only for errors. The same message twice is announced twice. It does nothing on the server.
+
+An open modal dialog makes the rest of the page inert, and screen readers do not read an inert live region. Pass `from`, the element that is announcing: when it is inside an open modal dialog, the region moves into the topmost open modal; otherwise it stays in `<body>`. Focsd's own components (the textarea count, the data grid) pass themselves.
+
+`deepActiveElement()` returns the focused element, looking inside open shadow roots, or `null` when there is no document.
+
+## Translations
+
+`registerTranslation(...tables)` adds or extends translation tables, and `en` is the English table to copy from. See [Localization](/foundations/localization/).
+
+## Icons
+
+`registerIconLibrary`, `unregisterIconLibrary`, `setDefaultIconLibrary`, `setSystemIcons`, `resetSystemIcons`, `systemIconNames` and the adapters `fromLucide`, `fromFontAwesome` and `fromSvgStrings`. See [Icons](/foundations/icons/).
+
+## Links and your router
+
+Focsd links are real `<a href>` elements, so they work without JavaScript, open in a new tab with Ctrl or Command + click, and show their address on hover. In a single-page app, `setLinkHandler()` hands the plain clicks to your router instead of loading a new page.
+
+```js
+import { setLinkHandler } from '@focsd/primitives/utils';
+
+setLinkHandler((url, { element, event }) => {
+  if (!url.pathname.startsWith('/app/')) return false; // not ours: the browser loads it
+  router.navigate(`/${url.pathname.replace(/^\/+/, '')}${url.search}${url.hash}`);
+  return true; // handled: the click's default is prevented
+});
+
+setLinkHandler(null); // back to plain links
+```
+
+The handler receives a fresh `URL` object, the Focsd element and the click. Return `true` when your router navigated; any other value, or an error thrown in the handler, lets the browser follow the link as usual. An async handler returns a promise: the click's default is prevented at once, and if the promise does not resolve to `true` (or rejects), the page is loaded once with `location.assign()`, so there is never a double navigation.
+
+Always build the router path as `/` plus the path with its leading slashes removed, as the recipes below do. Focsd already keeps a path that starts with `//` native, but a router given `//other.site/x` treats it as another host.
+
+**Which clicks reach it.** Only a plain click (or Enter) with the primary button and no modifier key, on a link to the same origin over `http` or `https`, with no `target` other than `_self` (its own, or else the page's `<base target>`), no `download` and no `ping`. Everything else stays native: Ctrl, Command, Shift or Alt + click, the middle button, `external` and `target="_blank"` links, downloads, links with `ping`, other sites, URLs with a user name or password, paths that start with `//`, and `mailto:`, `javascript:`, `data:` and `blob:` URLs. A link to the current page with a `#` (including `href="#"`) scrolls as usual. So the handler never sees a URL on another site, and your router cannot be used to redirect there.
+
+**Which elements use it.** `focsd-link`, `focsd-nav-item`, `focsd-sidebar-item`, `focsd-breadcrumb-item`, the links inside `focsd-footer-section`, and `focsd-pagination` when it has an `href`. The skip link, the table of contents and the error summary jump within the page, so they keep their native behavior.
+
+There is one handler per page; setting another replaces it.
+
+### Astro view transitions
+
+```js
+import { navigate } from 'astro:transitions/client';
+import { setLinkHandler } from '@focsd/primitives/utils';
+
+setLinkHandler((url) => {
+  navigate(url.href);
+  return true;
+});
+```
+
+Astro's router only sees links in the page's own DOM; this sends the links inside Focsd components through the same view transitions.
+
+### React Router
+
+```jsx
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router';
+import { setLinkHandler } from '@focsd/primitives/utils';
+
+export function FocsdLinks() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setLinkHandler((url) => {
+      navigate(`/${url.pathname.replace(/^\/+/, '')}${url.search}${url.hash}`);
+      return true;
+    });
+
+    return () => setLinkHandler(null);
+  }, [navigate]);
+
+  return null;
+}
+```
+
+Render `<FocsdLinks />` once inside your router. If the app has a `basename`, strip it from `url.pathname` first.
+
+### Vue Router
+
+```js
+import { setLinkHandler } from '@focsd/primitives/utils';
+import { router } from './router.js';
+
+setLinkHandler((url) => {
+  router.push(`/${url.pathname.replace(/^\/+/, '')}${url.search}${url.hash}`);
+  return true;
+});
+```
+
+## Default locale
+
+`setLocale('de-CH')` sets the locale components format numbers, amounts and dates with, and `setLocale(null)` goes back to the page's `lang`. `getLocale()` returns it, or `null`. Labels still follow `lang`. See [Localization](/foundations/localization/#format-numbers-and-dates).
+
+## Parsing and formatting
+
+| Helper | Does |
+|---|---|
+| `parseISODate(text)`, `toISODate(date)` | `YYYY-MM-DD` to a UTC `Date` and back; `null` for text that is not a real date |
+| `parseAmount(text, locale?, currency?)` | Reads an amount as typed or pasted in that locale (`1.234,56` in German, `(12.00)` for a negative); `null` when it is not an amount or is ambiguous |
+| `minorUnits(currency)` | Decimal places of a currency: 2 for USD, 0 for JPY, 3 for KWD |
+| `parsePhone(text, country)` | `{ country, national, e164 }` or `null`; a leading `+` or `00` switches to that dial code's country |
+| `isValidPhone(phone)`, `formatNational(national, country)` | Whether the number has a possible length; group its digits like the country's example |
+| `parseColor(text)`, `formatColor(color, format?, alpha?)` | Any supported CSS color to channels and back, as hex, rgb, hsl or oklch |
+| `contrastRatio(a, b)` | The WCAG 2.2 contrast ratio between two colors, to two decimals |
+| `formatBytes(bytes, locale?)`, `acceptsFile(accept, file)` | `1.5 MB` in decimal units, the number in `locale` (English when omitted); whether a `File` matches an `accept` list such as `.pdf,image/*` |
+
+## Imports from the package root
+
+Import these helpers from `@focsd/primitives/utils`. The `@focsd/primitives` root is for people building their own components on the headless base classes.

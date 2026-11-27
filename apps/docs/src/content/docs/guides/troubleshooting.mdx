@@ -1,0 +1,89 @@
+---
+title: Troubleshooting and recipes
+description: Answers to the questions people hit with web components, from styling through shadow DOM to testing and server rendering.
+---
+
+Focsd components are standard custom elements. Most surprises come from that, not from Focsd. Each one has a short answer.
+
+## Styling
+
+**My CSS does not reach inside a component.** Shadow DOM keeps page CSS out on purpose, so your styles cannot break a component by accident. Style a component in this order:
+
+1. **Design tokens** for anything global: `--focsd-action`, `--focsd-radius-control`, `--focsd-space-3`. See [Theming](/foundations/theming/) and the [theme builder](/foundations/theme-builder/).
+2. **Component properties** for one component: `focsd-button { --focsd-button-radius: 0; }`.
+3. **CSS parts** for one piece inside it: `focsd-dialog::part(headline) { font-size: 1.5rem; }`. Every component page lists its parts. Parts of nested components are re-exported, for example `focsd-date-picker::part(calendar-day)`.
+4. **Slots**: content you put inside an element (labels, icons, options) is your own light DOM, styled by your page CSS.
+
+See [Styling](/foundations/styling/) for worked examples.
+
+**Tailwind classes on a component do nothing inside it.** They apply to the element's box (its margins, width, placement) like any other element, but not to its internals. Use tokens or `::part()` for internals; Tailwind's arbitrary properties work: `class="[--focsd-button-radius:0]"`.
+
+## Before components load
+
+**Elements flash unstyled, or the page jumps when they upgrade.** Register the components early (import them in your entry module, not lazily on interaction), and hide undefined elements briefly:
+
+```css
+:not(:defined) {
+  visibility: hidden;
+}
+```
+
+For no flash at all, render on the server with Declarative Shadow DOM: see [Server rendering](/getting-started/frameworks/#server-rendering).
+
+**`document.querySelector('focsd-select').value` is undefined.** The element has not upgraded yet. Wait for it:
+
+```js
+await customElements.whenDefined('focsd-select');
+```
+
+## Forms
+
+**My framework's form library does not see the value.** Focsd inputs fire native `input` and `change` events and expose `value`, so wire them like native inputs. In React 19, `onChange` and `onInput` work on the elements directly or through `@focsd/react`; in Vue bind `:value` and listen with `@change` (or `@input`); in Angular bind `[value]` and `(change)`.
+
+**`new FormData(form)` misses a field.** Give the component a `name`. Focsd controls are form-associated, so with a name they submit, validate, reset and restore like native inputs, including inside `<fieldset disabled>`.
+
+**Custom validation.** Use the native API: `el.setCustomValidity('Choose a later date')`, then `form.reportValidity()`. The component shows the message and points screen readers at it.
+
+## Events
+
+**An event from inside a component does not reach my listener.** Focsd events bubble; `input` is also `composed`, so it crosses shadow roots. Listen on the element itself or an ancestor. In React 18 use `ref` and `addEventListener`, or upgrade to React 19, which supports custom-element events directly.
+
+**`event.target` is the host, not the inner `<input>`.** That is by design: read `event.target.value` from the Focsd element.
+
+**Setting a property from script fired (or did not fire) an event.** One rule, as in native HTML. State events (`focsd-open`, `close`, `toggle`) fire whenever an element opens or closes, however it happened, like `<details>` and `<dialog>`: `el.open = true` on a disclosure fires `toggle`. Value events (`input`, `change`, `focsd-select`, `focsd-snap-change`) fire only for the person's own actions, like `input.value = 'x'`: setting `value` or a bottom sheet's `snap` fires nothing.
+
+## TypeScript and editors
+
+Types, framework typings and editor autocomplete ship in every package: see [TypeScript and editors](/getting-started/frameworks/#typescript-and-editors). `document.createElement('focsd-select')` returns `FocsdSelect`, even when you import a single component file.
+
+## Testing
+
+- **Playwright** pierces shadow DOM automatically: `page.getByRole('combobox', { name: 'Country' })` finds the input inside `focsd-combobox`. Content you slot in (options, labels) stays in the light DOM, so scope those queries to the host element rather than to a role inside the shadow root.
+- **Testing Library** in a browser runner (Vitest browser mode, Web Test Runner) works the same way. jsdom has no `ElementInternals` or Popover API, so test interaction in a real browser.
+- Wait for upgrade before asserting: `await customElements.whenDefined('focsd-button')`.
+
+## Frameworks
+
+**Vue warns "Failed to resolve component: focsd-button".** Tell Vue these are custom elements: `compilerOptions: { isCustomElement: (tag) => tag.startsWith('focsd-') }`.
+
+**Angular errors on unknown elements.** Add `CUSTOM_ELEMENTS_SCHEMA` to the component or module that uses them.
+
+**Passing objects and arrays** (data grid rows, chart data): set them as properties, not attributes. React 19, Vue (`.prop` or `:rows`), Svelte and Angular (`[rows]`) all set properties for custom elements.
+
+## Bundlers
+
+**Which files does my bundler use?** The component packages (`@focsd/components`, `@focsd/primitives`, `@focsd/data-grid`, `@focsd/charts`, `@focsd/editor` and `@focsd/ai`) map the `development` condition in `exports` to readable `src/` and everything else to `dist/` (the same files, copied as written: nothing is minified, so your build does the optimizing). Vite and webpack dev servers pick `src/`, production builds `dist/`. Bundlers and test runners that predate `exports` read `main` and `module`, which point at `dist/`. `@focsd/tokens` ships `dist/` only, and `@focsd/react`, `@focsd/webmcp` and `@focsd/mcp` ship `src/` as written.
+
+**Components behave oddly after mixing conditions.** Load every Focsd package under the same conditions. If one import resolves to `src/` and another to `dist/` (a custom `resolve.conditions` in one build step but not another, or a test runner set up differently from the app), the page holds two copies of each module. The first copy registers the tags, so `registerTranslation()` or `registerIconLibrary()` called through the other copy never reaches the elements on the page. Keep conditions consistent, or alias `@focsd/*` to one folder.
+
+## Iframes and shadow roots
+
+Components work inside other shadow roots and same-origin iframes: popups position against their own window, and the rich text editor's styles are adopted into whichever root holds it.
+
+## Content Security Policy
+
+Focsd needs no `unsafe-eval`. With Trusted Types enforced, allow the `focsd-icons` policy (`trusted-types focsd-icons`), or register icons as DOM data, which needs no policy.
+
+## Still stuck?
+
+Search the [issues](https://github.com/SunTribe1/focsd/issues) or open one with a minimal reproduction. Accessibility problems are always bugs.

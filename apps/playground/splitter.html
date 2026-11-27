@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Splitter · Focsd test bench</title>
+    <style>
+      main > focsd-splitter {
+        block-size: 24rem;
+      }
+    </style>
+    <script type="module" src="/src/splitter.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Splitter"></pg-header>
+    <main class="pg-stack">
+      <h2>Two slots (legacy)</h2>
+      <focsd-splitter id="legacy" label="Resize sidebar" value="30">
+        <div slot="start">Sidebar</div>
+        <div slot="end">Content</div>
+      </focsd-splitter>
+
+      <h2>Three panes, collapsible preview, saved layout</h2>
+      <focsd-splitter id="three" orientation="horizontal" autosave="pg-three">
+        <focsd-splitter-pane id="p1" label="Folders" size="25" min="15">
+          <p>Inbox, Sent, Drafts, Archive</p>
+        </focsd-splitter-pane>
+        <focsd-splitter-pane id="p2" label="Messages" min="20">
+          <p>Quarterly report draft</p>
+          <p>Team offsite agenda</p>
+        </focsd-splitter-pane>
+        <focsd-splitter-pane id="p3" label="Preview" size="35" collapsible>
+          <p>Select a message to read it here.</p>
+        </focsd-splitter-pane>
+      </focsd-splitter>
+
+      <h2>Vertical, with a nested splitter</h2>
+      <focsd-splitter id="vert" orientation="vertical">
+        <focsd-splitter-pane label="Editor">
+          <p>Editor</p>
+        </focsd-splitter-pane>
+        <focsd-splitter-pane label="Panels">
+          <focsd-splitter id="nested" orientation="horizontal">
+            <focsd-splitter-pane label="Terminal"><p>Terminal</p></focsd-splitter-pane>
+            <focsd-splitter-pane label="Output"><p>Output</p></focsd-splitter-pane>
+          </focsd-splitter>
+        </focsd-splitter-pane>
+      </focsd-splitter>
+    </main>
+  </body>
+</html>

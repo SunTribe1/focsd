@@ -1,0 +1,51 @@
+---
+import '@focsd/tokens/fonts.css';
+import '@focsd/tokens/tokens.css';
+import '@focsd/components/upgrade.css';
+import '@focsd/tokens/presets.css';
+import '../styles/landing.css';
+import '../styles/landing-sections.css';
+import LandingHead from '../components/landing/LandingHead.astro';
+import LandingHeader from '../components/landing/LandingHeader.astro';
+import Hero from '../components/landing/Hero.astro';
+import Bento from '../components/landing/Bento.astro';
+import Frameworks from '../components/landing/Frameworks.astro';
+import Accessible from '../components/landing/Accessible.astro';
+import Theming from '../components/landing/Theming.astro';
+import ForAI from '../components/landing/ForAI.astro';
+import Cta from '../components/landing/Cta.astro';
+import Footer from '../components/landing/Footer.astro';
+import AskTheDocs from '../components/ask/AskTheDocs.astro';
+
+const title = 'Focsd: free, accessible web components for every framework';
+
+const description =
+  'Free, open-source web components for every framework. Accessible by default (WCAG 2.2 AA), themed with design tokens, MIT licensed.';
+---
+
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <LandingHead title={title} description={description} />
+  </head>
+  <body class="lp">
+    <a class="lp-skip" href="#lp-main">
+      Skip to content
+    </a>
+    <LandingHeader />
+    <main id="lp-main">
+      <Hero />
+      <Bento />
+      <Frameworks />
+      <Accessible />
+      <Theming />
+      <ForAI />
+      <Cta />
+    </main>
+    <Footer />
+    <AskTheDocs />
+    <script>
+      import '../components/landing/landing.js';
+    </script>
+  </body>
+</html>

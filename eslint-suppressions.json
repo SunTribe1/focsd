@@ -1,0 +1,12 @@
+{
+  "apps/docs/e2e/headers.spec.js": {
+    "playwright/no-networkidle": {
+      "count": 1
+    }
+  },
+  "apps/docs/e2e/webmcp.spec.js": {
+    "playwright/no-networkidle": {
+      "count": 1
+    }
+  }
+}

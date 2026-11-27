@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sign in · Northwind</title>
+    <!-- Tokens: adjust these two paths to where your server exposes @focsd/tokens/dist (or import "@focsd/tokens/tokens.css" in your bundler). -->
+    <link rel="stylesheet" href="/node_modules/@focsd/tokens/dist/fonts.css" />
+    <link rel="stylesheet" href="/node_modules/@focsd/tokens/dist/tokens.css" />
+    <!-- Applies the saved theme before first paint. CSP script-src hash: 'sha256-C2K4EpZbw+KtT6iuKenSdqPWVgO0OmPYfvgBBeiduRo=' -->
+    <!-- prettier-ignore -->
+    <script>(function(){try{var d=document.documentElement,s=localStorage,t=s.getItem("focsd-theme"),b=s.getItem("focsd-brand");/^(light|dark|contrast)$/.test(t)&&d.setAttribute("data-focsd-theme",t);/^(harbor|signal|mineral|prismatic)$/.test(b)&&d.setAttribute("data-focsd-brand",b)}catch(e){}})()</script>
+    <link rel="stylesheet" href="./sign-in.css" />
+    <script type="module" src="./sign-in.js"></script>
+  </head>
+  <body>
+    <header class="brand">
+      <a href="/">Northwind</a>
+    </header>
+
+    <main id="main">
+      <focsd-card class="card">
+        <h1 slot="header">Sign in to Northwind</h1>
+
+        <!-- Wire your own: set action to your sign-in endpoint. sign-in.js cancels the submit, so nothing is sent as it stands. -->
+        <form id="sign-in-form" action="" method="post" novalidate>
+          <focsd-error-summary headline="There is a problem" manual></focsd-error-summary>
+
+          <focsd-text-field
+            id="email"
+            name="email"
+            label="Email"
+            type="email"
+            autocomplete="username"
+            autocapitalize="off"
+            spellcheck="false"
+            required
+          ></focsd-text-field>
+          <focsd-password-field
+            id="password"
+            name="password"
+            label="Password"
+            autocomplete="current-password"
+            required
+          ></focsd-password-field>
+
+          <div class="row">
+            <focsd-checkbox name="remember" value="yes">Remember me</focsd-checkbox>
+            <focsd-link href="/reset-password">Forgot your password?</focsd-link>
+          </div>
+
+          <focsd-button type="submit" variant="action" class="submit">Sign in</focsd-button>
+          <p id="sign-in-status" class="status" role="status"></p>
+        </form>
+
+        <p slot="footer" class="footer-note">New to Northwind? <focsd-link href="/sign-up">Create an account</focsd-link></p>
+      </focsd-card>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+import { html } from 'lit';
+
+export const holeAttribute = html`<button aria-label=${'Close'}></button>`;
+
+export const holeText = html`<span>${open ? 'Open' : 'Shut'}</span>`;
+
+export const properties = html`<input .placeholder=${'Search'} .ariaLabel="Menu" />`;
+
+export const unquoted = html`<img alt=Cat src=${u} />`;
+
+export const more = html`<div aria-description="Opens a menu" aria-valuetext="Half" aria-roledescription="slide" aria-placeholder="Pick" label="Name" summary="Totals"></div>`;
+
+export const greaterThan = html`<abbr title="a > b means more">≥</abbr>`;
+
+export function code(el) {
+  el.setAttribute('aria-label', 'Close menu');
+}
+
+// visible-string: x
+export const shortReason = html`<b>Hello</b>`;
+
+// visible-string: a marker before the template covers its own line only
+export const longTemplate = html`<div>
+  <p>${t('fine')}</p>
+  <p>Not covered</p>
+</div>`;

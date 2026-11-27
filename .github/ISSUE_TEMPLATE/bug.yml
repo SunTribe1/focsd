@@ -1,0 +1,30 @@
+name: Bug report
+description: Something does not work as documented.
+labels: [bug]
+body:
+  - type: input
+    id: component
+    attributes:
+      label: Component
+      placeholder: focsd-select
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+      description: Steps to reproduce help most. A CodePen, StackBlitz or snippet is ideal.
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Browser, operating system and Focsd version
+      placeholder: Safari 26, macOS 26, @focsd/components 0.1.0
+    validations:
+      required: true
+  - type: input
+    id: at
+    attributes:
+      label: Assistive technology or input method (if any)
+      placeholder: VoiceOver, NVDA, keyboard only, voice control…

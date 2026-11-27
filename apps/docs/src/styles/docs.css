@@ -1,0 +1,349 @@
+/* Docs chrome comes from the Black theme (starlight-theme-black). This file only adds what the
+   theme cannot know about: component examples, API tables, accessibility rules and stability fixes. */
+
+/* The theme's light muted text (#737373) is 4.34:1 on its muted cards (#f5f5f5): use Focsd's muted
+   ink instead (6.9:1 there, 7.5:1 on white). */
+:root[data-theme='light'] {
+  --muted-foreground: var(--focsd-ink-muted);
+}
+
+/* Shared by the example card and the code block under it (they are siblings, so one cannot inherit
+   from the other). */
+:root {
+  --focsd-docs-card-radius: calc(var(--radius, 0.625rem) + var(--focsd-space-1));
+  --focsd-docs-card-border: var(--border, var(--focsd-edge-quiet));
+}
+
+/* Reserve the scrollbar's space so pages of different heights never shift sideways. */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* The logo is the horizontal lockup (970 × 256), not a square mark: the theme caps the image at
+   32 × 32, which would shrink it to a sliver. Size it by height and let the width follow. */
+.site-title > img {
+  block-size: 1.75rem;
+  inline-size: auto;
+  max-block-size: none;
+  max-inline-size: none;
+}
+
+/* Starlight puts "On this page" before the content in the DOM and orders it last with flexbox. While
+   a long page is still streaming, the content pane is not parsed yet, so the sidebar paints in the
+   content's place and jumps right when the content arrives (layout shift). Keep it out of layout
+   until its sibling exists. This relies on Starlight's `.lg:sl-flex` utility class and the
+   `.main-pane` / `.right-sidebar-container` names (starlight 0.42.5); e2e/docs.spec.js fails when a
+   theme or Starlight upgrade renames them. */
+@media (min-width: 72rem) {
+  .lg\:sl-flex:not(:has(> .main-pane)) > .right-sidebar-container {
+    display: none;
+  }
+}
+
+/* Every inline link is underlined, so links never rely on color alone (WCAG 1.4.1). */
+.sl-markdown-content a:not(.not-content a),
+.focsd-docs-link {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+/* The Focsd two-tone focus ring, visible on any background (the same token the components use).
+   The transparent outline shows in forced-colors mode, where box-shadow is dropped. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 0;
+  box-shadow: var(--focsd-focus-ring);
+}
+
+/* Examples: the preview keeps its measured final height (src/data/preview-heights.json) and stays
+   invisible until every element in it is defined, so upgrading never moves or flashes the page. */
+.focsd-example-preview:has(:not(:defined)) {
+  visibility: hidden;
+}
+
+/* No cross-document view transition: Chrome kept stale snapshots of the named header and sidebar
+   layers on screen after some navigations, which showed as patches of a different background. */
+
+.focsd-example {
+  position: relative;
+  margin-block: var(--focsd-space-4) 0;
+  border: var(--focsd-border-width) solid var(--focsd-docs-card-border);
+  border-block-end: 0;
+  border-radius: var(--focsd-docs-card-radius) var(--focsd-docs-card-radius) 0 0;
+  background: var(--focsd-surface);
+  color: var(--focsd-ink);
+  overflow: hidden;
+}
+
+/* The preview and its source read as one card: square top on the code, shared border. */
+.focsd-example + .expressive-code,
+.focsd-example + div .expressive-code {
+  --ec-brdRad: 0;
+  margin-block-start: 0;
+}
+
+.focsd-example + .expressive-code .frame,
+.focsd-example + div .expressive-code .frame {
+  overflow: hidden;
+  border: var(--focsd-border-width) solid var(--focsd-docs-card-border);
+  border-radius: 0 0 var(--focsd-docs-card-radius) var(--focsd-docs-card-radius);
+}
+
+.focsd-example-preview {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--focsd-space-3);
+  min-block-size: max(12rem, var(--focsd-preview-min, 0px));
+  padding: 2rem 1.5rem;
+  background: var(--focsd-surface);
+  color: var(--focsd-ink);
+  font-family: var(--focsd-font-sans);
+  font-size: var(--focsd-text-body-size);
+  line-height: var(--focsd-text-body-line-height);
+}
+
+.focsd-example-preview > .stack {
+  display: grid;
+  align-content: start;
+  gap: var(--focsd-space-4);
+  inline-size: min(100%, 26rem);
+}
+
+.focsd-example-preview > .full {
+  inline-size: 100%;
+}
+
+/* API tables */
+.focsd-api table {
+  display: table;
+  inline-size: 100%;
+}
+
+.focsd-api code {
+  white-space: nowrap;
+}
+
+.focsd-component-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--focsd-space-1);
+  margin-block: var(--focsd-space-3) 0;
+  padding: 0;
+  list-style: none;
+  color: var(--focsd-ink-muted);
+  font-size: var(--focsd-text-small-size);
+}
+
+.focsd-component-meta li {
+  margin: 0;
+  padding: var(--focsd-space-1) var(--focsd-space-2);
+  border: var(--focsd-border-width) solid var(--focsd-edge-quiet);
+  border-radius: var(--focsd-radius-tag);
+  background: var(--focsd-surface);
+}
+
+.focsd-component-meta code {
+  padding: 0;
+  background: none;
+  font-size: inherit;
+}
+
+.focsd-docs-target {
+  padding: var(--focsd-space-4);
+  border: calc(var(--focsd-border-width) * 2) dashed var(--focsd-edge);
+  border-radius: var(--focsd-radius-surface);
+}
+
+@media (max-width: 50rem) {
+  .focsd-example-preview {
+    min-block-size: max(12rem, var(--focsd-preview-min-mobile, 0px));
+  }
+}
+
+/* Framed examples (header, footer, sidebar, skip link) render their own document: fixed stage. */
+.focsd-example-frame {
+  display: block;
+  inline-size: 100%;
+  block-size: 20rem;
+  border: 0;
+  background: var(--focsd-surface);
+}
+
+/* Open the example in an online sandbox (rendered once the packages are on npm). */
+.focsd-example-sandboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--focsd-space-2);
+  margin-block: var(--focsd-space-2) var(--focsd-space-4);
+}
+.focsd-example-sandboxes form {
+  margin: 0;
+}
+.focsd-example-sandboxes button {
+  min-block-size: var(--focsd-target-min);
+  padding: var(--focsd-space-1) var(--focsd-space-3);
+  border: var(--focsd-border-width) solid var(--focsd-edge);
+  border-radius: var(--focsd-radius-control);
+  background: var(--focsd-surface);
+  color: var(--focsd-ink);
+  font: inherit;
+  font-size: var(--focsd-text-label-size);
+  cursor: pointer;
+}
+.focsd-example-sandboxes button:hover {
+  background: var(--focsd-surface-sunk);
+}
+
+/* Mobile LCP: the API tables at the end of each component page skip style and layout until they near
+   the viewport (they stay in the accessibility tree and find-in-page). Only blocks that are always
+   below the fold: a placeholder height above the fold would shift the page as it renders. Data grid
+   page on a throttled phone (Slow 4G, 4x CPU): LCP 2459 ms -> 2154 ms. */
+.focsd-api {
+  content-visibility: auto;
+  contain-intrinsic-block-size: auto 40rem;
+  /* content-visibility contains paint, which clips a table wider than the column: scroll it instead. */
+  overflow-x: auto;
+}
+
+/* Starlight Black pulls a tab panel's code blocks out by -1rem on every side so they sit flush with the
+   tab frame. That only works when the panel holds nothing but code: with prose between blocks, the
+   negative block margins slide the code over the paragraphs. Keep the inline bleed, restore the gaps. */
+.sl-markdown-content starlight-tabs [role='tabpanel'] > .expressive-code:not(:first-child) {
+  margin-block-start: var(--sl-content-gap-y);
+}
+
+.sl-markdown-content starlight-tabs [role='tabpanel'] > .expressive-code:not(:last-child) {
+  margin-block-end: 0;
+}
+
+/* Presets page: the at-a-glance table scrolls sideways on narrow screens instead of squeezing. */
+.focsd-presets-table {
+  margin-block-start: var(--sl-content-gap-y);
+  overflow-x: auto;
+  border: var(--focsd-border-width) solid var(--focsd-docs-card-border);
+  border-radius: var(--focsd-docs-card-radius);
+}
+
+.focsd-presets-table:focus-visible {
+  outline: 2px solid transparent;
+  box-shadow: var(--focsd-focus-ring);
+}
+
+.focsd-presets-table table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.focsd-presets-table :is(th, td) {
+  padding: 0.6rem 0.9rem;
+  border-block-end: var(--focsd-border-width) solid var(--focsd-docs-card-border);
+  text-align: start;
+  white-space: nowrap;
+}
+
+.focsd-presets-table tbody tr:last-child :is(th, td) {
+  border-block-end: 0;
+}
+
+.focsd-presets-table thead th {
+  color: var(--sl-color-gray-3);
+  font-weight: 600;
+}
+
+.focsd-swatch {
+  display: inline-block;
+  inline-size: 1rem;
+  block-size: 1rem;
+  margin-inline-end: 0.25rem;
+  border: var(--focsd-border-width) solid var(--sl-color-gray-4);
+  border-radius: 3px;
+  vertical-align: middle;
+}
+
+/* Starlight Black's phone menu stays in the layout on wide screens as a viewport-sized, visibility-hidden
+   panel with backdrop-filter: blur(8px). Chrome can keep compositing that hidden blur layer, which shows
+   as a darker block over part of the page. The menu is for narrow screens only, so take it out above that. */
+@media (min-width: 50rem) {
+  .mobile-nav {
+    display: none !important;
+  }
+}
+
+/* One painted page background. Only the root paints Starlight Black's --background (the canvas takes
+   it, so overscroll matches too); the body and the fixed sidebar are transparent over it. When several
+   layers each painted the same color, Chrome showed some of them a shade lighter than others (patches
+   that matched the sidebar and the title area), while Safari did not. The fixed header keeps its own
+   background: content scrolls under it. Do not restate the color in another format either: a rounded
+   hex value is a visibly different shade on wide-gamut displays. */
+:root {
+  background-color: var(--background);
+}
+
+body,
+.sidebar-pane {
+  background-color: transparent;
+}
+
+/* Starlight Black never sets --sl-color-black, so dark pages kept Starlight's own blue-grey
+   hsl(224 10% 10%) beside the theme's neutral --background: header and sidebar hairlines, the
+   search dialog, the phone sidebar and table of contents, cards. One near-black everywhere. */
+:root[data-theme='dark'] {
+  --sl-color-black: var(--background);
+}
+
+/* Inline code inside a tab panel looks like inline code everywhere else (the theme drops its chip). */
+.sl-markdown-content starlight-tabs [role='tabpanel'] :not(pre) > code {
+  padding: 0.125em 0.375em;
+  border-radius: 0.25rem;
+  background: var(--sl-color-bg-inline-code);
+}
+
+/* A wider reading column: Starlight Black's 40rem left long tables and code blocks cramped. The theme
+   also hard-codes the pane's max width beside the sidebar and table of contents, so restate that too. */
+:root {
+  --sl-content-width: 52rem;
+}
+
+[data-has-sidebar][data-has-toc] .main-pane {
+  max-width: var(--sl-content-width);
+}
+
+/* The components gallery has no table of contents on the right: it takes that width too. */
+:root:has(.gp) {
+  --sl-content-width: 100rem;
+}
+
+/* With the full width, keep the gallery off the window edges. */
+:root:has(.gp) .main-pane {
+  padding-inline: var(--focsd-space-6);
+}
+
+/* Starlight Black spaces every heading in the page body (.sl-markdown-content h2: a 3rem margin and padding),
+   even inside live examples marked not-content, such as the headings in a rich text editor. Examples
+   keep their components' own spacing. */
+.sl-markdown-content .not-content :is(h1, h2, h3, h4, h5, h6) {
+  margin-block-start: 0;
+  padding-block-start: 0;
+}
+
+.sl-markdown-content .not-content .ProseMirror > :is(h2, h3):not(:first-child) {
+  margin-block-start: 0.5em;
+}
+
+/* Examples lay items out with .stack (a column, styled above) or .row (a wrapping row). */
+.focsd-example-preview .row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--focsd-space-3);
+}
+
+/* Prev/next links at the foot of a page: long titles wrap instead of pushing the page sideways on
+   phones. */
+.pagination-links a {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}

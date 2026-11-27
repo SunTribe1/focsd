@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Icons · Focsd test bench</title>
+    <script type="module" src="/src/icons.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Icons"></pg-header>
+    <main class="pg-stack">
+      <p>
+        <focsd-icon id="i-default" name="check"></focsd-icon>
+        <focsd-icon id="i-labelled" name="check" label="Done"></focsd-icon>
+        <focsd-icon id="i-lucide" library="lucide" name="chevron-down"></focsd-icon>
+        <focsd-icon id="i-fa" library="fa" name="xmark"></focsd-icon>
+        <focsd-icon id="i-fa-alias" library="fa" name="close"></focsd-icon>
+        <focsd-icon id="i-late" library="late" name="dot"></focsd-icon>
+        <focsd-icon id="i-remote" library="remote" name="evil"></focsd-icon>
+        <focsd-icon id="i-src" src="/icons/evil.svg"></focsd-icon>
+        <focsd-icon id="i-sprite" library="sprite" name="dot"></focsd-icon>
+        <focsd-icon id="i-unknown-1" name="nope"></focsd-icon>
+        <focsd-icon id="i-unknown-2" name="nope"></focsd-icon>
+        <span dir="rtl"><focsd-icon id="i-mirror" name="arrow-right" mirror></focsd-icon></span>
+        <focsd-icon id="i-slot" name="check"
+          ><svg data-slotted viewBox="0 0 24 24"><path d="M1 1h2" /></svg
+        ></focsd-icon>
+      </p>
+      <focsd-icon-button id="i-btn" label="Settings"
+        ><svg data-own viewBox="0 0 24 24"><path d="M2 2h4" /></svg
+      ></focsd-icon-button>
+      <focsd-disclosure id="i-disc" summary="More">
+        <svg slot="icon" data-disc viewBox="0 0 24 24"><path d="M3 3h4" /></svg>
+        Details
+      </focsd-disclosure>
+      <focsd-date-picker id="i-date" label="Date"></focsd-date-picker>
+      <focsd-combobox id="i-combo" label="Fruit" clearable></focsd-combobox>
+    </main>
+  </body>
+</html>

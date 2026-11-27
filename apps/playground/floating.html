@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Floating panel · Focsd test bench</title>
+    <script type="module" src="/src/floating.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Floating panel"></pg-header>
+    <main class="pg-stack pg-w-40">
+      <div class="pg-row">
+        <focsd-button id="fp-notes-open">Notes</focsd-button>
+        <focsd-button id="fp-help-open">Help</focsd-button>
+        <focsd-button id="fp-outside">Outside (<output id="fp-count">0</output>)</focsd-button>
+      </div>
+      <focsd-floating-panel id="fp-notes" label="Notes" trigger="fp-notes-open">
+        <p>Drag me by the header, or use the move button and the arrow keys.</p>
+        <focsd-text-field label="Note"></focsd-text-field>
+      </focsd-floating-panel>
+      <focsd-floating-panel id="fp-help" label="Help" trigger="fp-help-open">
+        <p>Several panels can be open at once.</p>
+      </focsd-floating-panel>
+      <focsd-floating-panel id="fp-free" label="Standalone">
+        <p>Opened from code.</p>
+      </focsd-floating-panel>
+    </main>
+  </body>
+</html>

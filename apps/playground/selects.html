@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Select family · Focsd test bench</title>
+    <script type="module" src="/src/selects.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Select family"></pg-header>
+    <main class="pg-stack pg-w-36">
+      <form id="sf" class="pg-stack">
+        <focsd-select id="s-group" label="Office" name="office">
+          <focsd-option-group label="Europe">
+            <focsd-option value="ber">Berlin</focsd-option>
+            <focsd-option value="lon" disabled>London</focsd-option>
+            <focsd-option value="par">Paris</focsd-option>
+          </focsd-option-group>
+          <focsd-option-group label="Americas">
+            <focsd-option value="nyc">New York</focsd-option>
+            <focsd-option value="tor">Toronto</focsd-option>
+          </focsd-option-group>
+          <focsd-option-group label="Closed" disabled>
+            <focsd-option value="syd">Sydney</focsd-option>
+          </focsd-option-group>
+        </focsd-select>
+
+        <focsd-select
+          id="s-multi"
+          label="Cities"
+          name="cities"
+          multiple
+          searchable
+          clearable
+          select-all
+          max="3"
+          placeholder="Choose cities"
+        >
+          <focsd-option-group label="Europe">
+            <focsd-option value="ber">Berlin</focsd-option>
+            <focsd-option value="par">Paris</focsd-option>
+            <focsd-option value="rom">Rome</focsd-option>
+          </focsd-option-group>
+          <focsd-option-group label="Americas">
+            <focsd-option value="nyc">New York</focsd-option>
+            <focsd-option value="tor">Toronto</focsd-option>
+          </focsd-option-group>
+        </focsd-select>
+
+        <focsd-select id="s-clear" label="Size" name="size" clearable placeholder="Any size">
+          <focsd-option value="s">Small</focsd-option>
+          <focsd-option value="m">Medium</focsd-option>
+        </focsd-select>
+
+        <focsd-combobox id="c-group" label="Airport" name="airport" clearable>
+          <focsd-option-group label="Germany">
+            <focsd-option value="ber">Berlin Brandenburg</focsd-option>
+            <focsd-option value="muc">Munich</focsd-option>
+          </focsd-option-group>
+          <focsd-option-group label="France">
+            <focsd-option value="cdg">Paris Charles de Gaulle</focsd-option>
+            <focsd-option value="nce">Nice</focsd-option>
+          </focsd-option-group>
+        </focsd-combobox>
+
+        <focsd-combobox id="c-multi" label="Languages" name="langs" multiple select-all clearable max="2">
+          <focsd-option-group label="Germanic">
+            <focsd-option value="en">English</focsd-option>
+            <focsd-option value="de">German</focsd-option>
+          </focsd-option-group>
+          <focsd-option-group label="Romance">
+            <focsd-option value="fr">French</focsd-option>
+            <focsd-option value="es">Spanish</focsd-option>
+          </focsd-option-group>
+        </focsd-combobox>
+
+        <focsd-multi-select id="ms-group" label="Labels" name="labels">
+          <focsd-option-group label="Type">
+            <focsd-option value="bug">Bug</focsd-option>
+            <focsd-option value="feature">Feature</focsd-option>
+          </focsd-option-group>
+          <focsd-option-group label="Priority">
+            <focsd-option value="p1">Urgent</focsd-option>
+          </focsd-option-group>
+        </focsd-multi-select>
+      </form>
+    </main>
+  </body>
+</html>

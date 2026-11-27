@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Overview · Ledgerline Coffee</title>
+    <!-- Theme and brand before first paint. CSP script-src hash: 'sha256-C2K4EpZbw+KtT6iuKenSdqPWVgO0OmPYfvgBBeiduRo=' -->
+    <!-- prettier-ignore -->
+    <script>(function(){try{var d=document.documentElement,s=localStorage,t=s.getItem("focsd-theme"),b=s.getItem("focsd-brand");/^(light|dark|contrast)$/.test(t)&&d.setAttribute("data-focsd-theme",t);/^(harbor|signal|mineral|prismatic)$/.test(b)&&d.setAttribute("data-focsd-brand",b)}catch(e){}})()</script>
+    <!-- Served from node_modules by your dev server; point these at your own copy if you bundle differently. -->
+    <link rel="stylesheet" href="/node_modules/@focsd/tokens/dist/fonts.css" />
+    <link rel="stylesheet" href="/node_modules/@focsd/tokens/dist/tokens.css" />
+    <link rel="stylesheet" href="./dashboard.css" />
+    <script type="module" src="./dashboard.js"></script>
+  </head>
+  <body>
+    <focsd-app-shell nav-label="Ledgerline">
+      <focsd-header slot="header" sticky collapse-below="0">
+        <a href="#overview" slot="brand" class="brand">Ledgerline Coffee</a>
+        <div slot="actions" class="header-actions">
+          <focsd-theme-toggle label="Theme"></focsd-theme-toggle>
+          <focsd-menu label="Account">
+            <focsd-icon-button slot="trigger" label="Account menu">
+              <focsd-avatar name="Mara Ellison" size="s" decorative></focsd-avatar>
+            </focsd-icon-button>
+            <focsd-menu-item value="profile">Profile</focsd-menu-item>
+            <focsd-menu-item value="billing">Billing</focsd-menu-item>
+            <focsd-menu-item value="sign-out">Sign out</focsd-menu-item>
+          </focsd-menu>
+        </div>
+      </focsd-header>
+
+      <focsd-sidebar slot="sidebar" label="Main">
+        <focsd-sidebar-item href="#overview" icon="home" current>Overview</focsd-sidebar-item>
+        <focsd-sidebar-item href="#orders" icon="inbox">Orders</focsd-sidebar-item>
+        <focsd-sidebar-item href="#customers" icon="users">Customers</focsd-sidebar-item>
+        <focsd-sidebar-item href="#products" icon="package">Products</focsd-sidebar-item>
+        <focsd-sidebar-item href="#settings" icon="settings">Settings</focsd-sidebar-item>
+      </focsd-sidebar>
+
+      <div class="page" id="overview">
+        <div class="page-head">
+          <h1>Overview</h1>
+          <p>Wholesale and web orders for the last 30 days. Sample data: replace it with your own.</p>
+        </div>
+
+        <section class="stats" aria-labelledby="stats-heading">
+          <h2 id="stats-heading" class="visually-hidden">Key figures</h2>
+          <div class="stats-grid">
+            <focsd-stat
+              label="Revenue"
+              value="48200"
+              format='{"style":"currency","currency":"USD","maximumFractionDigits":0}'
+              delta="0.12"
+              period="last month"
+            >
+              <focsd-sparkline slot="chart" id="spark-revenue" label="Revenue per day, last 14 days" type="area"></focsd-sparkline>
+            </focsd-stat>
+            <focsd-stat label="Orders" value="1240" delta="0.043" period="last month">
+              <focsd-sparkline slot="chart" id="spark-orders" label="Orders per day, last 14 days" type="bar"></focsd-sparkline>
+            </focsd-stat>
+            <focsd-stat
+              label="Average order"
+              value="38.87"
+              format='{"style":"currency","currency":"USD"}'
+              delta="-0.018"
+              period="last month"
+            ></focsd-stat>
+            <focsd-stat
+              label="Refund rate"
+              value="0.014"
+              format='{"style":"percent","maximumFractionDigits":1}'
+              delta="-0.002"
+              good="down"
+              period="last month"
+            ></focsd-stat>
+          </div>
+        </section>
+
+        <section class="panel" aria-labelledby="trend-heading">
+          <h2 id="trend-heading">Revenue by week</h2>
+          <focsd-chart id="revenue-chart" type="area" x="week" label="Revenue by week, last 12 weeks"></focsd-chart>
+        </section>
+
+        <section class="panel" id="orders" aria-labelledby="orders-heading">
+          <h2 id="orders-heading">Recent orders</h2>
+          <div class="grid-wrap">
+            <focsd-data-grid id="orders-grid" label="Recent orders" page-size="8"></focsd-data-grid>
+          </div>
+        </section>
+      </div>
+
+      <focsd-footer slot="footer"><p slot="legal">Sample data for illustration. Ledgerline Coffee is a made-up shop.</p></focsd-footer>
+    </focsd-app-shell>
+  </body>
+</html>

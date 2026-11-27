@@ -1,0 +1,58 @@
+---
+title: Data grid
+description: Live examples of focsd-data-grid, from a first grid to server-side data, custom types and other languages.
+---
+
+import GuideExample from '../../../components/GuideExample.astro';
+import { examples } from '../../../data/guides/data-grid.js';
+
+`focsd-data-grid` is a separate package, so apps that don't need it don't pay for it:
+
+```sh
+npm install @focsd/data-grid
+```
+
+```js
+import '@focsd/data-grid';
+```
+
+Every example below is live and keyboard-operable: Tab into the grid, then use the arrow keys. The [data grid reference](/components/data-grid/) lists every property, event, method and key.
+
+## Columns and rows
+
+<GuideExample guide="data-grid" examples={examples} id="basics" />
+
+## Search, filters and a saved view
+
+<GuideExample guide="data-grid" examples={examples} id="saved-view" />
+
+## Grouping and totals
+
+<GuideExample guide="data-grid" examples={examples} id="grouping" />
+
+## Editing with validation
+
+<GuideExample guide="data-grid" examples={examples} id="editing" />
+
+## Server-side data
+
+<GuideExample guide="data-grid" examples={examples} id="server" />
+
+## Custom column types and cells
+
+<GuideExample guide="data-grid" examples={examples} id="custom-type" />
+
+## Selection and export
+
+<GuideExample guide="data-grid" examples={examples} id="selection" />
+
+## Other languages
+
+<GuideExample guide="data-grid" examples={examples} id="languages" />
+
+## Accessibility checklist for your grid
+
+- Give every grid a `label` that says what the rows are.
+- Keep `rowId` stable, so selection and editing survive sorting and paging.
+- Prefer `render` for text and keep cells free of interactive content. A cell holds one focus stop, so put row actions in a toolbar or the row's detail view.
+- With `external`, set `loading` while you fetch and keep `row-count` accurate: the counts screen readers hear come from it.

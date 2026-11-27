@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Focsd test bench: data and layout</title>
+    <script type="module" src="/src/data.js"></script>
+    <style>
+      #img-broken {
+        inline-size: 240px;
+      }
+      #img-deco {
+        inline-size: 80px;
+      }
+      #sa {
+        --focsd-scroll-area-max: 6rem;
+      }
+      #split {
+        block-size: 10rem;
+      }
+    </style>
+  </head>
+  <body>
+    <pg-header heading="Data and layout"></pg-header>
+    <main id="pg-main" class="pg-stack">
+      <focsd-table id="tbl" caption="Members"></focsd-table>
+      <focsd-data-grid id="grid" label="Invoices" page-size="5" selection="multiple" quick-search></focsd-data-grid>
+      <p>Selected: <output id="grid-selected">0</output></p>
+
+      <focsd-tree id="tree" label="Project files">
+        <focsd-tree-item label="src" value="src" expanded>
+          <focsd-tree-item label="index.js" value="src/index.js"></focsd-tree-item>
+          <focsd-tree-item label="components" value="src/components">
+            <focsd-tree-item label="button.js" value="src/components/button.js"></focsd-tree-item>
+          </focsd-tree-item>
+        </focsd-tree-item>
+        <focsd-tree-item label="package.json" value="package.json"></focsd-tree-item>
+        <focsd-tree-item label="README.md" value="README.md"></focsd-tree-item>
+      </focsd-tree>
+      <p>Tree: <output id="tree-result">none</output></p>
+
+      <focsd-timeline id="tl">
+        <focsd-timeline-item datetime="2026-10-01" heading="Project created">Amara created Atlas.</focsd-timeline-item>
+        <focsd-timeline-item datetime="2026-10-03" heading="Invoice paid" tone="positive">Payment received.</focsd-timeline-item>
+      </focsd-timeline>
+
+      <focsd-empty-state id="empty" headline="No reports yet" icon="search">
+        <p>Reports you create will appear here.</p>
+        <focsd-button slot="actions" variant="action">Create report</focsd-button>
+      </focsd-empty-state>
+
+      <focsd-code id="code" label="Install command" language="shell">pnpm add @focsd/components</focsd-code>
+
+      <div class="pg-row">
+        <focsd-image id="img-broken" src="/missing.jpg" alt="Team offsite in Lisbon" ratio="16/9"></focsd-image>
+        <focsd-image id="img-deco" src="/missing.jpg" alt="" ratio="1/1"></focsd-image>
+      </div>
+
+      <focsd-scroll-area id="sa" label="Release notes">
+        <p>v0.4: Added data grid.</p>
+        <p>v0.3: Added overlays.</p>
+        <p>v0.2: Added forms.</p>
+        <p>v0.1: Initial release.</p>
+      </focsd-scroll-area>
+
+      <focsd-splitter id="split" label="Resize file list" value="40">
+        <div slot="start">File list</div>
+        <div slot="end">Preview</div>
+      </focsd-splitter>
+
+      <focsd-carousel id="car" label="Featured templates" autoplay="0">
+        <focsd-carousel-slide><p>Invoice template</p></focsd-carousel-slide>
+        <focsd-carousel-slide><p>Roadmap template</p></focsd-carousel-slide>
+        <focsd-carousel-slide><p>Retro template</p></focsd-carousel-slide>
+      </focsd-carousel>
+    </main>
+  </body>
+</html>

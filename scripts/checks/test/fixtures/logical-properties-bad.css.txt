@@ -1,0 +1,8 @@
+.a { margin-left: 4px; }
+.b { padding-right: 4px; }
+.c { border-left: 1px solid; border-right-color: red; }
+.d { border-top-left-radius: 2px; }
+.e { position: absolute; left: 0; }
+.f { text-align: right; }
+.g { float: left; }
+.h { inset-right: 0; }

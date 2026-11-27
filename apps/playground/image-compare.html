@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Image compare · Focsd test bench</title>
+    <script type="module" src="/src/image-compare.js"></script>
+    <style>
+      .compare-layout {
+        display: grid;
+        gap: var(--focsd-space-6);
+        max-inline-size: 48rem;
+      }
+      .compare-layout section {
+        display: grid;
+        gap: var(--focsd-space-3);
+      }
+    </style>
+  </head>
+  <body>
+    <pg-header heading="Image compare"></pg-header>
+    <main class="compare-layout">
+      <section aria-labelledby="horizontal-heading">
+        <h2 id="horizontal-heading">Horizontal</h2>
+        <focsd-image-compare id="bridge" label="Bridge, 1990 and today">
+          <img slot="before" src="/media/bridge-1990.svg" alt="The bridge in 1990, brown steel" width="800" height="450" />
+          <img slot="after" src="/media/bridge-today.svg" alt="The bridge today, painted red" width="800" height="450" />
+        </focsd-image-compare>
+        <p>Last committed position: <output id="committed">none</output></p>
+      </section>
+      <section aria-labelledby="vertical-heading">
+        <h2 id="vertical-heading">Vertical</h2>
+        <focsd-image-compare id="vertical" orientation="vertical" position="30">
+          <img slot="before" src="/media/bridge-1990.svg" alt="The bridge in 1990" width="800" height="450" />
+          <img slot="after" src="/media/bridge-today.svg" alt="The bridge today" width="800" height="450" />
+        </focsd-image-compare>
+      </section>
+      <section aria-labelledby="rtl-heading" dir="rtl">
+        <h2 id="rtl-heading">Right to left</h2>
+        <focsd-image-compare id="rtl">
+          <img slot="before" src="/media/bridge-1990.svg" alt="The bridge in 1990" width="800" height="450" />
+          <img slot="after" src="/media/bridge-today.svg" alt="The bridge today" width="800" height="450" />
+        </focsd-image-compare>
+      </section>
+    </main>
+  </body>
+</html>

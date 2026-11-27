@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Editable · Focsd test bench</title>
+    <script type="module" src="/src/editable.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Editable"></pg-header>
+    <main class="pg-stack">
+      <form id="f" class="pg-stack">
+        <focsd-editable id="e" label="Project name" name="project" value="Atlas" required></focsd-editable>
+        <focsd-editable id="em" label="Description" name="desc" multiline placeholder="Add a description"></focsd-editable>
+        <focsd-editable id="en" label="Code name" name="code" value="Kite" keep-open-on-blur></focsd-editable>
+        <div class="pg-row">
+          <focsd-button type="submit" variant="action">Submit</focsd-button>
+          <focsd-button type="reset">Reset</focsd-button>
+        </div>
+      </form>
+      <output id="out"></output>
+    </main>
+  </body>
+</html>

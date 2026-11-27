@@ -1,0 +1,37 @@
+---
+import { mergeChangelogs, noteHtml, readChangelogs } from '../lib/changelog.js';
+import { repoPath } from '../lib/repo.js';
+import { REPO_URL } from '../data/site.js';
+
+const changelogs = readChangelogs(repoPath('packages'));
+const releases = mergeChangelogs(changelogs);
+const KIND_LABEL = { Major: 'Major changes', Minor: 'New', Patch: 'Fixes' };
+---
+
+{releases.map((release) => (
+  <section class="changelog-release" aria-labelledby={`v${release.version}`}>
+    <h2 id={`v${release.version}`}>
+      <a href={`${REPO_URL}/releases/tag/${encodeURIComponent(`@focsd/components@${release.version}`)}`}>{release.version}</a>
+    </h2>
+    {release.groups.map((group) => (
+      <>
+        <h3>{KIND_LABEL[group.kind]}</h3>
+        <ul>
+          {group.notes.map((note) => (
+            <li>
+              <Fragment set:html={noteHtml(note.text)} />
+              {note.packages.length < changelogs.length && <span class="changelog-packages"> ({note.packages.join(', ')})</span>}
+            </li>
+          ))}
+        </ul>
+      </>
+    ))}
+  </section>
+))}
+
+<style>
+  .changelog-packages {
+    color: var(--sl-color-gray-3);
+    font-size: var(--sl-text-sm);
+  }
+</style>

@@ -1,0 +1,65 @@
+---
+---
+
+<section class="lp-section" aria-labelledby="lp-a11y-title">
+  <div class="lp-wrap lp-split lp-split-reverse">
+    <div class="lp-split-text">
+      <h2 id="lp-a11y-title">Accessibility, built into every component</h2>
+      <p>Accessibility is how each component is specified and tested, not an audit at the end. What runs on every change:</p>
+      <dl class="lp-checks">
+        <div>
+          <dt>WAI-ARIA patterns</dt>
+          <dd>Roles, states and keys follow the ARIA Authoring Practices, and each component page lists its pattern and keyboard table.</dd>
+        </div>
+        <div>
+          <dt>axe in three themes</dt>
+          <dd>
+            Every component is scanned against the WCAG 2.2 AA rules in the light, dark and high-contrast themes, with its overlays open.
+          </dd>
+        </div>
+        <div>
+          <dt>Three browser engines</dt>
+          <dd>Keyboard scripts, accessibility tree snapshots and form tests run in Chromium, Firefox and WebKit.</dd>
+        </div>
+        <div>
+          <dt>Screen reader checklist</dt>
+          <dd>
+            Announcements are tested automatically on every change, and a manual NVDA and VoiceOver pass is part of the release checklist.
+          </dd>
+        </div>
+      </dl>
+      <a class="lp-text-link" href="/foundations/accessibility/">
+        How Focsd is tested
+      </a>
+    </div>
+    <div class="lp-keys" data-lp-keys data-lp-reveal>
+      <div class="lp-keys-head">
+        <h3 id="lp-keys-title">Try it with the keyboard</h3>
+        <p>Press Tab to move in, arrow keys inside a group, Space or Enter to choose.</p>
+      </div>
+      <div class="lp-keys-stage" role="group" aria-labelledby="lp-keys-title">
+        <focsd-segmented-control label="Calendar view" value="week">
+          <focsd-segment value="day">Day</focsd-segment>
+          <focsd-segment value="week">Week</focsd-segment>
+          <focsd-segment value="month">Month</focsd-segment>
+        </focsd-segmented-control>
+        <focsd-select label="Time zone" value="cet">
+          <focsd-option value="utc">UTC</focsd-option>
+          <focsd-option value="cet">Central European Time</focsd-option>
+          <focsd-option value="et">Eastern Time</focsd-option>
+        </focsd-select>
+        <focsd-switch checked>Show weekends</focsd-switch>
+      </div>
+      {/* A visual echo for sighted keyboard users; screen readers already hear the controls. */}
+      <div class="lp-keys-echo" aria-hidden="true">
+        <span class="lp-keys-label">Last keys</span>
+        <span class="lp-keys-list" data-lp-keys-list>
+          <kbd>Tab</kbd>
+        </span>
+        <span class="lp-keys-focus" data-lp-keys-focus>
+          Focus a control to start
+        </span>
+      </div>
+    </div>
+  </div>
+</section>

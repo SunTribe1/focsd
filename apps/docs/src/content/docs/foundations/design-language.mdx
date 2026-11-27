@@ -1,0 +1,38 @@
+---
+title: Design language
+description: "Wayfinding, the visual language behind Focsd: type, color, shape, space and motion."
+---
+
+The default theme is called **Wayfinding**. It should feel like good public signage: calm surfaces, letterforms built for legibility, and one unmistakable focus ring. You never wonder where to look or what something does.
+
+## Principles
+
+- **"I can read all of this."** The Atkinson Hyperlegible type family, designed by the Braille Institute for low-vision readers, at every density. Comfortable density adds 17px body text and 44px controls for touch and low-vision users.
+- **Action is ink, not a brand hue.** Primary buttons are near-black, so any brand can re-theme them with one token.
+- **Links look like links.** Links are underlined and teal, so "go somewhere" is never confused with "do something".
+- **The focus ring is crisp and quiet.** A 1px ink ring with a 1px gap in the page color, visible on every background and in every preset, never removed.
+- **Borders do the work.** Visible 3:1 borders identify controls; shadows appear only on floating layers such as dialogs and menus.
+
+## Color
+
+Neutral surfaces (a faint cool tint in the light theme, plain neutral graphite in the dark theme), ink for action, teal for navigation, and semantic colors only for status. Color is never the only signal: status always comes with an icon and words, links are underlined, and disabled states use a hatch pattern plus text.
+
+Light is the default. Dark and high-contrast are complete peers: dark mode raises lightness with elevation instead of inverting, and high contrast uses pure black and white, 2px borders and no shadows.
+
+## Type
+
+| Role | Style |
+| --- | --- |
+| Display | Atkinson Hyperlegible Next, 800, fluid 36–52px, −0.02em tracking |
+| Body | 15px, line height 1.55 (17px in comfortable density, 14px in compact; docs prose 16px, line height 1.65, 68 characters max) |
+| Mono | Atkinson Hyperlegible Mono for code, IDs and numeric columns, with tabular figures |
+
+## Shape and space
+
+- 4px radius on controls, 6px on surfaces, 3px on tags. Nothing is pill-shaped.
+- A 4px rhythm: 12–16px inside components, 24–32px between groups, 48–64px between sections.
+- Controls are 36px by default, 44px in comfortable density and 32px in compact density, never below the 24px target minimum.
+
+## Motion
+
+Minimal and functional. Motion confirms state changes and never decorates. Durations are 100, 160 and 240ms, and drop to zero under reduced motion. The focus ring appears instantly.

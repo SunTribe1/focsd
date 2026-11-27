@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Projects · Northwind</title>
+    <!-- Tokens: adjust these two paths to where your server exposes @focsd/tokens/dist (or import "@focsd/tokens/tokens.css" in your bundler). -->
+    <link rel="stylesheet" href="/node_modules/@focsd/tokens/dist/fonts.css" />
+    <link rel="stylesheet" href="/node_modules/@focsd/tokens/dist/tokens.css" />
+    <!-- Applies the saved theme before first paint. CSP script-src hash: 'sha256-C2K4EpZbw+KtT6iuKenSdqPWVgO0OmPYfvgBBeiduRo=' -->
+    <!-- prettier-ignore -->
+    <script>(function(){try{var d=document.documentElement,s=localStorage,t=s.getItem("focsd-theme"),b=s.getItem("focsd-brand");/^(light|dark|contrast)$/.test(t)&&d.setAttribute("data-focsd-theme",t);/^(harbor|signal|mineral|prismatic)$/.test(b)&&d.setAttribute("data-focsd-brand",b)}catch(e){}})()</script>
+    <link rel="stylesheet" href="./empty-app.css" />
+    <script type="module" src="./empty-app.js"></script>
+  </head>
+  <body>
+    <focsd-app-shell nav-label="Workspace">
+      <focsd-header slot="header" collapse-below="0">
+        <a href="/" slot="brand">Northwind</a>
+        <focsd-theme-toggle slot="actions"></focsd-theme-toggle>
+      </focsd-header>
+      <focsd-sidebar slot="sidebar" label="Workspace">
+        <focsd-sidebar-item href="/projects" icon="package" current>Projects</focsd-sidebar-item>
+        <focsd-sidebar-item href="/schedule" icon="calendar">Schedule</focsd-sidebar-item>
+        <focsd-sidebar-item href="/search" icon="search">Search</focsd-sidebar-item>
+      </focsd-sidebar>
+
+      <div class="page">
+        <h1>Projects</h1>
+        <focsd-empty-state headline="No projects yet" level="2">
+          <p>Projects keep a team's files, tasks and deadlines in one place. Create the first one to see it here.</p>
+          <focsd-button id="create" slot="actions" variant="action">Create a project</focsd-button>
+          <focsd-link slot="actions" href="/help/import-projects">Import from a spreadsheet</focsd-link>
+        </focsd-empty-state>
+        <p id="create-status" class="status" role="status"></p>
+      </div>
+    </focsd-app-shell>
+  </body>
+</html>

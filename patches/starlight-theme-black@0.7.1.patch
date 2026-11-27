@@ -1,0 +1,13 @@
+diff --git a/components/MarkdownActions.astro b/components/MarkdownActions.astro
+index 1f7656a6e6a156b20e787e5bc46f6fd5f4a1fe91..c3b268e807f594f3c838c47630909b5e0a82d1d6 100644
+--- a/components/MarkdownActions.astro
++++ b/components/MarkdownActions.astro
+@@ -57,7 +57,7 @@ function getAgentUrl(agent: ResolvedAgent) {
+           <div class="markdown-actions-separator" />
+ 
+           <div class="markdown-actions-dropdown">
+-            <button class="markdown-actions-trigger" type="button" aria-expanded="false" aria-haspopup="true">
++            <button class="markdown-actions-trigger" type="button" aria-label="More page actions" aria-expanded="false" aria-haspopup="true">
+               <svg
+                 xmlns="http://www.w3.org/2000/svg"
+                 width="16"

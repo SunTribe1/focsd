@@ -1,0 +1,646 @@
+{
+  "button": {
+    "desktop": 100,
+    "mobile": 196
+  },
+  "text-field": {
+    "desktop": 635,
+    "mobile": 670
+  },
+  "dialog": {
+    "desktop": 100,
+    "mobile": 100
+  },
+  "tabs": {
+    "desktop": 141,
+    "mobile": 204
+  },
+  "select": {
+    "desktop": 202,
+    "mobile": 202
+  },
+  "badge": {
+    "desktop": 90,
+    "mobile": 128
+  },
+  "badge-indicator": {
+    "desktop": 104,
+    "mobile": 104
+  },
+  "tag": {
+    "desktop": 173,
+    "mobile": 172
+  },
+  "tag-colors": {
+    "desktop": 89,
+    "mobile": 125
+  },
+  "tag-sizes": {
+    "desktop": 100,
+    "mobile": 140
+  },
+  "card": {
+    "desktop": 213,
+    "mobile": 211
+  },
+  "separator": {
+    "desktop": 183,
+    "mobile": 183
+  },
+  "alert": {
+    "desktop": 429,
+    "mobile": 429
+  },
+  "avatar": {
+    "desktop": 120,
+    "mobile": 120
+  },
+  "avatar-group": {
+    "desktop": 106,
+    "mobile": 106
+  },
+  "kbd": {
+    "desktop": 90,
+    "mobile": 90
+  },
+  "skeleton": {
+    "desktop": 177,
+    "mobile": 177
+  },
+  "spinner": {
+    "desktop": 144,
+    "mobile": 144
+  },
+  "progress": {
+    "desktop": 100,
+    "mobile": 100
+  },
+  "progress-ring": {
+    "desktop": 112,
+    "mobile": 112
+  },
+  "meter": {
+    "desktop": 100,
+    "mobile": 100
+  },
+  "link": {
+    "desktop": 88,
+    "mobile": 111
+  },
+  "visually-hidden": {
+    "desktop": 88,
+    "mobile": 88
+  },
+  "icon": {
+    "desktop": 79,
+    "mobile": 83
+  },
+  "skip-link": {
+    "desktop": 0,
+    "mobile": 0
+  },
+  "textarea": {
+    "desktop": 227,
+    "mobile": 227
+  },
+  "checkbox": {
+    "desktop": 204,
+    "mobile": 204
+  },
+  "checkbox-group": {
+    "desktop": 236,
+    "mobile": 236
+  },
+  "radio-group": {
+    "desktop": 246,
+    "mobile": 246
+  },
+  "switch": {
+    "desktop": 100,
+    "mobile": 100
+  },
+  "number-field": {
+    "desktop": 149,
+    "mobile": 149
+  },
+  "search-field": {
+    "desktop": 125,
+    "mobile": 125
+  },
+  "password-field": {
+    "desktop": 149,
+    "mobile": 149
+  },
+  "slider": {
+    "desktop": 204,
+    "mobile": 204
+  },
+  "otp-field": {
+    "desktop": 437,
+    "mobile": 454
+  },
+  "fieldset": {
+    "desktop": 270,
+    "mobile": 270
+  },
+  "error-summary": {
+    "desktop": 254,
+    "mobile": 254
+  },
+  "toggle": {
+    "desktop": 100,
+    "mobile": 100
+  },
+  "toggle-group": {
+    "desktop": 136,
+    "mobile": 136
+  },
+  "icon-button": {
+    "desktop": 100,
+    "mobile": 100
+  },
+  "button-group": {
+    "desktop": 100,
+    "mobile": 100
+  },
+  "rating": {
+    "desktop": 185,
+    "mobile": 185
+  },
+  "popover": {
+    "desktop": 100,
+    "mobile": 100
+  },
+  "tooltip": {
+    "desktop": 100,
+    "mobile": 100
+  },
+  "menu": {
+    "desktop": 100,
+    "mobile": 100
+  },
+  "context-menu": {
+    "desktop": 124,
+    "mobile": 124
+  },
+  "alert-dialog": {
+    "desktop": 100,
+    "mobile": 100
+  },
+  "drawer": {
+    "desktop": 100,
+    "mobile": 100
+  },
+  "toaster": {
+    "desktop": 100,
+    "mobile": 100
+  },
+  "accordion": {
+    "desktop": 261,
+    "mobile": 261
+  },
+  "disclosure": {
+    "desktop": 100,
+    "mobile": 100
+  },
+  "breadcrumb": {
+    "desktop": 88,
+    "mobile": 86
+  },
+  "pagination": {
+    "desktop": 100,
+    "mobile": 140
+  },
+  "nav-menu": {
+    "desktop": 100,
+    "mobile": 100
+  },
+  "sidebar": {
+    "desktop": 0,
+    "mobile": 0
+  },
+  "menubar": {
+    "desktop": 110,
+    "mobile": 110
+  },
+  "stepper": {
+    "desktop": 96,
+    "mobile": 136
+  },
+  "header": {
+    "desktop": 0,
+    "mobile": 0
+  },
+  "toolbar": {
+    "desktop": 110,
+    "mobile": 110
+  },
+  "list": {
+    "desktop": 300,
+    "mobile": 300
+  },
+  "list-sortable": {
+    "desktop": 246,
+    "mobile": 246
+  },
+  "description-list": {
+    "desktop": 158,
+    "mobile": 235
+  },
+  "table": {
+    "desktop": 290,
+    "mobile": 290
+  },
+  "data-grid": {
+    "desktop": 567,
+    "mobile": 689
+  },
+  "tree": {
+    "desktop": 244,
+    "mobile": 244
+  },
+  "timeline": {
+    "desktop": 233,
+    "mobile": 233
+  },
+  "empty-state": {
+    "desktop": 277,
+    "mobile": 277
+  },
+  "code": {
+    "desktop": 166,
+    "mobile": 166
+  },
+  "image": {
+    "desktop": 199,
+    "mobile": 199
+  },
+  "scroll-area": {
+    "desktop": 183,
+    "mobile": 183
+  },
+  "splitter": {
+    "desktop": 224,
+    "mobile": 224
+  },
+  "splitter-panes": {
+    "desktop": 288,
+    "mobile": 288
+  },
+  "carousel": {
+    "desktop": 242,
+    "mobile": 242
+  },
+  "combobox": {
+    "desktop": 125,
+    "mobile": 125
+  },
+  "multi-select": {
+    "desktop": 127,
+    "mobile": 127
+  },
+  "calendar": {
+    "desktop": 358,
+    "mobile": 358
+  },
+  "calendar-events": {
+    "desktop": 352,
+    "mobile": 378
+  },
+  "date-picker": {
+    "desktop": 149,
+    "mobile": 149
+  },
+  "date-range-picker": {
+    "desktop": 189,
+    "mobile": 189
+  },
+  "time-field": {
+    "desktop": 206,
+    "mobile": 206
+  },
+  "file-upload": {
+    "desktop": 193,
+    "mobile": 193
+  },
+  "command": {
+    "desktop": 100,
+    "mobile": 100
+  },
+  "footer": {
+    "desktop": 0,
+    "mobile": 0
+  },
+  "rich-text": {
+    "desktop": 269,
+    "mobile": 299
+  },
+  "chart": {
+    "desktop": 403,
+    "mobile": 401
+  },
+  "floating-panel": {
+    "desktop": 100,
+    "mobile": 100
+  },
+  "color-picker": {
+    "desktop": 458,
+    "mobile": 458
+  },
+  "tag-input": {
+    "desktop": 202,
+    "mobile": 232
+  },
+  "tag-input-sortable": {
+    "desktop": 125,
+    "mobile": 155
+  },
+  "phone-field": {
+    "desktop": 151,
+    "mobile": 151
+  },
+  "currency-field": {
+    "desktop": 206,
+    "mobile": 206
+  },
+  "hover-card": {
+    "desktop": 88,
+    "mobile": 88
+  },
+  "bottom-sheet": {
+    "desktop": 100,
+    "mobile": 100
+  },
+  "virtual-list": {
+    "desktop": 320,
+    "mobile": 320
+  },
+  "masonry": {
+    "desktop": 297,
+    "mobile": 564
+  },
+  "field": {
+    "desktop": 505,
+    "mobile": 515
+  },
+  "date-field": {
+    "desktop": 309,
+    "mobile": 309
+  },
+  "listbox": {
+    "desktop": 589,
+    "mobile": 589
+  },
+  "date-time-picker": {
+    "desktop": 254,
+    "mobile": 254
+  },
+  "swatch-picker": {
+    "desktop": 242,
+    "mobile": 242
+  },
+  "editable": {
+    "desktop": 202,
+    "mobile": 202
+  },
+  "split-button": {
+    "desktop": 100,
+    "mobile": 100
+  },
+  "tour": {
+    "desktop": 100,
+    "mobile": 100
+  },
+  "toggletip": {
+    "desktop": 92,
+    "mobile": 92
+  },
+  "qr-code": {
+    "desktop": 224,
+    "mobile": 224
+  },
+  "copy-button": {
+    "desktop": 100,
+    "mobile": 148
+  },
+  "loading-overlay": {
+    "desktop": 274,
+    "mobile": 274
+  },
+  "format-number": {
+    "desktop": 123,
+    "mobile": 158
+  },
+  "relative-time": {
+    "desktop": 88,
+    "mobile": 193
+  },
+  "app-shell": {
+    "desktop": 0,
+    "mobile": 0
+  },
+  "table-of-contents": {
+    "desktop": 218,
+    "mobile": 326
+  },
+  "theme-toggle": {
+    "desktop": 222,
+    "mobile": 268
+  },
+  "theme-picker": {
+    "desktop": 557,
+    "mobile": 603
+  },
+  "chat-thread": {
+    "desktop": 352,
+    "mobile": 352
+  },
+  "chat-message": {
+    "desktop": 300,
+    "mobile": 300
+  },
+  "streaming-text": {
+    "desktop": 256,
+    "mobile": 256
+  },
+  "tool-call": {
+    "desktop": 102,
+    "mobile": 102
+  },
+  "reasoning": {
+    "desktop": 100,
+    "mobile": 100
+  },
+  "prompt-suggestions": {
+    "desktop": 100,
+    "mobile": 144
+  },
+  "message-actions": {
+    "desktop": 100,
+    "mobile": 100
+  },
+  "composer": {
+    "desktop": 110,
+    "mobile": 110
+  },
+  "attachment-tile": {
+    "desktop": 110,
+    "mobile": 110
+  },
+  "source-chip": {
+    "desktop": 88,
+    "mobile": 88
+  },
+  "stat": {
+    "desktop": 520,
+    "mobile": 520
+  },
+  "stat-animated": {
+    "desktop": 258,
+    "mobile": 258
+  },
+  "animated-number": {
+    "desktop": 100,
+    "mobile": 100
+  },
+  "status-dot": {
+    "desktop": 270,
+    "mobile": 270
+  },
+  "sparkline": {
+    "desktop": 173,
+    "mobile": 173
+  },
+  "gauge": {
+    "desktop": 297,
+    "mobile": 293
+  },
+  "segmented-control": {
+    "desktop": 207,
+    "mobile": 351
+  },
+  "segmented-control-icons": {
+    "desktop": 240,
+    "mobile": 336
+  },
+  "lightbox": {
+    "desktop": 212,
+    "mobile": 632
+  },
+  "image-compare": {
+    "desktop": 316,
+    "mobile": 238
+  },
+  "image-compare-vertical": {
+    "desktop": 244,
+    "mobile": 238
+  },
+  "signature-pad": {
+    "desktop": 388,
+    "mobile": 407
+  },
+  "bottom-nav": {
+    "desktop": 0,
+    "mobile": 0
+  },
+  "notification-center": {
+    "desktop": 100,
+    "mobile": 100
+  },
+  "notification-center-markup": {
+    "desktop": 100,
+    "mobile": 100
+  },
+  "dock": {
+    "desktop": 150,
+    "mobile": 150
+  },
+  "dock-custom-icons": {
+    "desktop": 179,
+    "mobile": 172
+  },
+  "file-changes": {
+    "desktop": 352,
+    "mobile": 352
+  },
+  "guide-data-grid-basics": {
+    "desktop": 417,
+    "mobile": 415
+  },
+  "guide-data-grid-saved-view": {
+    "desktop": 465,
+    "mobile": 551
+  },
+  "guide-data-grid-grouping": {
+    "desktop": 330,
+    "mobile": 372
+  },
+  "guide-data-grid-editing": {
+    "desktop": 341,
+    "mobile": 339
+  },
+  "guide-data-grid-server": {
+    "desktop": 432,
+    "mobile": 466
+  },
+  "guide-data-grid-custom-type": {
+    "desktop": 282,
+    "mobile": 280
+  },
+  "guide-data-grid-selection": {
+    "desktop": 453,
+    "mobile": 451
+  },
+  "guide-data-grid-languages": {
+    "desktop": 509,
+    "mobile": 578
+  },
+  "guide-patterns-sign-in": {
+    "desktop": 322,
+    "mobile": 322
+  },
+  "guide-patterns-settings": {
+    "desktop": 443,
+    "mobile": 540
+  },
+  "guide-patterns-team": {
+    "desktop": 420,
+    "mobile": 506
+  },
+  "guide-patterns-delete": {
+    "desktop": 100,
+    "mobile": 100
+  },
+  "guide-patterns-kanban": {
+    "desktop": 196,
+    "mobile": 387
+  },
+  "guide-patterns-app-shell": {
+    "desktop": 0,
+    "mobile": 0
+  },
+  "guide-charts-area": {
+    "desktop": 403,
+    "mobile": 401
+  },
+  "guide-charts-stacked": {
+    "desktop": 403,
+    "mobile": 401
+  },
+  "guide-charts-scatter": {
+    "desktop": 426,
+    "mobile": 423
+  },
+  "guide-charts-mirror": {
+    "desktop": 403,
+    "mobile": 401
+  },
+  "guide-charts-sparkline": {
+    "desktop": 247,
+    "mobile": 247
+  },
+  "guide-charts-gauge": {
+    "desktop": 297,
+    "mobile": 293
+  }
+}

@@ -1,0 +1,81 @@
+---
+import sansLatin from '@focsd/tokens/fonts/atkinson-hyperlegible-next-latin-wght-normal.woff2?url';
+import monoLatin from '@focsd/tokens/fonts/atkinson-hyperlegible-mono-latin-wght-normal.woff2?url';
+import AgentTools from '../AgentTools.astro';
+import { components } from '../../data/catalogue.js';
+import { OG_IMAGE, REPO_URL, SITE } from '../../data/site.js';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const pages = JSON.stringify(components.map((c) => c.slug));
+
+const structuredData = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'WebSite', name: 'Focsd', url: `${SITE}/`, description },
+    {
+      '@type': 'SoftwareSourceCode',
+      name: 'Focsd',
+      description,
+      url: `${SITE}/`,
+      codeRepository: REPO_URL,
+      license: 'https://opensource.org/license/mit',
+      programmingLanguage: ['JavaScript', 'TypeScript', 'CSS'],
+      runtimePlatform: 'Web browsers',
+      keywords: 'web components, design system, component library, UI library, framework agnostic, accessibility, WCAG 2.2, front end',
+      isAccessibleForFree: true,
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    },
+  ],
+});
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<link rel="sitemap" href="/sitemap-index.xml" />
+<meta property="og:title" content={title} />
+<meta property="og:type" content="website" />
+<meta property="og:url" content={canonical} />
+<meta property="og:description" content={description} />
+<meta property="og:site_name" content="Focsd" />
+<meta property="og:image" content={OG_IMAGE} />
+<meta property="og:image:alt" content="Focsd: free, accessible web components that work everywhere." />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content={OG_IMAGE} />
+<script type="application/ld+json" set:html={structuredData} />
+<link rel="preload" href={sansLatin} as="font" type="font/woff2" crossorigin />
+<link rel="preload" href={monoLatin} as="font" type="font/woff2" crossorigin />
+<link rel="icon" href="/favicon.ico" sizes="48x48" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<meta name="theme-color" content="#F4F6F5" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#111113" media="(prefers-color-scheme: dark)" />
+{/* The docs' theme choice (Starlight stores it as `starlight-theme`) before first paint, for both
+    Starlight's `data-theme` and the Focsd tokens' `data-focsd-theme`. */}
+<script is:inline>
+  (() => {
+    let stored = '';
+
+    try {
+      stored = localStorage.getItem('starlight-theme') ?? '';
+    } catch {
+      /* storage blocked: follow the system */
+    }
+
+    const theme = stored === 'light' || stored === 'dark' ? stored : matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    const root = document.documentElement;
+    root.dataset.theme = theme;
+    root.dataset.focsdTheme = theme;
+  })();
+</script>
+<script type="application/json" id="focsd-agent-pages" set:html={pages} />
+<AgentTools />

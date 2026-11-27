@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Polish · Focsd test bench</title>
+    <script type="module" src="/src/polish.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Polish"></pg-header>
+    <main class="pg-stack">
+      <form id="pf">
+        <focsd-search-field id="p-search" label="Search" name="q" required></focsd-search-field>
+        <focsd-number-field id="p-num" label="Amount" name="amount"></focsd-number-field>
+        <focsd-textarea id="p-notes" label="Notes" name="notes" maxlength="40"></focsd-textarea>
+        <focsd-rating id="p-rating" label="Score" name="score" value="3"></focsd-rating>
+        <focsd-radio-group id="p-radios" label="Plan" name="plan" value="b">
+          <focsd-radio value="a">A</focsd-radio>
+          <focsd-radio value="b">B</focsd-radio>
+          <focsd-radio value="c">C</focsd-radio>
+        </focsd-radio-group>
+        <focsd-slider id="p-range" label="Price" name="price" range value-low="0" value-high="0" min="0" max="100"></focsd-slider>
+        <focsd-slider id="p-vol" label="Volume" name="vol" value="50"></focsd-slider>
+        <focsd-toggle-group id="p-align" label="Align" name="align" type="multiple">
+          <focsd-toggle value="l">Left</focsd-toggle>
+          <focsd-toggle value="r">Right</focsd-toggle>
+        </focsd-toggle-group>
+      </form>
+      <focsd-meter id="p-meter" label="Storage" value="150" max="100"></focsd-meter>
+      <focsd-progress id="p-progress" label="Upload" value="5" max="0"></focsd-progress>
+      <focsd-button-group id="p-group" label="Actions"><focsd-button>One</focsd-button></focsd-button-group>
+      <div id="p-alert-host"></div>
+      <focsd-combobox id="p-cb" label="Country" allow-custom>
+        <focsd-option value="de">Germany</focsd-option>
+        <focsd-option value="fr">France</focsd-option>
+      </focsd-combobox>
+      <focsd-table id="p-table" caption="Small"></focsd-table>
+      <focsd-carousel id="p-car" label="Slides" autoplay="0">
+        <focsd-carousel-slide><p>One</p></focsd-carousel-slide>
+        <focsd-carousel-slide><p>Two</p></focsd-carousel-slide>
+        <focsd-carousel-slide><p>Three</p></focsd-carousel-slide>
+      </focsd-carousel>
+      <focsd-calendar id="p-cal" value="2026-05-15" min="2026-05-01" max="2026-05-31"></focsd-calendar>
+      <form id="pf-range"><focsd-date-range-picker id="p-range-dates" label="Stay" name="stay"></focsd-date-range-picker></form>
+      <focsd-file-upload id="p-file" label="Report" accept=".pdf"></focsd-file-upload>
+      <div dir="rtl"><focsd-otp-field id="p-otp" label="Code" length="4"></focsd-otp-field></div>
+    </main>
+  </body>
+</html>

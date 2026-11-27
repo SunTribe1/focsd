@@ -1,0 +1,52 @@
+{
+  "sys": {
+    "color": {
+      "$type": "color",
+      "ground": {
+        "$value": "{ref.color.mineral.slate.97}"
+      },
+      "focus-inner": {
+        "$value": "{ref.color.mineral.slate.97}"
+      },
+      "surface": {
+        "$value": "{ref.color.mineral.slate.100}"
+      },
+      "surface-sunk": {
+        "$value": "{ref.color.mineral.slate.95}"
+      },
+      "surface-raised": {
+        "$value": "{ref.color.mineral.slate.100}"
+      },
+      "ink": {
+        "$value": "{ref.color.mineral.slate.22}"
+      },
+      "focus-outer": {
+        "$value": "{ref.color.mineral.slate.22}"
+      },
+      "ink-muted": {
+        "$value": "{ref.color.mineral.slate.47}"
+      },
+      "edge": {
+        "$value": "{ref.color.mineral.slate.60}"
+      },
+      "edge-quiet": {
+        "$value": "{ref.color.mineral.slate.88}"
+      },
+      "action": {
+        "$value": "{ref.color.mineral.petrol.42}"
+      },
+      "action-hover": {
+        "$value": "{ref.color.mineral.petrol.48}"
+      },
+      "action-press": {
+        "$value": "{ref.color.mineral.petrol.37}"
+      },
+      "on-action": {
+        "$value": "{ref.color.mineral.petrol.99}"
+      },
+      "route": {
+        "$value": "{ref.color.mineral.blue.50}"
+      }
+    }
+  }
+}

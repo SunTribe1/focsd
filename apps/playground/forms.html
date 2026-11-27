@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Focsd test bench: form controls</title>
+    <script type="module" src="/src/forms.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Form controls"></pg-header>
+    <main id="pg-main">
+      <form id="prefs" class="pg-stack">
+        <focsd-textarea
+          id="ta"
+          label="Project description"
+          name="description"
+          maxlength="120"
+          hint="Shown on the project overview."
+        ></focsd-textarea>
+
+        <focsd-checkbox id="cb-terms" name="terms" required>I accept the <a href="#terms">terms of service</a></focsd-checkbox>
+        <focsd-checkbox id="cb-all" indeterminate>Select all reports</focsd-checkbox>
+
+        <focsd-checkbox-group id="cbg" label="Email me about" hint="Choose any.">
+          <focsd-checkbox name="topics" value="releases" checked>Product releases</focsd-checkbox>
+          <focsd-checkbox name="topics" value="security">Security notices</focsd-checkbox>
+          <focsd-checkbox name="topics" value="events" disabled>Events (unavailable)</focsd-checkbox>
+        </focsd-checkbox-group>
+
+        <focsd-radio-group id="rg" label="Plan" name="plan" value="team" required>
+          <focsd-radio value="solo">Solo</focsd-radio>
+          <focsd-radio value="team">Team</focsd-radio>
+          <focsd-radio value="enterprise" disabled>Enterprise (contact sales)</focsd-radio>
+          <focsd-radio value="education">Education</focsd-radio>
+        </focsd-radio-group>
+
+        <focsd-switch id="sw" name="digest" checked>Weekly digest</focsd-switch>
+
+        <focsd-fieldset id="fs-ship" label="Shipping address" hint="We only ship within the EU.">
+          <focsd-text-field label="Street" name="street"></focsd-text-field>
+          <focsd-text-field label="City" name="city"></focsd-text-field>
+        </focsd-fieldset>
+
+        <div class="pg-row">
+          <focsd-button id="prefs-submit" type="submit" variant="action">Save preferences</focsd-button>
+          <focsd-button id="prefs-reset" type="reset">Reset</focsd-button>
+        </div>
+        <output id="prefs-result"></output>
+      </form>
+      <form id="account" class="pg-stack">
+        <focsd-number-field
+          id="nf"
+          label="Seats"
+          name="seats"
+          value="10"
+          min="1"
+          max="50"
+          step="1"
+          hint="Between 1 and 50."
+        ></focsd-number-field>
+        <focsd-search-field id="sf" label="Search members" name="q" placeholder="Name or email"></focsd-search-field>
+        <focsd-password-field id="pf" label="Password" name="password" hint="At least 12 characters." required></focsd-password-field>
+        <focsd-otp-field id="otp" label="Verification code" name="code" length="6" required></focsd-otp-field>
+        <div class="pg-row">
+          <focsd-button id="account-submit" type="submit" variant="action">Continue</focsd-button>
+          <focsd-button id="account-reset" type="reset">Reset</focsd-button>
+        </div>
+        <output id="account-result"></output>
+      </form>
+      <form id="tools" class="pg-stack" novalidate>
+        <focsd-error-summary id="es" manual></focsd-error-summary>
+        <focsd-text-field id="es-name" label="Team name" name="team" required></focsd-text-field>
+        <focsd-slider id="sl" label="Volume" name="volume" value="40" value-text="{value}%"></focsd-slider>
+        <focsd-slider
+          id="sl-range"
+          label="Price"
+          name="price"
+          range
+          value-low="20"
+          value-high="80"
+          min="0"
+          max="100"
+          step="5"
+          value-text="€{value}"
+        ></focsd-slider>
+        <focsd-rating id="rt" label="Rate this template" name="stars" value="3"></focsd-rating>
+        <focsd-rating id="rt-ro" label="Average rating" value="4" readonly></focsd-rating>
+        <div class="pg-row" id="toggles">
+          <focsd-toggle id="tg-bold">Bold</focsd-toggle>
+          <focsd-toggle-group id="tgg" label="Text alignment" name="align" value="left">
+            <focsd-toggle value="left">Left</focsd-toggle>
+            <focsd-toggle value="center">Center</focsd-toggle>
+            <focsd-toggle value="right">Right</focsd-toggle>
+          </focsd-toggle-group>
+        </div>
+        <div class="pg-row">
+          <focsd-icon-button id="ib" icon="trash" label="Delete file"></focsd-icon-button>
+          <focsd-icon-button icon="copy" label="Copy link" variant="quiet"></focsd-icon-button>
+          <focsd-button-group id="bg" label="Pagination">
+            <focsd-button>Previous</focsd-button>
+            <focsd-button>Next</focsd-button>
+          </focsd-button-group>
+        </div>
+        <focsd-button id="tools-submit" type="submit" variant="action">Save</focsd-button>
+        <output id="tools-result"></output>
+      </form>
+    </main>
+  </body>
+</html>

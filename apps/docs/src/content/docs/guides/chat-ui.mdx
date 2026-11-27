@@ -1,0 +1,162 @@
+---
+title: Chat UI (AI kit)
+description: 'Build an accessible chat from web components, with a live demo that needs no server, the controller, the event stream format and a server recipe for any model.'
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import GuideExample from '../../../components/GuideExample.astro';
+import { examples } from '../../../data/guides/chat-ui.js';
+
+`@focsd/ai` is a separate package, so apps that don't need it don't pay for it. It has 11 chat elements, a small controller that talks to any model server through a transport, and a markdown renderer that never touches `innerHTML`.
+
+```sh
+npm install @focsd/ai
+```
+
+```js
+import '@focsd/tokens/tokens.css';
+import '@focsd/ai';
+```
+
+Importing the package defines every element. To load one element on its own, import its file, named after the tag without `focsd-`: `@focsd/ai/composer.js` or `@focsd/ai/chat-thread.js`. The package marks these files as having side effects, so bundlers keep them.
+
+## Try it without a server
+
+<GuideExample guide="chat-ui" examples={examples} id="scripted" />
+
+The thread, the suggestions and the composer are three independent elements. Your page connects them to a chat controller in a few lines (the code above is the whole wiring):
+
+- `thread.chat = chat` makes the thread show and follow the controller's messages.
+- The composer's `focsd-submit` event calls `chat.send(text, files)`, and `focsd-stop` calls `chat.stop()`.
+- The composer's `busy` property follows the controller's `status`, so the send button becomes Stop while a reply streams.
+
+The controller keeps the name, type and size of each file, not its bytes. Map the composer's `File` objects as shown above, and upload them in your own code.
+
+## How replies are announced
+
+A chat that reads out every token is unusable with a screen reader. The thread is an [ARIA feed](https://www.w3.org/WAI/ARIA/apg/patterns/feed/): each message is an `article`, and the one that is streaming has `aria-busy="true"`. There is no live region on the feed.
+
+- When a reply is complete, the thread says "Assistant replied:" and the start of its text, once, politely. Long replies are cut at 300 characters and say "Message continues in the conversation."
+- A reply with no text (only tool calls, sources or reasoning) says "Assistant replied without text."
+- Stop says "Response stopped". An error is announced assertively.
+- Messages you set all at once (a saved history) are not announced.
+- The thread follows new text only while the reader is at the bottom. Scrolled up, a "Jump to latest" button appears. Sending a message follows the thread again, so the new message and its reply are in view.
+
+The feed is one tab stop (the last focused message, at first the latest); Page Down and Page Up move between messages. Each finished reply also has a message actions toolbar (copy, retry, feedback). That is one more tab stop per reply, so in a long thread Tab passes one toolbar per reply. Code blocks and the input and output of an open tool call scroll, so each is a named region in the tab order and scrolls with the arrow keys.
+
+## The controller
+
+```js
+import { createChat, fetchSseTransport } from '@focsd/ai';
+
+const chat = createChat({
+  transport: fetchSseTransport({ url: '/api/chat' }),
+  messages: savedMessages,
+  onChange: ({ messages, status }) => save(messages),
+});
+
+await chat.send('Hello');
+chat.stop();
+await chat.retry(messageId);
+chat.setMessages([]);
+```
+
+State is immutable: every update makes a new `messages` array and a new message object, so it works with any framework's change detection. Treat `chat.messages` and the messages in it as read-only: change the list with `send`, `retry` or `setMessages`, never in place. Text arriving in a burst is applied once per animation frame, so 200 tokens are one render.
+
+Each message has an `id`, a `role` (`user`, `assistant`, `system` or `tool`), a `status` (`pending`, `streaming`, `done`, `stopped` or `error`) and `parts`: text, reasoning, tool calls, sources and files. A failed message keeps its `error` text and an `errorCode`, and the elements show the translated term for a known code:
+
+- `http`: the server answered with a status that is not 2xx.
+- `network`: the request failed before a response (offline, DNS, CORS).
+- `too-long`: more than 1 MB of text and reasoning streamed.
+- `too-large`: a line or an event was over 2 MB, or the reply passed its size cap counted over every chunk type (text, reasoning, tool calls, tool results and sources). The request is aborted.
+
+The `ErrorCode` type also names `stream`, for an `error` event your server sends with `code: 'stream'`. The built-in transport never sets it, and it has no translated term, so the elements show the event's `message`.
+
+The elements never show or revoke a `file` part's `url`: if your app creates an object URL for a file, your app revokes it.
+
+<Aside type="caution" title="Long conversations">
+The thread does not virtualize. It is built for conversations of up to about 500 messages; past that, keep the oldest messages out of `chat.messages` (summarize or page them) or the page will slow down.
+</Aside>
+
+## The wire format
+
+`fetchSseTransport` POSTs `{ "messages": [...] }` as JSON (change it with `body(messages)`; add headers such as authorization with `headers`) and reads a `text/event-stream` response. Each event is one JSON object on a `data:` line, with a `type`:
+
+| `type` | Fields | Effect |
+|---|---|---|
+| `text-delta` | `id`, `delta` | Appends to the reply's text |
+| `reasoning-delta` | `id`, `delta` | Appends to its reasoning |
+| `tool-call` | `id`, `name`, `input` | Adds a running tool call |
+| `tool-result` | `id`, `output`, `status` (`done` or `error`) | Completes the tool call with the same `id` |
+| `source` | `url`, `title` | Adds a source chip |
+| `finish` | `reason` | Ends the reply (the request is aborted, even if the server keeps the stream open) |
+| `error` | `message`, `code` (optional) | Fails the reply |
+
+```text
+data: {"type":"text-delta","id":"text","delta":"Hello"}
+
+data: {"type":"text-delta","id":"text","delta":" there"}
+
+data: {"type":"finish","reason":"stop"}
+```
+
+Unknown types and `:` comment lines are ignored, and CRLF, LF and CR line ends all work. A reply stops with an error after 1 MB of text, or once it passes its total size cap (see the error codes above). A response that is not 2xx becomes an error with the status text, and a failed request one with the code `network`. Stop and `chat.stop()` abort the request with an `AbortController`.
+
+## A server recipe
+
+Focsd ships no server code: you keep your keys, your model and your rules. Any runtime with Fetch `Response` streaming (Node, Deno, Bun, Cloudflare Workers, Vercel) can speak the format. Adapt the model call to your vendor's SDK:
+
+```js
+const encoder = new TextEncoder();
+const frame = (chunk) => encoder.encode(`data: ${JSON.stringify(chunk)}\n\n`);
+
+export async function POST(request) {
+  const { messages } = await request.json();
+  const prompt = messages.map((m) => ({
+    role: m.role,
+    content: m.parts.filter((p) => p.type === 'text').map((p) => p.text).join('\n'),
+  }));
+
+  const body = new ReadableStream({
+    async start(controller) {
+      try {
+        // Replace with your vendor's streaming call; it should stop when request.signal aborts.
+        for await (const token of model.stream(prompt, { signal: request.signal })) {
+          controller.enqueue(frame({ type: 'text-delta', id: 'text', delta: token }));
+        }
+
+        controller.enqueue(frame({ type: 'finish', reason: 'stop' }));
+      } catch {
+        controller.enqueue(frame({ type: 'error', message: 'The model could not answer.' }));
+      } finally {
+        controller.close();
+      }
+    },
+  });
+
+  return new Response(body, { headers: { 'content-type': 'text/event-stream', 'cache-control': 'no-cache' } });
+}
+```
+
+Authenticate the request, limit its size and rate, and never put a vendor key in the page. Do not forward the `messages` array to the model as it is: it comes from the browser.
+
+The composer's `accept`, `max-files` and `max-file-size` checks are a convenience for the person, not a defense: the server must check the type, size and content of every upload again.
+
+## Safe by default
+
+- Markdown is parsed to a small tree and built with DOM calls, so it runs under a strict Content Security Policy with Trusted Types (`style-src 'self'` and `require-trusted-types-for 'script'`) and has no HTML sink.
+- Raw HTML, images and tables in a reply are shown as text.
+- A link keeps only `https:`, `http:`, `mailto:` and relative URLs; anything else (such as `javascript:`) becomes text. Links get `rel="noopener noreferrer nofollow"`.
+- Tool input and output are shown as text (JSON), never as HTML.
+
+## Translating
+
+Every word the elements show or announce is a term under an `ai.*` key (`ai.send`, `ai.stop`, `ai.responseStopped`, `ai.errorHttp` and so on). Register a table with the same keys to translate them, as described in [Localization](/foundations/localization/):
+
+```js
+import { registerTranslation } from '@focsd/primitives/utils';
+
+registerTranslation({ $code: 'en-GB', 'ai.send': 'Send it', 'ai.stop': 'Halt' });
+```
+
+The elements are documented one by one: [chat thread](/components/chat-thread/), [chat message](/components/chat-message/), [streaming text](/components/streaming-text/), [tool call](/components/tool-call/), [reasoning](/components/reasoning/), [prompt suggestions](/components/prompt-suggestions/), [message actions](/components/message-actions/), [composer](/components/composer/), [attachment tile](/components/attachment-tile/), [source chip](/components/source-chip/) and [file changes](/components/file-changes/).

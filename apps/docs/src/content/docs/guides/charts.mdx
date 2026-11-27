@@ -1,0 +1,75 @@
+---
+title: Charts
+description: 'Accessible charts: bar, line, area, stacked, scatter and donut, plus sparklines, gauges and stat tiles. Every chart is also a summary, a data table and keyboard-explorable points.'
+---
+
+import GuideExample from '../../../components/GuideExample.astro';
+import { examples } from '../../../data/guides/charts.js';
+
+`@focsd/charts` is a separate package, so apps without charts don't pay for it. It has three elements: [`focsd-chart`](/components/chart/) (bar, line, area, stacked bars and areas, scatter, donut), [`focsd-sparkline`](/components/sparkline/) and [`focsd-gauge`](/components/gauge/). The stat tile, the animated number and the status dot are in `@focsd/components`: see [Stat](/components/stat/).
+
+```sh
+npm install @focsd/charts
+```
+
+```js
+import '@focsd/tokens/tokens.css';
+import '@focsd/charts';
+```
+
+## What every chart does
+
+A chart is a figure named by its caption and described by a generated sentence. You give it rows (`data`), the column for the categories (`x`) and the series (`series`, one `{ key, label }` per column). Then:
+
+- The summary is words: "Area chart, 6 categories, 3 series. Highest: Online, Jun, $4,100."
+- Each point is named "Series, category: value", and the points are one tab stop. Arrow keys move between points; Home and End jump to the ends.
+- The Show data table button lists every value in a real table.
+- Series differ by pattern and marker shape as well as color, so a chart works in grayscale.
+- Numbers use `Intl.NumberFormat` options in `format`, in the page language.
+
+## Area
+
+<GuideExample guide="charts" examples={examples} id="area" />
+
+An area chart reads like a line chart: Left and Right move between categories, Up and Down between series.
+
+## Stacked bars and areas
+
+<GuideExample guide="charts" examples={examples} id="stacked" />
+
+`stacked` applies to bars and areas, and is ignored for lines, scatter and donut. Positive and negative values stack separately from zero. Up and Down still move to the next series in legend order, not up the visual stack.
+
+## Scatter
+
+<GuideExample guide="charts" examples={examples} id="scatter" />
+
+Scatter data uses the same rows. `x` is the key of the numeric column, and each series is a y column; for one series you can set `y` instead of `series`. A row whose x is not a finite number is skipped. Left and Right move to the next larger or smaller x, Up and Down to the point with the nearest x in the neighboring series, and Home and End to the smallest and largest x. The summary gives the ranges: "x from 5 to 30, y from 12 to 410".
+
+## Mirrored direction
+
+<GuideExample guide="charts" examples={examples} id="mirror" />
+
+Charts draw left to right even on right-to-left pages, because most right-to-left charts show time that way. `mirror` flips the categories (and the grouped bar order and the scatter x axis), moves the value axis to the right and swaps Left and Right so the keys follow what you see. Home and End stay logical: the first and last category. `mirror` is off under `dir="rtl"` unless you set it.
+
+## Sparklines and stat tiles
+
+<GuideExample guide="charts" examples={examples} id="sparkline" />
+
+The sparkline is an image whose name is the label plus a sentence: "Signups per day: 6 values, from 4 to 19, last 17, up 325% from the first". It has no tab stops. A [stat](/components/stat/) says its change in words ("Up 12.4% from last month, good"), so the arrow and color are never the only signal.
+
+## Gauge
+
+<GuideExample guide="charts" examples={examples} id="gauge" />
+
+The gauge is a `meter`. Its value text includes the current band ("72%, Warning"), and the bands are also a visible list.
+
+## Choosing
+
+- Use a **chart** when people need the values: it has the table and the keyboard.
+- Use a **sparkline** for a trend next to a number or in a table row, never alone for important data.
+- Use a **gauge** for one value against known limits, and give the bands names.
+- Use a **stat** for a headline figure and its change.
+
+## Content Security Policy
+
+Charts draw with SVG attributes, not inline `style`, so they run under a strict policy (`style-src 'self'`).

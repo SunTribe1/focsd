@@ -1,0 +1,127 @@
+---
+title: Migrating from Material Web
+description: Move from @material/web (md-*) to Focsd (focsd-*), element by element, with tokens, icons and forms.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Google moved Material Web Components into maintenance mode in June 2024: bugs may be fixed, but no new components or features are planned. Focsd covers the same components and adds others. Its components work in any framework, join native forms and are tested against WCAG 2.2 AA. This guide maps one to the other.
+
+<Aside>
+Both libraries are web components, so you can migrate one screen at a time: `md-*` and `focsd-*` elements work side by side in the same page and the same form.
+</Aside>
+
+## Install
+
+```sh
+npm uninstall @material/web
+npm install @focsd/components @focsd/tokens
+```
+
+```js
+import '@focsd/tokens/tokens.css';
+import '@focsd/tokens/fonts.css';
+import '@focsd/components';
+```
+
+## Element map
+
+| Material Web | Focsd | Notes |
+|---|---|---|
+| `md-filled-button` | `focsd-button variant="action"` | The one primary action on a screen. |
+| `md-outlined-button`, `md-elevated-button`, `md-filled-tonal-button` | `focsd-button` | The default (`plain`) button. |
+| `md-text-button` | `focsd-button variant="quiet"` | |
+| (error-colored button) | `focsd-button variant="critical"` | For destructive actions. |
+| `md-icon-button` (all variants) | `focsd-icon-button icon="…" label="…"` | `label` is required: it is the accessible name. |
+| `md-fab` | `focsd-button variant="action" icon="…"` | No floating button; place the action in the layout. |
+| `md-checkbox` | `focsd-checkbox` | The label is the element's content, so no wrapping `<label>` is needed. |
+| `md-radio` | `focsd-radio-group` + `focsd-radio` | The group owns `name`, `value`, `required` and arrow keys. |
+| `md-switch` | `focsd-switch` | |
+| `md-slider` (`range`, `value-start`, `value-end`) | `focsd-slider` (`range`, `value-low`, `value-high`) | `value-text` gives screen readers formatted values (`€{value}`). |
+| `md-filled-text-field`, `md-outlined-text-field` | `focsd-text-field` | `supporting-text` becomes `hint`; `error` + `error-text` become `error`. |
+| `md-…-text-field type="textarea"` | `focsd-textarea` | `maxlength` adds a counter that announces after typing pauses. |
+| `md-filled-select`, `md-outlined-select` + `md-select-option` | `focsd-select` + `focsd-option` | Option text is the content; `multiple` is supported. |
+| `md-menu` + `md-menu-item` (`anchor`) | `focsd-menu` + `focsd-menu-item` | The trigger is slotted (`slot="trigger"`) instead of anchored by id. Choosing fires `focsd-select`. |
+| `md-dialog` (`headline`, `content`, `actions` slots) | `focsd-dialog` (`headline` attribute, default slot, `actions` slot) | `show()`, `showModal()`, `close(returnValue)`, `requestClose()`, `closedby`. `<form method="dialog">` works. |
+| `md-tabs` + `md-primary-tab` / `md-secondary-tab` | `focsd-tabs` + `focsd-tab` + `focsd-tab-panel` | Panels are part of the component, so `aria-controls` is wired for you. |
+| `md-list` + `md-list-item` | `focsd-list` + `focsd-list-item` | `selectable` turns it into a listbox. |
+| `md-chip-set` + input chips | `focsd-tag removable` | Fires `focsd-remove`; your app removes it. |
+| Filter chips | `focsd-toggle-group type="multiple"` + `focsd-toggle` | Pressed state and form value included. |
+| Suggestion and assist chips | `focsd-button` | |
+| `md-circular-progress indeterminate` | `focsd-spinner` | |
+| `md-circular-progress` / `md-linear-progress` with a value | `focsd-progress` | |
+| `md-divider` | `focsd-separator` | |
+| `md-icon` | `focsd-icon` | See [Icons](#icons) below. |
+| `md-ripple`, `md-elevation`, `md-focus-ring` | Built in | Every component draws its own focus ring, which stays visible in forced colors mode. |
+
+Focsd also has components Material Web never had: the data grid, combobox, date and time pickers, file upload, toasts, drawer, popover, tooltip, command palette, pagination, stepper and tree. See [all components](/components/).
+
+## Attributes and events
+
+```html
+<!-- Material Web -->
+<md-outlined-text-field label="Email" type="email" supporting-text="We never share it" error error-text="Enter an email address"></md-outlined-text-field>
+
+<!-- Focsd -->
+<focsd-text-field label="Email" type="email" autocomplete="email" hint="We never share it" error="Enter an email address"></focsd-text-field>
+```
+
+- **Events.** Both fire `input` and `change` like native controls, so listeners carry over.
+- **Forms.** Both are form-associated: `name`, `value`, `required`, `disabled`, `FormData`, reset and `setCustomValidity()` work the same way. Focsd also supports `readonly` on text-like fields, `labels`, `defaultValue` and fieldset `disabled`.
+- **Validation messages** come from the browser's constraint API in both. Ours are translatable (see [Localization](/foundations/localization/)).
+
+## Theming
+
+Material's system tokens map to Focsd's semantic tokens. Set them once on `:root` (or on any element, for part of a page):
+
+| Material token | Focsd token |
+|---|---|
+| `--md-sys-color-primary` | `--focsd-action` |
+| `--md-sys-color-on-primary` | `--focsd-on-action` |
+| `--md-sys-color-background` | `--focsd-ground` |
+| `--md-sys-color-surface` | `--focsd-surface` |
+| `--md-sys-color-surface-container` | `--focsd-surface-raised` |
+| `--md-sys-color-surface-container-highest` | `--focsd-surface-sunk` |
+| `--md-sys-color-on-surface` | `--focsd-ink` |
+| `--md-sys-color-on-surface-variant` | `--focsd-ink-muted` |
+| `--md-sys-color-outline` | `--focsd-edge` |
+| `--md-sys-color-outline-variant` | `--focsd-edge-quiet` |
+| `--md-sys-color-error` | `--focsd-critical` |
+| `--md-ref-typeface-plain` | `--focsd-font-sans` |
+| `--md-sys-shape-corner-small` | `--focsd-radius-control` |
+
+Light, dark and high-contrast themes ship ready-made: set `data-focsd-theme="light" | "dark" | "contrast"`, or let them follow the system. Check contrast after mapping brand colors: our tokens are tested at WCAG AA, but your values replace ours. See [Theming and tokens](/foundations/theming/).
+
+## Icons
+
+`md-icon` draws Material Symbols with an icon font. You have two options:
+
+1. **Keep the font for now.** Slotted content stays in your page, where the font's CSS applies:
+
+   ```html
+   <focsd-icon label="Settings"><span class="material-symbols-outlined">settings</span></focsd-icon>
+   ```
+
+2. **Move to SVG** (sharper, no font download, accessible by default). Register the Material Symbols SVGs as a library:
+
+   ```js
+   import { registerIconLibrary, setDefaultIconLibrary } from '@focsd/components';
+
+   registerIconLibrary('material', { resolve: (name) => `/icons/material-symbols/${name}.svg` });
+   setDefaultIconLibrary('material');
+   ```
+
+   ```html
+   <focsd-icon name="settings" label="Settings"></focsd-icon>
+   ```
+
+See [Icons](/foundations/icons/) for adapters (Lucide, Font Awesome) and for replacing the icons inside components.
+
+## Checklist
+
+1. Install the packages and import the tokens.
+2. Map your `--md-sys-*` overrides to `--focsd-*` tokens.
+3. Replace elements screen by screen, using the table above.
+4. Give every `focsd-icon-button` a `label` and every `focsd-data-grid` a `label`.
+5. Run your form tests. Values, events and validity carry over.
+6. Remove `@material/web` once no `md-*` elements remain. To find any left on a page, run `[...document.querySelectorAll('*')].filter((el) => el.localName.startsWith('md-'))` in the console.

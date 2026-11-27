@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Currency field · Focsd test bench</title>
+    <!-- cspell:ignore Preis preis -->
+    <script type="module" src="/src/currency.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Currency field"></pg-header>
+    <main class="pg-stack pg-w-40">
+      <form id="f" class="pg-stack">
+        <focsd-currency-field id="c" label="Price" name="price" currency="EUR" min="0" max="10000" value="1234.5"></focsd-currency-field>
+        <div lang="de"><focsd-currency-field id="cd" label="Preis" name="preis" currency="EUR"></focsd-currency-field></div>
+        <focsd-currency-field id="cj" label="Yen" name="yen" currency="JPY" currency-display="code"></focsd-currency-field>
+        <div class="pg-row">
+          <focsd-button type="submit" variant="action">Submit</focsd-button>
+          <focsd-button type="reset">Reset</focsd-button>
+        </div>
+      </form>
+      <output id="out"></output>
+    </main>
+  </body>
+</html>

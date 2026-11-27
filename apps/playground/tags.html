@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tag input · Focsd test bench</title>
+    <!-- cspell:ignore وسوم -->
+    <script type="module" src="/src/tags.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Tag input"></pg-header>
+    <main class="pg-stack pg-w-40">
+      <form id="f" class="pg-stack">
+        <focsd-tag-input id="t" label="Skills" name="skills" value="CSS,HTML" max="5"></focsd-tag-input>
+        <focsd-tag-input id="ts" label="Languages" name="lang">
+          <focsd-option value="de">German</focsd-option>
+          <focsd-option value="fr">French</focsd-option>
+          <focsd-option value="ja">Japanese</focsd-option>
+        </focsd-tag-input>
+        <focsd-tag-input id="tc" label="Cities" name="cities">
+          <focsd-option value="New York, NY">New York, NY</focsd-option>
+          <focsd-option value="Paris">Paris</focsd-option>
+        </focsd-tag-input>
+        <div dir="rtl" lang="ar"><focsd-tag-input id="tr" label="وسوم" name="rtl"></focsd-tag-input></div>
+        <div class="pg-row">
+          <focsd-button type="submit" variant="action">Submit</focsd-button>
+          <focsd-button type="reset">Reset</focsd-button>
+        </div>
+      </form>
+      <output id="out"></output>
+    </main>
+  </body>
+</html>

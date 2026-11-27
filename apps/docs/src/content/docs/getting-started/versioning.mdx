@@ -1,0 +1,26 @@
+---
+title: Versioning and upgrades
+description: What a major, minor or patch release means for you, and how deprecations work.
+---
+
+Focsd follows [Semantic Versioning](https://semver.org), and all packages share one version number, so `@focsd/components@1.4.0` always works with `@focsd/tokens@1.4.0`.
+
+| Release | What it can contain | Your upgrade |
+|---|---|---|
+| **Patch** (1.4.**1**) | Bug fixes, accessibility fixes, performance, docs | Update and ship |
+| **Minor** (1.**5**.0) | New components, attributes, events, parts and tokens. Existing markup looks and behaves the same | Update and ship |
+| **Major** (**2**.0.0) | Removals and renames, changed defaults | Follow the migration notes; a codemod when edits are mechanical |
+
+Every breaking change is listed under **Major changes** in the [changelog](/changelog/), with how to migrate.
+
+## Deprecations
+
+Nothing disappears without notice:
+
+1. A deprecated API keeps working for at least one minor release, next to its replacement.
+2. While you use it, the console shows one warning per page, for example: `Focsd: focsd-rating readonly property is deprecated and will be removed in the next major version; use readOnly.`
+3. It is removed only in the next major release, and the changelog says what to use instead.
+
+## What counts as breaking
+
+Renaming or removing any tag, attribute, property, method, event, slot, CSS part, CSS custom property or token is breaking. So is a changed default that alters how existing markup looks or behaves, and a change to how a component is announced or operated by keyboard (unless it fixes a WCAG failure).

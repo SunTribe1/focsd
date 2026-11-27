@@ -1,0 +1,282 @@
+/*
+ * @focsd/components/upgrade.css: the page before the elements upgrade.
+ *
+ * Custom elements render nothing of their own until their script defines them, so for a moment the
+ * browser lays out their raw children: every tab panel at once, a closed dialog's body, a select's
+ * option list, and nothing at all for elements that draw everything themselves (a text field, a
+ * chart). When the script arrives the page jumps. Load this file in <head>, before first paint, and
+ * each element keeps roughly the footprint it will have:
+ *
+ *   - content that is hidden until opened or selected takes no space;
+ *   - form controls reserve their control, label and hint;
+ *   - self-drawn controls reserve their box;
+ *   - nothing unstyled is shown: undefined elements are invisible until they upgrade.
+ *
+ * Every rule matches :not(:defined) only, so it does nothing once an element is defined.
+ * The rules apply only when scripting is enabled: without JavaScript nothing would ever upgrade,
+ * so the raw content stays visible instead of being hidden for good.
+ */
+
+@media (scripting: enabled) {
+  /* Never show raw, unstyled content. Space is kept (visibility, not display). */
+  :is(
+    focsd-accordion,
+    focsd-alert,
+    focsd-avatar,
+    focsd-avatar-group,
+    focsd-badge,
+    focsd-breadcrumb,
+    focsd-button,
+    focsd-button-group,
+    focsd-calendar,
+    focsd-card,
+    focsd-carousel,
+    focsd-checkbox,
+    focsd-checkbox-group,
+    focsd-code,
+    focsd-color-picker,
+    focsd-combobox,
+    focsd-copy-button,
+    focsd-currency-field,
+    focsd-date-field,
+    focsd-date-picker,
+    focsd-date-range-picker,
+    focsd-date-time-picker,
+    focsd-description-list,
+    focsd-disclosure,
+    focsd-dock,
+    focsd-empty-state,
+    focsd-fieldset,
+    focsd-field,
+    focsd-file-upload,
+    focsd-format-number,
+    focsd-icon,
+    focsd-icon-button,
+    focsd-kbd,
+    focsd-link,
+    focsd-list,
+    focsd-listbox,
+    focsd-menubar,
+    focsd-meter,
+    focsd-multi-select,
+    focsd-nav-menu,
+    focsd-notification-center,
+    focsd-number-field,
+    focsd-otp-field,
+    focsd-pagination,
+    focsd-password-field,
+    focsd-phone-field,
+    focsd-progress,
+    focsd-radio,
+    focsd-radio-group,
+    focsd-rating,
+    focsd-relative-time,
+    focsd-search-field,
+    focsd-segmented-control,
+    focsd-select,
+    focsd-separator,
+    focsd-sidebar,
+    focsd-skeleton,
+    focsd-slider,
+    focsd-spinner,
+    focsd-split-button,
+    focsd-stat,
+    focsd-status-dot,
+    focsd-stepper,
+    focsd-swatch-picker,
+    focsd-switch,
+    focsd-table,
+    focsd-tabs,
+    focsd-tag,
+    focsd-tag-input,
+    focsd-text-field,
+    focsd-textarea,
+    focsd-theme-picker,
+    focsd-theme-toggle,
+    focsd-time-field,
+    focsd-timeline,
+    focsd-toggle,
+    focsd-toggle-group,
+    focsd-toolbar,
+    focsd-tree,
+    focsd-chart,
+    focsd-sparkline,
+    focsd-gauge,
+    focsd-data-grid,
+    focsd-file-changes,
+    focsd-qr-code,
+    focsd-signature-pad
+  ):not(:defined) {
+    visibility: hidden;
+  }
+
+  /* Hidden until opened: no space at all. */
+  :is(
+    focsd-dialog,
+    focsd-alert-dialog,
+    focsd-drawer,
+    focsd-bottom-sheet,
+    focsd-lightbox,
+    focsd-tour,
+    focsd-toaster,
+    focsd-tooltip,
+    focsd-command,
+    focsd-floating-panel,
+    focsd-loading-overlay
+  ):not(:defined) {
+    display: none;
+  }
+
+  /* A trigger shows; the panel it opens does not. */
+  :is(focsd-menu, focsd-popover, focsd-hover-card, focsd-context-menu, focsd-split-button, focsd-menubar-item):not(:defined)
+    > :not([slot='trigger'], [slot='target']) {
+    display: none;
+  }
+
+  /* Only the first tab panel is shown before the tabs upgrade (the default selection). */
+  focsd-tabs:not(:defined) > focsd-tab-panel:not(:first-of-type) {
+    display: none;
+  }
+
+  /* Option lists open in a popup: the control alone takes space. */
+  :is(focsd-select, focsd-combobox, focsd-multi-select, focsd-notification-center, focsd-toggletip):not(:defined) > * {
+    display: none;
+  }
+
+  /* Form controls: the control, plus a label row and a hint row when they have them. */
+  :is(
+    focsd-text-field,
+    focsd-textarea,
+    focsd-number-field,
+    focsd-password-field,
+    focsd-search-field,
+    focsd-currency-field,
+    focsd-phone-field,
+    focsd-date-field,
+    focsd-time-field,
+    focsd-date-picker,
+    focsd-date-range-picker,
+    focsd-date-time-picker,
+    focsd-select,
+    focsd-combobox,
+    focsd-multi-select,
+    focsd-color-picker,
+    focsd-tag-input,
+    focsd-otp-field,
+    focsd-segmented-control,
+    focsd-slider
+  ):not(:defined) {
+    --_upgrade-label: 0px;
+    --_upgrade-hint: 0px;
+    display: block;
+    min-block-size: calc(var(--focsd-control-height, 36px) + var(--_upgrade-label) + var(--_upgrade-hint));
+  }
+
+  :is(
+      focsd-text-field,
+      focsd-textarea,
+      focsd-number-field,
+      focsd-password-field,
+      focsd-search-field,
+      focsd-currency-field,
+      focsd-phone-field,
+      focsd-date-field,
+      focsd-time-field,
+      focsd-date-picker,
+      focsd-date-range-picker,
+      focsd-date-time-picker,
+      focsd-select,
+      focsd-combobox,
+      focsd-multi-select,
+      focsd-color-picker,
+      focsd-tag-input,
+      focsd-otp-field,
+      focsd-segmented-control,
+      focsd-slider
+    ):not(:defined)[label] {
+    --_upgrade-label: 1.5625rem;
+  }
+
+  :is(
+      focsd-text-field,
+      focsd-textarea,
+      focsd-number-field,
+      focsd-password-field,
+      focsd-search-field,
+      focsd-currency-field,
+      focsd-phone-field,
+      focsd-date-field,
+      focsd-time-field,
+      focsd-date-picker,
+      focsd-date-range-picker,
+      focsd-date-time-picker,
+      focsd-select,
+      focsd-combobox,
+      focsd-multi-select,
+      focsd-color-picker,
+      focsd-tag-input,
+      focsd-otp-field,
+      focsd-segmented-control,
+      focsd-slider
+    ):not(:defined)[hint] {
+    --_upgrade-hint: 1.5rem;
+  }
+
+  /* Self-drawn buttons and switches: their box. */
+  :is(focsd-copy-button, focsd-icon-button, focsd-notification-center):not(:defined) {
+    display: inline-block;
+    min-inline-size: var(--focsd-control-height, 36px);
+    min-block-size: var(--focsd-control-height, 36px);
+    vertical-align: middle;
+  }
+
+  :is(focsd-theme-toggle, focsd-theme-picker):not(:defined) {
+    display: inline-block;
+    min-block-size: var(--focsd-control-height, 36px);
+    vertical-align: middle;
+  }
+
+  /* Data views drawn from properties: a sensible box until they render. Set the height on the element
+   (or its container) when you know it, for no shift at all. */
+  :is(focsd-chart, focsd-data-grid):not(:defined) {
+    display: block;
+    min-block-size: 16rem;
+  }
+
+  /* Buttons and tabs: a control-height box around their label, as they will have. */
+  :is(focsd-button, focsd-toggle):not(:defined) {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--focsd-control-height, 36px);
+    padding-inline: var(--focsd-space-4, 1rem);
+    vertical-align: middle;
+  }
+
+  focsd-tabs:not(:defined) {
+    display: block;
+  }
+
+  focsd-tabs:not(:defined) > focsd-tab {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--focsd-control-height, 36px);
+    padding-inline: var(--focsd-space-4, 1rem);
+  }
+
+  /* Checkboxes, radios and switches: one control-height row. */
+  :is(focsd-checkbox, focsd-radio, focsd-switch):not(:defined) {
+    display: flex;
+    align-items: center;
+    min-block-size: var(--focsd-control-height, 36px);
+  }
+
+  focsd-progress:not(:defined) {
+    display: block;
+    min-block-size: 0.625rem;
+  }
+
+  focsd-alert:not(:defined) {
+    display: block;
+    padding-block: 5px;
+  }
+}

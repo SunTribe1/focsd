@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Close buttons · Focsd test bench</title>
+    <script type="module" src="/src/close-buttons.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Close buttons"></pg-header>
+    <main class="pg-stack">
+      <div class="pg-row">
+        <focsd-button id="open-dialog">Open dialog</focsd-button>
+        <focsd-button id="open-drawer">Open drawer</focsd-button>
+        <focsd-button id="open-alert-dialog">Open alert dialog</focsd-button>
+        <focsd-button id="open-no-close">Open dialog without ×</focsd-button>
+      </div>
+      <focsd-dialog id="dialog" headline="Invite people">
+        <p>They get an email with a link.</p>
+        <focsd-text-field label="Email"></focsd-text-field>
+        <focsd-button slot="actions" variant="action" data-dialog-close value="send">Send</focsd-button>
+      </focsd-dialog>
+      <focsd-drawer id="drawer" headline="Filters"><p>Status and owner.</p></focsd-drawer>
+      <focsd-alert-dialog id="alert-dialog" headline="Delete project?">
+        <p>This cannot be undone.</p>
+        <focsd-button slot="actions" data-dialog-close value="cancel" data-autofocus>Cancel</focsd-button>
+        <focsd-button slot="actions" variant="critical" data-dialog-close value="delete">Delete</focsd-button>
+      </focsd-alert-dialog>
+      <focsd-dialog id="no-close" headline="Choose one" no-close>
+        <focsd-button slot="actions" data-dialog-close value="ok">OK</focsd-button>
+      </focsd-dialog>
+      <focsd-alert id="alert" tone="info" headline="New version" closable>Reload to update.</focsd-alert>
+      <focsd-alert id="kept" tone="caution" headline="Kept" closable>Its close is cancelled.</focsd-alert>
+      <focsd-popover id="popover" label="Details" closable>
+        <focsd-button slot="trigger">Details</focsd-button>
+        <p>Popover content.</p>
+      </focsd-popover>
+    </main>
+  </body>
+</html>

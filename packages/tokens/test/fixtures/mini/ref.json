@@ -1,0 +1,14 @@
+{
+  "ref": {
+    "color": {
+      "$type": "color",
+      "graphite": {
+        "21": { "$value": { "colorSpace": "oklch", "components": [0.2108, 0.0098, 173.15], "hex": "#141a18" } }
+      }
+    },
+    "space": {
+      "$type": "dimension",
+      "4": { "$value": { "value": 16, "unit": "px" } }
+    }
+  }
+}

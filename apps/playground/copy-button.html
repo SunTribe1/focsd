@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Copy button · Focsd test bench</title>
+    <script type="module" src="/src/copy-button.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Copy button"></pg-header>
+    <main class="pg-stack">
+      <p>API key <code id="key">sk_live_51H8</code> <focsd-copy-button id="c1" from="key" label="Copy API key"></focsd-copy-button></p>
+      <p>Install guide <focsd-copy-button id="c2" value="https://focsd.dev/install"></focsd-copy-button></p>
+      <p>
+        <focsd-text-field id="url" label="Share link" value="https://focsd.dev/s/42"></focsd-text-field
+        ><focsd-copy-button id="c3" from="url" label="Copy share link"></focsd-copy-button>
+      </p>
+      <focsd-code id="code" language="bash">pnpm add @focsd/components</focsd-code>
+    </main>
+  </body>
+</html>

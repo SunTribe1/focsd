@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>No-flash snippet only · Focsd test bench</title>
+    <!-- Only the tokens no-flash snippet, no components: e2e/presets.spec.js proves it sets the stored theme and preset before any module runs. -->
+    <!-- prettier-ignore -->
+    <script id="no-flash">(function(){try{var d=document.documentElement,s=localStorage,t=s.getItem("focsd-theme"),b=s.getItem("focsd-brand");/^(light|dark|contrast)$/.test(t)&&d.setAttribute("data-focsd-theme",t);/^(harbor|signal|mineral|prismatic)$/.test(b)&&d.setAttribute("data-focsd-brand",b)}catch(e){}})()</script>
+    <script id="record">
+      window.__seen = [document.documentElement.getAttribute("data-focsd-theme"), document.documentElement.getAttribute("data-focsd-brand")]
+    </script>
+  </head>
+  <body>
+    <h1>No-flash snippet only</h1>
+  </body>
+</html>

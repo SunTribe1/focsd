@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Relative time · Focsd test bench</title>
+    <script type="module" src="/src/relative-time.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Relative time"></pg-header>
+    <main class="pg-stack">
+      <dl>
+        <dt>Comment posted</dt>
+        <dd><focsd-relative-time id="r1" datetime="2026-10-15T10:41:00Z" locale="en-US"></focsd-relative-time></dd>
+        <dt>Invoice sent (auto: the date after 7 days)</dt>
+        <dd><focsd-relative-time id="r2" datetime="2026-10-05T09:00:00Z" format="auto" locale="en-US"></focsd-relative-time></dd>
+        <dt>Backup starts</dt>
+        <dd><focsd-relative-time id="r3" datetime="2026-10-15T10:47:00Z" locale="en-US"></focsd-relative-time></dd>
+        <dt>Comment posted (de)</dt>
+        <dd><focsd-relative-time id="r4" datetime="2026-10-15T10:41:00Z" locale="de"></focsd-relative-time></dd>
+        <dt>Page loaded (does not update)</dt>
+        <dd><focsd-relative-time id="r5" datetime="2026-10-15T10:41:00Z" frozen locale="en-US"></focsd-relative-time></dd>
+        <dt>Draft saved (auto, 6.6 days ago)</dt>
+        <dd><focsd-relative-time id="r7" datetime="2026-10-08T20:20:00Z" format="auto" locale="en-US"></focsd-relative-time></dd>
+        <dt>Not a date</dt>
+        <dd><focsd-relative-time id="r6" datetime="yesterday-ish" locale="en-US"></focsd-relative-time></dd>
+      </dl>
+    </main>
+  </body>
+</html>

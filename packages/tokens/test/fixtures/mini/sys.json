@@ -1,0 +1,11 @@
+{
+  "sys": {
+    "color": {
+      "$type": "color",
+      "ink": { "$value": "{ref.color.graphite.21}" }
+    },
+    "radius": {
+      "control": { "$type": "dimension", "$value": { "value": 4, "unit": "px" } }
+    }
+  }
+}

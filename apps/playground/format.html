@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Format number · Focsd test bench</title>
+    <script type="module" src="/src/format.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Format number"></pg-header>
+    <main class="pg-stack">
+      <dl>
+        <dt>Decimal (en-US)</dt>
+        <dd><focsd-format-number id="n1" value="1234.5" locale="en-US"></focsd-format-number></dd>
+        <dt>Currency (de, EUR)</dt>
+        <dd><focsd-format-number id="n2" value="1234.5" type="currency" currency="EUR" locale="de"></focsd-format-number></dd>
+        <dt>Bytes</dt>
+        <dd><focsd-format-number id="n3" value="1500" type="bytes" locale="en-US"></focsd-format-number></dd>
+        <dt>Binary bytes</dt>
+        <dd><focsd-format-number id="n4" value="1536" type="bytes" binary></focsd-format-number></dd>
+        <dt>Not a number</dt>
+        <dd><focsd-format-number id="n5" value="abc"></focsd-format-number></dd>
+        <dt>From the nearest lang (fr)</dt>
+        <dd>
+          <div lang="fr"><focsd-format-number id="n6" value="1234.5"></focsd-format-number></div>
+        </dd>
+      </dl>
+    </main>
+  </body>
+</html>

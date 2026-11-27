@@ -1,0 +1,75 @@
+---
+import { COMPONENT_COUNT, INSTALL, THEME_COUNT, inWords } from '../../data/landing.js';
+
+const WORDS = ['user', 'app', 'interface', 'component', 'design', 'product', 'team', 'screen', 'customer'];
+
+const features = [
+  { title: `${COMPONENT_COUNT} components`, text: 'Buttons to data grids, charts and a rich text editor.' },
+  { title: 'Accessible by default', text: 'WAI-ARIA patterns and full keyboard support, tested against WCAG 2.2 AA.' },
+  { title: 'Any framework', text: 'The same tags in plain HTML, React, Vue, Svelte and Angular.' },
+  { title: 'Yours to theme', text: `Start from ${inWords(THEME_COUNT)} presets, then change one token or all of them.` },
+];
+---
+
+<section class="lp-hero" aria-labelledby="lp-hero-title" data-lp-hero>
+  <div class="lp-hero-inner lp-wrap">
+    {/* The whole hero sits in a landscape focus frame: four corner brackets that pulse like a camera locking focus. */}
+    <div class="lp-focus-frame lp-hero-frame">
+      <span class="lp-focus-corner" data-corner="top-start" aria-hidden="true"></span>
+      <span class="lp-focus-corner" data-corner="top-end" aria-hidden="true"></span>
+      <span class="lp-focus-corner" data-corner="bottom-start" aria-hidden="true"></span>
+      <span class="lp-focus-corner" data-corner="bottom-end" aria-hidden="true"></span>
+      {/* A soft glow inside the frame, behind the text. */}
+      <div class="lp-hero-glow" aria-hidden="true"></div>
+      <div class="lp-hero-copy">
+        <p class="lp-hero-brand" data-lp-intro>
+          <span class="lp-hero-mark" aria-hidden="true"></span>
+          <span class="lp-hero-word">focsd</span>
+        </p>
+        <h1 id="lp-hero-title" class="lp-hero-title" data-lp-intro>
+          <span class="lp-hero-line">Bring every</span>
+          {/* Line two: the rotating word in a slot as wide as the longest word, right-aligned, so short words grow
+              to the left and "into focus." never moves. Screen readers hear "user". */}
+          <span class="lp-hero-line lp-hero-line-rotate">
+            <span class="lp-visually-hidden">{' user '}</span>
+            <span class="lp-rotate" aria-hidden="true" data-lp-rotate>
+              {WORDS.map((word, i) => (
+                <span class="lp-rotate-word" data-active={i === 0 ? '' : undefined}>
+                  {word}
+                </span>
+              ))}
+            </span>
+            <span>into focus.</span>
+          </span>
+        </h1>
+        <p class="lp-hero-lead" data-lp-intro>
+          An open-source component library and design system for teams that build in any framework. Accessibility is designed into every
+          component, not added at the end.
+        </p>
+        <ul class="lp-hero-features" aria-label="What you get" data-lp-intro>
+          {features.map(({ title, text }) => (
+            <li>
+              <strong>{title}</strong>
+              <span>{text}</span>
+            </li>
+          ))}
+        </ul>
+        <div class="lp-hero-actions" data-lp-intro>
+          <a class="lp-button lp-button-primary" href="/getting-started/installation/">
+            Get started
+          </a>
+          <a class="lp-button" href="/components/">
+            Browse components
+          </a>
+        </div>
+        <div class="lp-install" data-lp-intro>
+          <span class="lp-install-prompt" aria-hidden="true">
+            $
+          </span>
+          <code id="lp-install-hero">{INSTALL}</code>
+          <focsd-copy-button from="lp-install-hero" label="Copy install command"></focsd-copy-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

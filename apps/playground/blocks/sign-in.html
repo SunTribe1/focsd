@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>sign-in block · Focsd test bench</title>
+    <!-- Thin page: renders packages/cli/blocks/sign-in/index.html (its body) with the block's own CSS and JS. -->
+    <script type="module">
+      import '../src/base.js';
+      import html from '../../../packages/cli/blocks/sign-in/index.html?raw';
+      import '../../../packages/cli/blocks/sign-in/sign-in.css';
+
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      document.title = doc.title;
+      document.body.replaceChildren(...doc.body.childNodes);
+      await import('../../../packages/cli/blocks/sign-in/sign-in.js');
+    </script>
+  </head>
+  <body></body>
+</html>

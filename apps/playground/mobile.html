@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content" />
+    <title>Mobile popups · Focsd test bench</title>
+    <script type="module" src="/src/mobile.js"></script>
+    <style>
+      #m-pop-body {
+        block-size: 60rem;
+      }
+      #m-scroller {
+        block-size: 12rem;
+        overflow: auto;
+        border: 1px solid;
+      }
+      .m-gap-before {
+        block-size: 4rem;
+      }
+      .m-gap-after {
+        block-size: 40rem;
+      }
+      .m-page-spacer {
+        block-size: 120vh;
+      }
+    </style>
+  </head>
+  <body>
+    <pg-header heading="Mobile popups"></pg-header>
+    <main class="pg-stack pg-w-30">
+      <focsd-select id="m-select" label="Country"></focsd-select>
+      <focsd-combobox id="m-combo" label="City" placeholder="Start typing"></focsd-combobox>
+      <focsd-menu id="m-menu" label="Actions">
+        <focsd-button slot="trigger">Actions</focsd-button>
+      </focsd-menu>
+      <focsd-popover id="m-pop" label="Filters">
+        <focsd-button slot="trigger">Filters</focsd-button>
+        <div id="m-pop-body">Long form</div>
+      </focsd-popover>
+      <div id="m-scroller">
+        <div class="m-gap-before"></div>
+        <focsd-select id="m-nested" label="Nested"></focsd-select>
+        <div class="m-gap-after"></div>
+      </div>
+      <div class="m-page-spacer"></div>
+    </main>
+  </body>
+</html>

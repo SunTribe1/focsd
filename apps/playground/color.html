@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Color picker · Focsd test bench</title>
+    <script type="module" src="/src/color.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Color picker"></pg-header>
+    <main class="pg-stack pg-w-40">
+      <form id="f" class="pg-stack">
+        <focsd-color-picker
+          id="cp"
+          label="Brand color"
+          name="brand"
+          value="#3366ff"
+          swatches="#000000,#ffffff,#e11d48,#16a34a"
+        ></focsd-color-picker>
+        <focsd-color-picker
+          id="cpi"
+          label="Accent"
+          name="accent"
+          inline
+          alpha
+          format="oklch"
+          contrast-with="#ffffff"
+          value="#123456"
+        ></focsd-color-picker>
+        <div class="pg-row">
+          <focsd-button type="submit" variant="action">Submit</focsd-button>
+          <focsd-button type="reset">Reset</focsd-button>
+        </div>
+      </form>
+      <output id="out"></output>
+    </main>
+  </body>
+</html>

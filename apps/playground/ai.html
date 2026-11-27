@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI chat · Focsd test bench</title>
+    <script type="module" src="/src/ai.js"></script>
+    <style>
+      .ai-layout {
+        display: grid;
+        gap: var(--focsd-space-3);
+        max-inline-size: 40rem;
+        padding: var(--focsd-space-5);
+      }
+      .ai-frame {
+        display: grid;
+        block-size: 24rem;
+        border: var(--focsd-border-width) solid var(--focsd-edge-quiet);
+        border-radius: var(--focsd-radius-control);
+        background: var(--focsd-surface);
+      }
+    </style>
+  </head>
+  <body>
+    <pg-header heading="AI chat"></pg-header>
+    <main class="ai-layout">
+      <div class="ai-frame">
+        <focsd-chat-thread id="thread" label="Conversation"></focsd-chat-thread>
+      </div>
+      <focsd-prompt-suggestions id="suggestions" label="Try asking"></focsd-prompt-suggestions>
+      <focsd-composer id="composer" placeholder="Ask anything" accept="image/*,.pdf,.txt,.md" max-file-size="1000000"></focsd-composer>
+    </main>
+  </body>
+</html>

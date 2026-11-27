@@ -1,0 +1,36 @@
+node_modules/
+dist/
+dist-sandboxes/
+test-results/
+playwright-report/
+.DS_Store
+packages/components/custom-elements.json
+.turbo
+.astro/
+packages/data-grid/custom-elements.json
+packages/editor/custom-elements.json
+packages/charts/custom-elements.json
+packages/ai/custom-elements.json
+# Generated typings and editor data (pnpm build)
+packages/*/types/
+packages/*/vscode.*-custom-data.json
+packages/*/web-types.json
+packages/mcp/data/
+packages/cli/templates/
+coverage/
+
+# Claude Code harness worktrees and local state
+.claude/*
+!.claude/skills/
+!.claude/agents/
+
+# Maintainer-only notes: kept locally, never committed
+CLAUDE.md
+planning/
+docs/superpowers/
+docs/audit/
+docs/research/
+docs/design/
+docs/PLAN.md
+docs/LAUNCH.md
+docs/PRE-LAUNCH-CHECKLIST.md

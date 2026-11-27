@@ -1,0 +1,163 @@
+---
+title: Icons
+description: Use the built-in Lucide icons, or bring your own icon kit (Lucide, Font Awesome, Heroicons, react-icons or a custom set) in every component, from plain HTML, React, Vue or Svelte.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Focsd's 36 built-in icons are [Lucide](https://lucide.dev) icons (ISC license), copied in at build time, so there is no icon dependency to install. The full Lucide set is one adapter away. Bring any icon set you already use: register it once, and `focsd-icon`, `focsd-icon-button` and the icons our components draw internally can all use it.
+
+## Use an icon
+
+```html
+<focsd-icon name="check"></focsd-icon>                       <!-- decorative -->
+<focsd-icon name="alert-triangle" label="Warning"></focsd-icon> <!-- meaningful: role="img" -->
+<focsd-icon src="/brand/logo.svg" label="Acme"></focsd-icon>  <!-- one SVG file -->
+<focsd-icon label="Acme"><svg viewBox="0 0 24 24">…</svg></focsd-icon> <!-- your own markup -->
+```
+
+Icons are 1em and use the text color (`currentColor`), so they follow the theme and Windows High Contrast. Without `label` they are hidden from assistive technology. Give every icon-only button a `label`. Add `mirror` to directional icons, such as arrows, so they flip in right-to-left text.
+
+## Bring your own icons
+
+Register a library with a `resolve` function that turns a name into an icon. Adapters cover the popular sets, and only the icons you import are bundled.
+
+```js
+import { registerIconLibrary, setDefaultIconLibrary, fromLucide, fromFontAwesome, fromSvgStrings } from '@focsd/components';
+
+// Lucide: npm i lucide
+import { icons } from 'lucide';
+registerIconLibrary('lucide', { resolve: fromLucide(icons) });
+
+// Font Awesome Free or Pro: npm i @fortawesome/free-solid-svg-icons
+import { fas } from '@fortawesome/free-solid-svg-icons';
+registerIconLibrary('fa', { resolve: fromFontAwesome(fas) });
+
+// Any set as SVG strings (Heroicons, Tabler, Phosphor, your own)
+registerIconLibrary('brand', { resolve: fromSvgStrings({ logo: '<svg viewBox="0 0 24 24">…</svg>' }) });
+
+// A folder of SVG files, fetched once and cached
+registerIconLibrary('files', { resolve: (name) => `/icons/${name}.svg` });
+
+// A sprite sheet (same origin)
+registerIconLibrary('sprite', { resolve: (name) => `/icons/sprite.svg#${name}` });
+
+setDefaultIconLibrary('lucide'); // <focsd-icon name="…"> now uses Lucide
+```
+
+```html
+<focsd-icon library="fa" name="xmark"></focsd-icon>
+<focsd-icon-button icon="settings" label="Settings"></focsd-icon-button>
+```
+
+`resolve` may return SVG markup, an `SVGElement`, a URL, `null` for unknown names, or a Promise of any of these. An optional `mutate(svg)` adjusts each icon, for example its stroke width. Libraries can be registered at any time; icons already on the page update.
+
+## System icons
+
+Components draw a small set of system icons: chevrons, close, check, calendar, sort arrows and so on. Override one, some or all of them. Anything you leave out keeps ours.
+
+```js
+import { setSystemIcons, resetSystemIcons, systemIconNames } from '@focsd/components';
+
+setSystemIcons({
+  x: { library: 'lucide', name: 'x' }, // from a registered library
+  'chevron-down': '<svg viewBox="0 0 24 24">…</svg>', // or markup
+});
+```
+
+`systemIconNames` lists every name: `check`, `x`, `chevron-down`, `chevron-up`, `chevron-left`, `chevron-right`, `plus`, `minus`, `pipette`, `search`, `info`, `alert-circle`, `alert-triangle`, `external`, `menu`, `more`, `copy`, `eye`, `eye-off`, `calendar`, `upload`, `trash`, `edit`, `arrow-up`, `arrow-down`, `arrow-left`, `arrow-right`, `star`, `move` and `grip`.
+
+To change the icon of one element instead, see [Icons in components](#icons-in-components).
+
+## Icons in components
+
+Every component that shows an icon next to its label takes it the same two ways:
+
+- **`icon="name"`**: an icon from the default library, or from any registered library with `icon-library="…"`.
+- **`slot="icon"`**: any markup at all, with nothing to register: an inline SVG, an `<img>`, an icon-font element, or your framework's icon component.
+
+```html
+<focsd-button icon="upload">Upload</focsd-button>
+<focsd-button icon="xmark" icon-library="fa">Cancel</focsd-button>
+<focsd-button><svg slot="icon" viewBox="0 0 24 24">…</svg>Ship</focsd-button>
+<focsd-button><i slot="icon" class="fa-solid fa-truck"></i>Ship</focsd-button>
+```
+
+| Component | Where the icon goes |
+| --- | --- |
+| `focsd-button`, `focsd-toggle`, `focsd-menu-item`, `focsd-tab`, `focsd-option`, `focsd-segment`, `focsd-tag` | Before the label |
+| `focsd-nav-item`, `focsd-breadcrumb-item`, `focsd-sidebar-item`, `focsd-tree-item` | Before the label |
+| `focsd-dock-item`, `focsd-bottom-nav-item` | Above the label |
+| `focsd-empty-state` | Above the heading |
+| `focsd-alert` | Replaces the tone's icon |
+| `focsd-timeline-item` | Inside the marker, which grows to fit |
+| `focsd-command-item` | Before the label in the palette (a copy of the slotted icon) |
+| `focsd-icon`, `focsd-icon-button` | The default slot |
+| `focsd-disclosure`, `focsd-accordion-item` | `slot="icon"` replaces the chevron |
+
+Icons in these places are decorative and hidden from screen readers: the label names the control. They are 1em of `--focsd-icon-size` (default 1.15 × the text), and a slotted `<svg>` or `<img>` is sized to that box even when it sets its own width and height. Icon-font glyphs follow the font size.
+
+## Use your framework's icon components
+
+Put `slot="icon"` on the icon component. React, Vue and Preact icon libraries pass unknown props through to the `<svg>`, so the slot lands on the element the component sizes. This works with the [React wrappers](/getting-started/frameworks/) and with the plain custom elements.
+
+```jsx
+// React: react-icons, lucide-react, Font Awesome, Heroicons, Phosphor…
+import { Button, Tag } from '@focsd/react';
+import { FaTruck } from 'react-icons/fa6';
+import { Clock } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { ArrowUpTrayIcon } from '@heroicons/react/24/outline';
+
+<Button><ArrowUpTrayIcon slot="icon" />Upload</Button>
+<Tag tone="info"><FaTruck slot="icon" />Shipped</Tag>
+<Tag tone="caution"><Clock slot="icon" />Waiting</Tag>
+<Tag tone="positive"><FontAwesomeIcon icon={faCheck} slot="icon" />Delivered</Tag>
+```
+
+```vue
+<!-- Vue: lucide-vue-next, @heroicons/vue, unplugin-icons… (attributes fall through to the <svg>) -->
+<script setup>
+import { Truck } from 'lucide-vue-next';
+</script>
+
+<template>
+  <focsd-tag tone="info"><Truck slot="icon" />Shipped</focsd-tag>
+</template>
+```
+
+```svelte
+<!-- Svelte reads slot="…" on a component as its own slot syntax, so wrap the icon in an element -->
+<script>
+  import { Truck } from 'lucide-svelte';
+</script>
+
+<focsd-tag tone="info"><span slot="icon"><Truck size="1em" /></span>Shipped</focsd-tag>
+```
+
+When an icon component wraps its `<svg>` in another element, as the Svelte example does, give the icon `size="1em"` (or `width` and `height` of `1em`) so it fills the icon box; the box only sizes a slotted `<svg>` directly.
+
+<Aside type="tip">
+Prefer a name? Register the set once with `registerIconLibrary` (the adapters above cover Lucide and Font Awesome) and use `icon="…"` everywhere, including on elements the framework renders for you, such as options built from data.
+</Aside>
+
+## Icon fonts
+
+Our components render inside shadow DOM, which page CSS cannot reach, so icon fonts cannot be used by name. Slotted content stays in your page, so an icon-font element works in a slot:
+
+```html
+<focsd-icon-button label="Settings"><i class="fa-solid fa-gear"></i></focsd-icon-button>
+```
+
+We recommend SVG: it is sharper, it is accessible by default, and it needs no font download.
+
+## Security
+
+Every SVG string, element and file is sanitized before it is shown. The sanitizer keeps only drawing elements (shapes, paths, groups, `<use>`, gradients, masks, clip paths, markers, text and `<title>`); everything else, such as scripts, `<foreignObject>`, `<style>` and animation, is removed with its content, and a link (`<a>`) is replaced by the drawing inside it. Attributes are allowlisted too: drawing attributes (geometry, paint, stroke, gradients, masks, markers, text) and `data-*` stay; event handlers, `style`, `class`, `part` and `tabindex` go. A value may only use a same-icon `url(#id)`, color functions and transform functions, so external `url()`, `image-set()` and CSS escapes are removed, and `href` is kept only as a `#` fragment on `<use>` and paint servers. The root loses `transform`, `x` and `y`, so a drawing cannot leave its 1em box, and ids get a per-icon prefix so they cannot collide with the ids around them. Markup is parsed in an inert template, so nothing runs or loads while it is parsed. Fetched files are cached for the page's lifetime. A file that fails to load (an error status, or a response that is not an SVG) warns once in the console and is tried again only after the icon registry changes; a resolver that throws or rejects also warns once and renders the empty 1em box.
+
+On pages that enforce Trusted Types, icons use a policy named `focsd-icons`. Allow it in your CSP (`trusted-types focsd-icons`), or register icons as DOM data (the Lucide and Font Awesome adapters), which needs no policy.
+
+<Aside type="caution">
+Iconify's API can serve any icon set by URL (`https://api.iconify.design/{set}/{name}.svg`), but every icon then loads from a third-party server. Self-host the icons for privacy and offline use.
+</Aside>

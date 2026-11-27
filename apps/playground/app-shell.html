@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>App shell · Focsd test bench</title>
+    <script type="module" src="/src/app-shell.js"></script>
+  </head>
+  <body>
+    <focsd-app-shell id="shell" nav-label="Workspace">
+      <focsd-header slot="header" collapse-below="0"><a href="#" slot="brand">Northwind</a></focsd-header>
+      <focsd-sidebar slot="sidebar" label="Workspace">
+        <focsd-sidebar-item href="#projects" icon="menu">Projects</focsd-sidebar-item>
+        <focsd-sidebar-item href="#reports" icon="search">Reports</focsd-sidebar-item>
+      </focsd-sidebar>
+      <h1>Projects</h1>
+      <p id="intro">Twelve projects, three due this week.</p>
+      <div style="block-size: 200vh"></div>
+      <p id="end">End of list.</p>
+      <focsd-footer slot="footer"><p>© 2026 Northwind</p></focsd-footer>
+    </focsd-app-shell>
+  </body>
+</html>

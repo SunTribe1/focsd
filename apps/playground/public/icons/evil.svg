@@ -1,0 +1,1 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="10" onload="window.__pwned = true"><script>window.__pwned = true</script><foreignObject><div>x</div></foreignObject><a href="javascript:alert(1)"><path d="M0 0h20v10H0z" onclick="window.__pwned = true"/></a></svg>

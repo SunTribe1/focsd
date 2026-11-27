@@ -1,0 +1,102 @@
+{
+  "name": "@focsd/editor",
+  "version": "1.0.0",
+  "description": "Focsd rich text editor: an accessible, form-associated editor built on Tiptap.",
+  "license": "MIT",
+  "homepage": "https://focsd.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SunTribe1/focsd.git",
+    "directory": "packages/editor"
+  },
+  "bugs": {
+    "url": "https://github.com/SunTribe1/focsd/issues"
+  },
+  "keywords": [
+    "a11y",
+    "accessibility",
+    "component-library",
+    "custom-elements",
+    "design-system",
+    "framework-agnostic",
+    "free",
+    "frontend",
+    "lit",
+    "ui",
+    "ui-components",
+    "ui-library",
+    "wcag",
+    "web-components"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "development": "./src/index.js",
+      "default": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./types/react.d.ts"
+    },
+    "./jsx": {
+      "types": "./types/jsx.d.ts"
+    },
+    "./vue": {
+      "types": "./types/vue.d.ts"
+    },
+    "./svelte": {
+      "types": "./types/svelte.d.ts"
+    },
+    "./custom-elements.json": "./custom-elements.json",
+    "./vscode.html-custom-data.json": "./vscode.html-custom-data.json",
+    "./vscode.css-custom-data.json": "./vscode.css-custom-data.json",
+    "./web-types.json": "./web-types.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "custom-elements.json",
+    "dist",
+    "src",
+    "types",
+    "vscode.css-custom-data.json",
+    "vscode.html-custom-data.json",
+    "web-types.json",
+    "LICENSE-lucide.txt"
+  ],
+  "customElements": "custom-elements.json",
+  "scripts": {
+    "check": "tsc -p tsconfig.check.json",
+    "prepack": "pnpm run build",
+    "build": "node ../../scripts/build-dist.mjs && pnpm analyze && pnpm types",
+    "analyze": "cd ../.. && cem analyze --globs \"packages/editor/src/**/*.js\" \"packages/primitives/src/internal/form-control.js\" \"packages/primitives/src/internal/focsd-element.js\" --litelement --outdir packages/editor",
+    "test": "vitest run && tsc -p test/types",
+    "types": "node ../../scripts/emit-types.mjs && node ../../scripts/type-integrations.mjs"
+  },
+  "dependencies": {
+    "@tiptap/core": "^3.31.4",
+    "@tiptap/extension-link": "^3.31.4",
+    "@tiptap/extensions": "^3.31.4",
+    "@tiptap/pm": "^3.31.4",
+    "@tiptap/starter-kit": "^3.31.4",
+    "@focsd/primitives": "workspace:*",
+    "@focsd/tokens": "workspace:*",
+    "lit": "^3.3.3"
+  },
+  "devDependencies": {
+    "@custom-elements-manifest/analyzer": "0.11.0",
+    "esbuild": "0.28.2",
+    "vitest": "5.0.3"
+  },
+  "sideEffects": [
+    "./src/index.js",
+    "./dist/index.js"
+  ],
+  "web-types": "./web-types.json",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}

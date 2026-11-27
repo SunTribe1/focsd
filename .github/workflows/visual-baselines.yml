@@ -1,0 +1,60 @@
+# Records the Linux screenshots the CI visual job compares against, and commits them to the branch
+# it runs on. Run it on a pull request branch, never on main (branch protection rejects the push):
+# Actions → Update visual baselines → Run workflow → choose the PR branch. See RELEASING.md.
+name: Update visual baselines
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  baselines:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # The same image as the CI visual job, so the screenshots match pixel for pixel.
+    container:
+      # v1.63.0-noble (multi-arch index digest); matches @playwright/test 1.63.0.
+      image: mcr.microsoft.com/playwright:v1.63.0-noble@sha256:eff16c30e6f3f4af0a03fa4b706120d5e9b0891c344a27d64559aff5900a4a27
+      # Chromium runs out of shared memory in a container without the host's IPC namespace.
+      options: --ipc=host
+    steps:
+      # Only a pull request branch: main rejects the push, and a tag dispatch would create a branch.
+      - name: Refuse main and non-branch refs
+        if: github.ref == 'refs/heads/main' || !startsWith(github.ref, 'refs/heads/')
+        run: |
+          echo "::error::Run this on a pull request branch, not main or a tag (got ${GITHUB_REF})."
+          exit 1
+      # actions/checkout needs git on the PATH to make a repository it can commit to.
+      - run: command -v git || (apt-get update && apt-get install -y --no-install-recommends git)
+      # No token stays in .git/config while install scripts, the build and the specs run.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec turbo run build --filter="./packages/*"
+      # The image already has the Playwright 1.63.0 browsers.
+      - run: pnpm --filter @focsd/playground exec playwright test --project=visual --update-snapshots
+      # RELEASE_TOKEN, when set, makes the baseline commit trigger CI; a GITHUB_TOKEN push does not.
+      # The token is used only here, in the push URL, and is never printed.
+      - name: Commit the baselines
+        env:
+          TOKEN: ${{ secrets.RELEASE_TOKEN || github.token }}
+          REPOSITORY: ${{ github.repository }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/playground/e2e/__screenshots__/linux
+          if git diff --cached --quiet; then
+            echo "The baselines are unchanged."
+            exit 0
+          fi
+          git commit -m "test: update Linux visual baselines"
+          git push --quiet "https://x-access-token:${TOKEN}@github.com/${REPOSITORY}.git" "HEAD:refs/heads/${BRANCH}"

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Table of contents · Focsd test bench</title>
+    <script type="module" src="/src/toc.js"></script>
+    <style>
+      .toc-layout {
+        display: grid;
+        grid-template-columns: 14rem 1fr;
+        gap: var(--focsd-space-6);
+        align-items: start;
+      }
+      .toc-layout aside {
+        position: sticky;
+        inset-block-start: var(--focsd-space-4);
+        display: grid;
+        gap: var(--focsd-space-6);
+      }
+      .toc-layout main p {
+        min-block-size: 80vh;
+        max-inline-size: 40rem;
+      }
+      @media (max-width: 45rem) {
+        .toc-layout {
+          grid-template-columns: 1fr;
+        }
+        .toc-layout aside {
+          position: static;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <pg-header heading="Table of contents"></pg-header>
+    <div class="toc-layout">
+      <aside aria-label="Contents">
+        <focsd-table-of-contents id="toc"></focsd-table-of-contents>
+        <focsd-table-of-contents id="toc2" levels="2"></focsd-table-of-contents>
+      </aside>
+      <main>
+        <h2>Install</h2>
+        <p>Add the package to your project, then import the components you use on each page.</p>
+        <h3 id="npm">With npm</h3>
+        <p>Run <code>npm install @focsd/components</code> in the folder that holds your package.json.</p>
+        <h3>With a CDN</h3>
+        <p>Load one module from the CDN in a script tag with <code>type="module"</code>.</p>
+        <h2>Usage</h2>
+        <p>Write the elements in your HTML as you would any other tag.</p>
+        <h2>Keyboard</h2>
+        <p>Every control is reachable with Tab and shows a focus ring.</p>
+      </main>
+    </div>
+  </body>
+</html>
