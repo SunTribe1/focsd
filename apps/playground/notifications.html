@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Notification center · Focsd test bench</title>
+    <script type="module" src="/src/notifications.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Notification center"></pg-header>
+    <main class="pg-stack">
+      <section aria-labelledby="data-heading">
+        <h2 id="data-heading">From an array</h2>
+        <p>The app owns the list: the page marks notifications read and removes them when the center asks.</p>
+        <div class="pg-row">
+          <focsd-notification-center id="center"></focsd-notification-center>
+          <focsd-button id="arrive">Add 3 notifications</focsd-button>
+        </div>
+        <p id="log" aria-live="off"></p>
+      </section>
+      <section aria-labelledby="markup-heading">
+        <h2 id="markup-heading">From markup</h2>
+        <div class="pg-row">
+          <focsd-notification-center id="markup" label="Alerts" max="9">
+            <focsd-notification
+              id="m1"
+              title="Disk almost full"
+              body="92% of 500 GB used."
+              tone="caution"
+              time="2026-11-25T08:00:00Z"
+            ></focsd-notification>
+            <focsd-notification id="m2" title="Backup finished" tone="positive" time="2026-11-24T22:15:00Z" read></focsd-notification>
+          </focsd-notification-center>
+        </div>
+      </section>
+      <section aria-labelledby="empty-heading">
+        <h2 id="empty-heading">Nothing new</h2>
+        <focsd-notification-center id="empty" label="Messages"></focsd-notification-center>
+      </section>
+      <section aria-labelledby="rtl-heading" dir="rtl">
+        <h2 id="rtl-heading">Right to left</h2>
+        <focsd-notification-center id="rtl"></focsd-notification-center>
+      </section>
+    </main>
+  </body>
+</html>

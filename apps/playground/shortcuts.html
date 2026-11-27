@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Shortcuts · Focsd test bench</title>
+    <script type="module" src="/src/shortcuts.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Keyboard shortcuts"></pg-header>
+    <main id="pg-main" class="pg-stack">
+      <p>
+        Press <focsd-kbd>Ctrl</focsd-kbd> + <focsd-kbd>K</focsd-kbd> (<focsd-kbd>⌘</focsd-kbd> + <focsd-kbd>K</focsd-kbd> on a Mac) to open
+        the command palette.
+      </p>
+
+      <section class="pg-stack" aria-labelledby="try-heading">
+        <h2 id="try-heading">Try it</h2>
+        <focsd-text-field id="notes" label="Notes"></focsd-text-field>
+        <div class="pg-row">
+          <focsd-button id="open-dialog">Open dialog</focsd-button>
+          <focsd-switch id="enabled" checked>Keep Alt + N turned on</focsd-switch>
+        </div>
+        <p>Last shortcut: <output id="fired">none</output>. Times Alt + N fired: <output id="count">0</output>.</p>
+        <div
+          id="board"
+          tabindex="0"
+          role="group"
+          aria-label="Board"
+          style="padding: var(--focsd-space-3, 0.75rem); border: 1px solid currentColor; border-radius: 0.25rem"
+        >
+          Focus this board, then press <focsd-kbd>J</focsd-kbd>. Elsewhere, J does nothing.
+        </div>
+      </section>
+
+      <section class="pg-stack" aria-labelledby="list-heading">
+        <h2 id="list-heading">All shortcuts</h2>
+        <table id="shortcut-list">
+          <thead>
+            <tr>
+              <th scope="col">Keys</th>
+              <th scope="col">Does</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+
+      <focsd-dialog id="dlg" headline="Settings">
+        <p>A modal is open, so page shortcuts stay quiet.</p>
+        <focsd-button slot="actions" id="close-dialog">Close</focsd-button>
+      </focsd-dialog>
+
+      <focsd-command id="cmd">
+        <focsd-command-item value="new-project" group="Projects">New project</focsd-command-item>
+        <focsd-command-item value="invite" group="People">Invite member</focsd-command-item>
+      </focsd-command>
+    </main>
+  </body>
+</html>

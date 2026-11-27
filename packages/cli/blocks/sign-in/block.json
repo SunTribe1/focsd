@@ -1,0 +1,16 @@
+{
+  "name": "sign-in",
+  "title": "Sign in",
+  "description": "Centered sign-in card with email, password and remember me, correct autocomplete tokens and an error summary. Sends nothing.",
+  "files": ["index.html", "sign-in.js", "sign-in.css"],
+  "packages": ["@focsd-dev/components", "@focsd-dev/tokens"],
+  "elements": [
+    "focsd-button",
+    "focsd-card",
+    "focsd-checkbox",
+    "focsd-error-summary",
+    "focsd-link",
+    "focsd-password-field",
+    "focsd-text-field"
+  ]
+}

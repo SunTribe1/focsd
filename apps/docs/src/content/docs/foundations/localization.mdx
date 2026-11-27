@@ -1,0 +1,61 @@
+---
+title: Localization
+description: Translate every label, announcement and validation message, per page or per section.
+---
+
+Every string a component shows or announces comes from a translation table: labels, accessible names, live announcements, validation messages and empty states. English is built in. Register more languages, and components follow the `lang` attribute.
+
+## Choose the language
+
+Components use the nearest `lang` attribute (on the element or any ancestor), else `<html lang>`, else English. Changing `lang` on `<html>` or on any other element updates the components on the page.
+
+```html
+<html lang="de">
+  …
+  <section lang="fr">
+    <focsd-pagination total="5"></focsd-pagination> <!-- French -->
+  </section>
+</html>
+```
+
+`de-CH` falls back to `de`, then to English. Components re-render when a `lang` attribute changes anywhere in the document. A `lang` set inside another component's shadow root is not watched; call `requestUpdate()` on the components inside it.
+
+## Add a translation
+
+```js
+import { registerTranslation, en } from '@focsd-dev/components';
+
+registerTranslation({
+  $code: 'de',
+  $name: 'Deutsch',
+  previousPage: 'Vorherige Seite',
+  nextPage: 'Nächste Seite',
+  selectedCount: (n) => `${n} ausgewählt`,
+  dateMin: (date) => `Wähle ein Datum ab ${date}.`,
+});
+```
+
+Tables can be partial: any key you leave out falls back to English. Start from `en`, the full English table, which is exported for translators. Values are strings, or functions for text with numbers or names in it.
+
+## Format numbers and dates
+
+Numbers, amounts and dates are formatted with `Intl`. Each element picks its locale in this order:
+
+1. its own `locale` attribute (on format number, relative time, the date and time fields, the calendar and the data grid);
+2. the app's default, set with `setLocale()`;
+3. the nearest `lang` attribute (on the element, an ancestor or `<html>`);
+4. the browser's locale.
+
+```js
+import { setLocale, getLocale } from '@focsd-dev/primitives/utils';
+
+setLocale('de-CH'); // Swiss German numbers and dates everywhere; labels unchanged
+getLocale(); // 'de-CH'
+setLocale(null); // back to the nearest lang
+```
+
+`setLocale()` changes formatting only: labels, announcements and messages keep following `lang`, so a Swiss German number format can sit in an English interface. An invalid tag throws a `RangeError`. When the locale changes, only the elements that format with it re-render: format number, relative time, the currency, date and time fields, the calendar, charts and the data grid. An element with its own `locale` is left alone.
+
+## Data grid
+
+The data grid's toolbar, column menu, filters, footer and screen-reader announcements are all in the table (keys start with `grid`, `column`, `filter`, `sort` and `group`). Operator names for custom column types fall back to the label the type defines. To translate built-in operators, add `op.<id>` keys (for example `'op.contains': 'enthält'`) and `opSymbol.<id>` keys for the word used in filter chips.

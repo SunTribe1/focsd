@@ -1,0 +1,196 @@
+{
+  "sys": {
+    "color": {
+      "$type": "color",
+      "ground": {
+        "$value": "{ref.color.neutral.18}"
+      },
+      "surface": {
+        "$value": "{ref.color.neutral.22}"
+      },
+      "surface-sunk": {
+        "$value": "{ref.color.neutral.15}"
+      },
+      "surface-raised": {
+        "$value": "{ref.color.neutral.22}"
+      },
+      "ink": {
+        "$value": "{ref.color.neutral.94}"
+      },
+      "ink-muted": {
+        "$value": "{ref.color.neutral.71}"
+      },
+      "edge": {
+        "$value": "{ref.color.neutral.55}"
+      },
+      "edge-quiet": {
+        "$value": "{ref.color.neutral.29}"
+      },
+      "action": {
+        "$value": "{ref.color.neutral.94}"
+      },
+      "action-hover": {
+        "$value": "{ref.color.graphite.100}"
+      },
+      "action-press": {
+        "$value": "{ref.color.neutral.87}"
+      },
+      "on-action": {
+        "$value": "{ref.color.neutral.18}"
+      },
+      "route": {
+        "$value": "{ref.color.teal.78}"
+      },
+      "positive": {
+        "$value": "{ref.color.green.76}"
+      },
+      "positive-tint": {
+        "$value": "{ref.color.green.26}"
+      },
+      "caution": {
+        "$value": "{ref.color.amber.80}"
+      },
+      "caution-tint": {
+        "$value": "{ref.color.amber.27}"
+      },
+      "critical": {
+        "$value": "{ref.color.red.74}"
+      },
+      "critical-tint": {
+        "$value": "{ref.color.red.25}"
+      },
+      "focus-outer": {
+        "$value": "{ref.color.neutral.94}",
+        "$description": "Focus ring color: the ink, so it contrasts with any ground or surface."
+      },
+      "focus-inner": {
+        "$value": "{ref.color.neutral.18}",
+        "$description": "Focus ring gap: the page ground, between the element and the ring."
+      },
+      "scrim": {
+        "$value": "{ref.color.overlay.black-66}"
+      },
+      "hatch": {
+        "$value": "{ref.color.overlay.paper-12}"
+      },
+      "info": {
+        "$value": "{ref.color.teal.78}"
+      },
+      "info-tint": {
+        "$value": "{ref.color.neutral.15}"
+      },
+      "accent-1": {
+        "$value": "{ref.color.neutral.71}"
+      },
+      "accent-1-tint": {
+        "$value": "{ref.color.neutral.15}"
+      },
+      "accent-2": {
+        "$value": "{ref.color.neutral.71}"
+      },
+      "accent-2-tint": {
+        "$value": "{ref.color.neutral.15}"
+      },
+      "accent-3": {
+        "$value": "{ref.color.neutral.71}"
+      },
+      "accent-3-tint": {
+        "$value": "{ref.color.neutral.15}"
+      },
+      "accent-4": {
+        "$value": "{ref.color.neutral.71}"
+      },
+      "accent-4-tint": {
+        "$value": "{ref.color.neutral.15}"
+      },
+      "accent-5": {
+        "$value": "{ref.color.neutral.71}"
+      },
+      "accent-5-tint": {
+        "$value": "{ref.color.neutral.15}"
+      },
+      "accent-6": {
+        "$value": "{ref.color.neutral.71}"
+      },
+      "accent-6-tint": {
+        "$value": "{ref.color.neutral.15}"
+      },
+      "accent-7": {
+        "$value": "{ref.color.neutral.71}"
+      },
+      "accent-7-tint": {
+        "$value": "{ref.color.neutral.15}"
+      },
+      "accent-8": {
+        "$value": "{ref.color.neutral.71}"
+      },
+      "accent-8-tint": {
+        "$value": "{ref.color.neutral.15}"
+      }
+    },
+    "focus": {
+      "ring": {
+        "$description": "The focus ring (DESIGN.md): a 1px gap in the ground color and a 1px ink ring. Redeclared per theme so a themed subtree resolves its own colors.",
+        "$value": "0 0 0 1px var(--focsd-focus-inner), 0 0 0 2px var(--focsd-focus-outer)"
+      },
+      "ring-inset": {
+        "$description": "The same ring drawn inside the element, for rows and cells that sit flush in a scrolling container.",
+        "$value": "inset 0 0 0 1px var(--focsd-focus-outer), inset 0 0 0 2px var(--focsd-focus-inner)"
+      }
+    },
+    "border": {
+      "width": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1,
+          "unit": "px"
+        }
+      }
+    },
+    "shadow": {
+      "overlay": {
+        "$type": "shadow",
+        "$value": [
+          {
+            "color": "{ref.color.overlay.black-60}",
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": {
+              "value": 16,
+              "unit": "px"
+            },
+            "blur": {
+              "value": 40,
+              "unit": "px"
+            },
+            "spread": {
+              "value": -8,
+              "unit": "px"
+            }
+          },
+          {
+            "color": "{ref.color.overlay.black-40}",
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": {
+              "value": 2,
+              "unit": "px"
+            },
+            "blur": {
+              "value": 6,
+              "unit": "px"
+            },
+            "spread": {
+              "value": 0,
+              "unit": "px"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

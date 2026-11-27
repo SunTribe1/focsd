@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Theme presets · Focsd test bench</title>
+    <!-- The tokens' noFlashScript, verbatim and byte for byte, with no whitespace inside the tags, so its CSP hash holds (e2e/presets.spec.js checks it): applies the stored theme and preset before the first paint. -->
+    <!-- prettier-ignore -->
+    <script id="no-flash">(function(){try{var d=document.documentElement,s=localStorage,t=s.getItem("focsd-theme"),b=s.getItem("focsd-brand");/^(light|dark|contrast)$/.test(t)&&d.setAttribute("data-focsd-theme",t);/^(harbor|signal|mineral|prismatic)$/.test(b)&&d.setAttribute("data-focsd-brand",b)}catch(e){}})()</script>
+    <script type="module" src="/src/presets.js"></script>
+    <style>
+      .presets-layout {
+        display: grid;
+        gap: var(--focsd-space-6);
+        max-inline-size: 48rem;
+      }
+      .presets-layout section {
+        display: grid;
+        gap: var(--focsd-space-3);
+      }
+      .presets-sample {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--focsd-space-3);
+        align-items: end;
+      }
+    </style>
+  </head>
+  <body>
+    <pg-header heading="Theme presets"></pg-header>
+    <main class="presets-layout">
+      <section aria-labelledby="toggle-heading">
+        <h2 id="toggle-heading">Theme toggle</h2>
+        <focsd-theme-toggle id="toggle"></focsd-theme-toggle>
+        <focsd-theme-toggle id="toggle-contrast" label="Color theme with contrast"></focsd-theme-toggle>
+      </section>
+      <section aria-labelledby="picker-heading">
+        <h2 id="picker-heading">Theme picker</h2>
+        <focsd-theme-picker id="picker"></focsd-theme-picker>
+      </section>
+      <section aria-labelledby="sample-heading">
+        <h2 id="sample-heading">Sample</h2>
+        <div class="presets-sample">
+          <focsd-text-field label="Email" type="email"></focsd-text-field>
+          <focsd-button variant="action">Save</focsd-button>
+          <focsd-link href="#sample-heading">A link</focsd-link>
+        </div>
+        <focsd-alert tone="info">Presets change color, type and corner radius.</focsd-alert>
+      </section>
+      <section aria-labelledby="rtl-heading" dir="rtl">
+        <h2 id="rtl-heading">Right to left</h2>
+        <focsd-theme-toggle id="toggle-rtl" label="Color theme, right to left"></focsd-theme-toggle>
+      </section>
+    </main>
+  </body>
+</html>

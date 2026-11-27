@@ -1,0 +1,9 @@
+{
+  "ref": {
+    "font": {
+      "$type": "fontFamily",
+      "atkinson-next": { "$value": ["Atkinson Hyperlegible Next", "Atkinson Hyperlegible Next Fallback", "ui-sans-serif", "system-ui", "sans-serif"] },
+      "atkinson-mono": { "$value": ["Atkinson Hyperlegible Mono", "ui-monospace", "SFMono-Regular", "Menlo", "monospace"] }
+    }
+  }
+}

@@ -1,0 +1,121 @@
+---
+title: Theming and tokens
+description: Switch themes and density, re-theme Focsd with design tokens, and use the same tokens as Figma variables.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Every visual decision is a design token: a CSS custom property prefixed `--focsd-`. Components read only tokens, so changing a token changes every component that uses it.
+
+## Themes
+
+Three themes ship in `@focsd-dev/tokens`: `light`, `dark` and `contrast`. Without an explicit theme, the tokens follow the system (`prefers-color-scheme` and `prefers-contrast`).
+
+```html
+<html data-focsd-theme="dark">
+```
+
+A theme can apply to part of a page: set `data-focsd-theme` on any element and its descendants use that theme.
+
+## Density
+
+```html
+<body data-focsd-density="comfortable">
+```
+
+Three densities. Set `data-focsd-density` on `<body>` or on any section; `default` restores the standard size inside another density.
+
+From script, `setTheme('dark')` and `setDensity('compact', element)` from `@focsd-dev/tokens` set the same attributes and reject unknown names; see [Helpers for app code](/foundations/utilities/).
+
+| Density | Controls | Body text | Labels and buttons | Use for |
+|---|---|---|---|---|
+| `default` | 36px | 15px | 14px | Most web apps (the default, close to shadcn/ui) |
+| `comfortable` | 44px | 17px | 15px | Touch-first apps, kiosks, and products for low-vision or older users |
+| `compact` | 32px | 14px | 13px | Data-dense tools: admin consoles, dashboards, trading and monitoring |
+
+Every density keeps targets at 24px or more (WCAG 2.5.8 Target size, minimum). The data grid has its own row density toggle as well.
+
+### Density, not size
+
+Density is the one size control for controls: buttons, icon buttons, badges and every field follow it, and they have no `size` attribute of their own. Where you do see `size`, it means one of two things:
+
+- On text-like fields (`focsd-text-field`, `focsd-textarea`, `focsd-number-field`, `focsd-search-field`, `focsd-password-field`, `focsd-currency-field`) it is the native `size` attribute: the field's width in characters, as on `<input>`.
+- On a few components whose look has a scale of its own (`focsd-avatar`, `focsd-spinner`, `focsd-segmented-control`, `focsd-dock`, `focsd-tag`) it is `s`, `m` or `l` (the spinner adds `xl`). Targets stay within the density's minimum at every size.
+
+## Presets and layers
+
+Four ready-made brands are one attribute away: `<html data-focsd-brand="harbor">`; see [Theme presets](/foundations/presets/). Focsd's CSS sits in three cascade layers, declared in this order: `focsd.tokens` (the defaults), `focsd.preset` (a preset) and `focsd.brand` (your overrides).
+
+```css
+@layer focsd.tokens, focsd.preset, focsd.brand;
+```
+
+Put your brand in `focsd.brand` and it beats a preset whatever the load order. The [theme builder](/foundations/theme-builder/) writes it that way.
+
+## Token tiers
+
+| Tier | Example | Use |
+| --- | --- | --- |
+| Reference | `--focsd-ref-graphite-19` | Raw palette values. Do not use in components. |
+| System | `--focsd-action`, `--focsd-surface`, `--focsd-space-3`, `--focsd-radius-control` | Semantic roles. Re-theme here. |
+| Component | `--focsd-button-background`, `--focsd-field-border-color` | Optional hooks for one component, with system fallbacks. |
+
+## Re-theme with your brand
+
+Override system tokens after loading `tokens.css`. Tokens live in the `focsd.tokens` cascade layer, so any unlayered rule of yours wins.
+
+```css
+:root {
+  --focsd-action: #0b5cad;
+  --focsd-action-hover: #094a8b;
+  --focsd-on-action: #ffffff;
+  --focsd-route: #0b5cad;
+  --focsd-radius-control: 8px;
+}
+
+[data-focsd-theme='dark'] {
+  --focsd-action: #8cc4ff;
+  --focsd-on-action: #0b1220;
+}
+```
+
+<Aside type="caution" title="Check contrast">
+  Text needs 4.5:1 against its background, and borders and focus indicators need 3:1 (WCAG 1.4.3 and 1.4.11). Check every pair you change, in every theme you ship.
+</Aside>
+
+## Component hooks and CSS parts
+
+Some components read optional component tokens:
+
+```css
+focsd-button {
+  --focsd-button-radius: 0;
+}
+focsd-text-field {
+  --focsd-field-background: var(--focsd-surface-sunk);
+}
+```
+
+For anything else, style the component's internals through CSS parts. Each component page lists its parts.
+
+```css
+focsd-dialog::part(headline) {
+  font-size: 1.5rem;
+}
+```
+
+## Figma variables
+
+`@focsd-dev/tokens` ships the same tokens as Figma variables, in the design tokens (DTCG) format Figma imports natively. Each file is one mode of one collection:
+
+| Collection | Files | Holds |
+| --- | --- | --- |
+| Theme | `theme.light`, `theme.dark`, `theme.contrast` | Colors, and anything else that changes with the theme |
+| Density | `density.default`, `density.comfortable`, `density.compact` | Control heights and other sizes that change with density |
+| Base | `base` | Spacing, radii, type sizes and weights, durations, font families |
+
+Find them in `node_modules/@focsd-dev/tokens/dist/figma/`. In Figma's Variables panel, import each file as the matching mode of its collection. Sizes are converted to pixels at a 16px root, and fluid type uses its largest size. Easing curves, shadows and letter spacing have no Figma variable type, so they are left out.
+
+## The accessibility floor
+
+`@focsd-dev/tokens/floor.css` is an optional global stylesheet that applies the same baseline to your own markup: the two-tone focus ring on native controls, 24px minimum targets, forced-colors support, reduced motion and a `.focsd-visually-hidden` utility.

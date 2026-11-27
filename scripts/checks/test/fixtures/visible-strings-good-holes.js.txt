@@ -1,0 +1,12 @@
+import { html } from 'lit';
+
+export const classes = html`<div class=${open ? 'is-open' : 'is-shut'} part=${'body'}>${t('x')}</div>`;
+
+export const property = html`<input .value=${'draft'} aria-label=${cond ? t('a') : t('b')} />`;
+
+export const symbol = html`<span>${sep ? '·' : ''}</span>`;
+
+export function code(el) {
+  el.setAttribute('role', 'dialog');
+  el.setAttribute('aria-label', label);
+}

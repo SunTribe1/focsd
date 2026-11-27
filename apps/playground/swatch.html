@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Swatch picker · Focsd test bench</title>
+    <script type="module" src="/src/swatch.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Swatch picker"></pg-header>
+    <main class="pg-stack">
+      <form id="f" class="pg-stack">
+        <focsd-swatch-picker
+          id="s"
+          label="Label color"
+          name="color"
+          value="#ff6347"
+          swatches="#ff6347,#2e8b57,#123456"
+        ></focsd-swatch-picker>
+        <focsd-swatch-picker id="sc" label="Theme" name="theme" allow-custom required>
+          <focsd-option value="#0f766e" color="#0f766e">Teal</focsd-option>
+          <focsd-option value="#7c2d12" color="#7c2d12">Rust</focsd-option>
+        </focsd-swatch-picker>
+        <div class="pg-row">
+          <focsd-button type="submit" variant="action">Submit</focsd-button>
+          <focsd-button type="reset">Reset</focsd-button>
+        </div>
+      </form>
+      <output id="out"></output>
+      <!-- 14a-9: phone-width column; the swatches wrap and the custom color button ends their last row. -->
+      <div class="pg-w-18">
+        <focsd-swatch-picker
+          id="sw"
+          label="Calendar color"
+          allow-custom
+          swatches="#ff6347,#2e8b57,#123456,#0f766e,#7c2d12,#1d4ed8,#ca8a04,#be123c,#15803d,#334155"
+        ></focsd-swatch-picker>
+      </div>
+    </main>
+  </body>
+</html>

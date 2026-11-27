@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Localization · Focsd test bench</title>
+    <script type="module" src="/src/i18n.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Localization"></pg-header>
+    <main class="pg-stack">
+      <focsd-pagination id="l-pages" total="5" page="2"></focsd-pagination>
+      <focsd-date-picker id="l-date" label="Date" min="2026-01-10"></focsd-date-picker>
+      <focsd-select id="l-langs" label="Languages" multiple>
+        <focsd-option value="a" selected>A</focsd-option>
+        <focsd-option value="b" selected>B</focsd-option>
+        <focsd-option value="c" selected>C</focsd-option>
+      </focsd-select>
+      <focsd-file-upload id="l-file" label="File"></focsd-file-upload>
+      <focsd-data-grid id="l-grid" label="People" toolbar></focsd-data-grid>
+      <div lang="de">
+        <focsd-pagination id="l-pages-de" total="5" page="2"></focsd-pagination>
+        <focsd-data-grid id="l-grid-de" label="Zahlen"></focsd-data-grid>
+      </div>
+      <focsd-carousel id="l-car" label="Slides" autoplay="0">
+        <focsd-carousel-slide><p>One</p></focsd-carousel-slide>
+        <focsd-carousel-slide><p>Two</p></focsd-carousel-slide>
+      </focsd-carousel>
+      <focsd-time-field id="l-time" label="Time" hour-cycle="h12"></focsd-time-field>
+      <focsd-textarea id="l-notes" label="Notes" maxlength="50" value="Prefilled"></focsd-textarea>
+    </main>
+  </body>
+</html>

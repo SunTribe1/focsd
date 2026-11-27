@@ -1,0 +1,82 @@
+{
+  // Dead-code check (`pnpm knip`, part of `pnpm check`). knip reads each package's exports, bin, scripts
+  // and the Vitest, Playwright, ESLint and Astro configs by itself; this file only adds what it cannot see.
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "ignore": [".claude/**", "**/dist/**", "**/types/**"],
+  // A Vite dev-server module id that one WebMCP spec imports in the browser.
+  "ignoreUnresolved": ["/@id/@focsd-dev/webmcp"],
+  "workspaces": {
+    ".": {
+      "entry": ["scripts/**/*.mjs", "tools/**/*.{js,mjs,ts}"],
+      "project": ["scripts/**/*.mjs", "tools/**/*.{js,mjs,ts}"],
+      // lit-analyzer, publint and attw run through `pnpm exec` in scripts (check:lit, scripts/check-packages.mjs).
+      "ignoreDependencies": ["lit-analyzer", "publint", "@arethetypeswrong/cli"],
+    },
+    "packages/*": {
+      "entry": ["test/**/*.{js,mjs,ts}"],
+      "project": ["src/**/*.js"],
+    },
+    "packages/components": {
+      // Every element module is a public entry (`@focsd-dev/components/focsd-*.js`).
+      "entry": ["src/focsd-*.js", "test/**/*.{js,mjs,ts}"],
+      "project": ["src/**/*.js"],
+      // The type tests compile React JSX; `cem` is the analyzer binary the event tests run.
+      "ignoreDependencies": ["@types/react", "cem"],
+    },
+    "packages/ai": {
+      // Every element module is a public entry (`@focsd-dev/ai/*.js`).
+      "entry": ["src/*.js", "test/**/*.{js,mjs,ts}"],
+      "project": ["src/**/*.js"],
+      "ignoreDependencies": ["@focsd-dev/tokens"],
+    },
+    "packages/primitives": {
+      "entry": [
+        // icons.js loads it with import() and keeps the module object, which knip cannot follow.
+        "src/internal/icon-sources.js",
+        "src/styles/*.js",
+        "test/**/*.{js,mjs,ts}",
+        "scripts/**/*.mjs",
+      ],
+      "project": ["src/**/*.js", "scripts/**/*.mjs"],
+      "ignoreDependencies": ["@focsd-dev/tokens"],
+    },
+    "packages/cli": {
+      "entry": ["test/**/*.{js,mjs}", "blocks/**/*.js"],
+      "project": ["src/**/*.js", "blocks/**/*.js"],
+      // The blocks are app templates that import the packages the app installs.
+      "ignoreDependencies": ["@focsd-dev/charts", "@focsd-dev/data-grid"],
+    },
+    "packages/charts": {
+      "entry": ["test/**/*.{js,mjs,ts}"],
+      "project": ["src/**/*.js"],
+      // The elements need @focsd-dev/tokens' CSS at runtime, though no module imports it.
+      "ignoreDependencies": ["@focsd-dev/tokens"],
+    },
+    "packages/editor": {
+      "entry": ["test/**/*.{js,mjs,ts}"],
+      "project": ["src/**/*.js"],
+      // The elements need @focsd-dev/tokens' CSS at runtime, though no module imports it.
+      "ignoreDependencies": ["@focsd-dev/tokens"],
+    },
+    "packages/mcp": {
+      "entry": ["test/**/*.{js,mjs}", "scripts/**/*.mjs"],
+      "project": ["src/**/*.js", "scripts/**/*.mjs"],
+      // The build reads the other packages' manifests as files.
+      "ignoreDependencies": ["@focsd-dev/ai", "@focsd-dev/charts", "@focsd-dev/components", "@focsd-dev/data-grid", "@focsd-dev/editor"],
+    },
+    "packages/tokens": {
+      "entry": ["lib/**/*.mjs", "scripts/**/*.mjs", "test/**/*.mjs", "e2e/**/*.mjs"],
+      "project": ["lib/**/*.mjs", "scripts/**/*.mjs"],
+      // The build copies the font files out of these packages.
+      "ignoreDependencies": ["@fontsource-variable/atkinson-hyperlegible-mono", "@fontsource-variable/atkinson-hyperlegible-next"],
+    },
+    "apps/playground": {
+      "entry": ["*.html", "blocks/*.html", "src/*.{js,jsx}", "e2e/**/*.{js,mjs}", "scripts/**/*.mjs"],
+      "project": ["src/**/*.{js,jsx}", "e2e/**/*.{js,mjs}", "scripts/**/*.mjs"],
+    },
+    "apps/docs": {
+      "entry": ["src/pages/**/*.{astro,js,ts}", "src/content/**/*.{md,mdx}", "e2e/**/*.js", "test/**/*.{js,mjs}", "scripts/**/*.mjs"],
+      "project": ["src/**/*.{js,ts,astro,mjs}", "scripts/**/*.mjs"],
+    },
+  },
+}

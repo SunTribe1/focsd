@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Focsd test bench: navigation and lists</title>
+    <script type="module" src="/src/navigation.js"></script>
+  </head>
+  <body>
+    <focsd-header id="hdr" sticky>
+      <strong slot="brand">Northwind</strong>
+      <focsd-nav-menu id="nav" label="Main">
+        <focsd-nav-item href="#overview" current>Overview</focsd-nav-item>
+        <focsd-nav-item label="Products" id="nav-products">
+          <a href="#analytics">Analytics</a>
+          <a href="#reports">Reports</a>
+        </focsd-nav-item>
+        <focsd-nav-item label="Company" id="nav-company">
+          <a href="#about">About</a>
+        </focsd-nav-item>
+      </focsd-nav-menu>
+      <focsd-button slot="actions" variant="action">Sign in</focsd-button>
+    </focsd-header>
+    <div class="pg-shell">
+      <focsd-sidebar id="side" label="Workspace">
+        <focsd-sidebar-item href="#projects" icon="menu" current>Projects</focsd-sidebar-item>
+        <focsd-sidebar-item href="#members" icon="search">Members</focsd-sidebar-item>
+        <focsd-sidebar-item href="#settings" icon="settings">Settings</focsd-sidebar-item>
+      </focsd-sidebar>
+      <main id="pg-main" class="pg-stack">
+        <h1>Navigation and lists</h1>
+        <focsd-breadcrumb id="bc">
+          <focsd-breadcrumb-item href="#home">Home</focsd-breadcrumb-item>
+          <focsd-breadcrumb-item href="#projects">Projects</focsd-breadcrumb-item>
+          <focsd-breadcrumb-item current>Atlas</focsd-breadcrumb-item>
+        </focsd-breadcrumb>
+
+        <focsd-menubar id="mb" label="Editor">
+          <focsd-menubar-item label="File">
+            <focsd-menu-item value="new">New</focsd-menu-item>
+            <focsd-menu-item value="open">Open</focsd-menu-item>
+          </focsd-menubar-item>
+          <focsd-menubar-item label="Edit">
+            <focsd-menu-item value="undo">Undo</focsd-menu-item>
+            <focsd-menu-item value="redo">Redo</focsd-menu-item>
+          </focsd-menubar-item>
+          <focsd-menubar-item label="View">
+            <focsd-menu-item value="zoom">Zoom</focsd-menu-item>
+          </focsd-menubar-item>
+        </focsd-menubar>
+        <p>Menubar: <output id="mb-result">none</output></p>
+
+        <focsd-toolbar id="tb" label="Formatting">
+          <focsd-toggle>Bold</focsd-toggle>
+          <focsd-toggle>Italic</focsd-toggle>
+          <focsd-button>Clear</focsd-button>
+        </focsd-toolbar>
+
+        <focsd-stepper id="st" label="Checkout progress" current="1">
+          <focsd-step>Cart</focsd-step>
+          <focsd-step>Shipping</focsd-step>
+          <focsd-step>Payment</focsd-step>
+        </focsd-stepper>
+
+        <focsd-pagination id="pg" total="12" page="5"></focsd-pagination>
+        <p>Page: <output id="pg-result">5</output></p>
+
+        <focsd-list id="ls" label="Recent files">
+          <focsd-list-item>report-q3.pdf</focsd-list-item>
+          <focsd-list-item>roadmap.key</focsd-list-item>
+        </focsd-list>
+        <focsd-list id="lsel" label="Assignee" selectable value="amara">
+          <focsd-list-item value="amara">Amara Okafor</focsd-list-item>
+          <focsd-list-item value="lukas">Lukas Brandt</focsd-list-item>
+          <focsd-list-item value="priya" disabled>Priya Raman (away)</focsd-list-item>
+          <focsd-list-item value="tomas">Tomás Herrera</focsd-list-item>
+        </focsd-list>
+
+        <focsd-description-list id="dl">
+          <focsd-description-item term="Plan">Team</focsd-description-item>
+          <focsd-description-item term="Seats">9 of 10</focsd-description-item>
+        </focsd-description-list>
+      </main>
+    </div>
+    <focsd-footer id="ftr">
+      <strong slot="brand">Northwind</strong>
+      <p slot="brand">Invoicing for small studios.</p>
+      <focsd-footer-section heading="Product">
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+      </focsd-footer-section>
+      <focsd-footer-section heading="Company">
+        <a href="#story">Our story</a>
+        <a href="#careers">Careers</a>
+      </focsd-footer-section>
+      <small slot="legal">© 2026 Northwind Ltd</small>
+      <a slot="legal" href="#privacy">Privacy</a>
+    </focsd-footer>
+  </body>
+</html>

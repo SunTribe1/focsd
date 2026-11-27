@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Listbox · Focsd test bench</title>
+    <script type="module" src="/src/listbox.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Listbox"></pg-header>
+    <main class="pg-stack">
+      <form id="f" class="pg-stack">
+        <focsd-listbox id="ship" label="Shipping speed" name="ship" value="standard">
+          <focsd-option value="standard">Standard (5–7 days)</focsd-option>
+          <focsd-option value="express">Express (2 days)</focsd-option>
+          <focsd-option value="overnight" disabled>Overnight</focsd-option>
+        </focsd-listbox>
+        <focsd-listbox id="top" label="Toppings" name="top" multiple>
+          <focsd-option-group label="Cheese">
+            <focsd-option value="mozzarella">Mozzarella</focsd-option>
+            <focsd-option value="feta">Feta</focsd-option>
+          </focsd-option-group>
+          <focsd-option-group label="Vegetables">
+            <focsd-option value="olives">Olives</focsd-option>
+            <focsd-option value="peppers">Peppers</focsd-option>
+          </focsd-option-group>
+        </focsd-listbox>
+        <focsd-listbox id="size" label="Size" name="size" orientation="horizontal" value="m">
+          <focsd-option value="s">Small</focsd-option>
+          <focsd-option value="m">Medium</focsd-option>
+          <focsd-option value="l">Large</focsd-option>
+        </focsd-listbox>
+        <div class="pg-row">
+          <focsd-button type="submit" variant="action">Submit</focsd-button>
+          <focsd-button type="reset">Reset</focsd-button>
+        </div>
+      </form>
+      <output id="out"></output>
+    </main>
+  </body>
+</html>

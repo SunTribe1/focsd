@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Rich text · Focsd test bench</title>
+    <script type="module" src="/src/editor.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Rich text"></pg-header>
+    <main class="pg-stack">
+      <form id="ef">
+        <focsd-rich-text id="notes" label="Release notes" name="notes" hint="Shown to customers" value="<p>Hi there</p>"></focsd-rich-text>
+        <focsd-rich-text id="req" label="Summary" name="summary" required placeholder="Write a summary…"></focsd-rich-text>
+        <focsd-button id="ef-reset" type="reset">Reset</focsd-button>
+      </form>
+      <focsd-rich-text id="off" label="Disabled notes" disabled value="<p>Locked</p>"></focsd-rich-text>
+    </main>
+  </body>
+</html>

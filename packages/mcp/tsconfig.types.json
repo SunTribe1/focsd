@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "types",
+    "rootDir": "src",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "resolveJsonModule": true,
+    "target": "es2022",
+    "lib": ["es2023"],
+    "skipLibCheck": true,
+    "strict": true,
+    "stripInternal": true
+  },
+  "include": ["src/**/*.js"]
+}

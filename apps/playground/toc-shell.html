@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Table of contents in an app shell · Focsd test bench</title>
+    <script type="module" src="/src/toc.js"></script>
+    <style>
+      .tall {
+        min-block-size: 90vh;
+      }
+    </style>
+  </head>
+  <body>
+    <focsd-app-shell id="shell" nav-label="Contents">
+      <focsd-header slot="header" collapse-below="0"><a href="#" slot="brand">Northwind</a></focsd-header>
+      <focsd-table-of-contents slot="sidebar" id="toc"></focsd-table-of-contents>
+      <h1>Guide</h1>
+      <h2>Install</h2>
+      <p class="tall">Add the package to your project, then import the components you use on each page.</p>
+      <h2>Usage</h2>
+      <p class="tall">Write the elements in your HTML as you would any other tag.</p>
+      <h2>Theming</h2>
+      <p>Set the theme on the root element.</p>
+      <h2>Keyboard</h2>
+      <p>Every control is reachable with Tab and shows a focus ring.</p>
+      <focsd-footer slot="footer"><h2>Contact</h2></focsd-footer>
+    </focsd-app-shell>
+  </body>
+</html>

@@ -1,0 +1,134 @@
+---
+title: Hosted MCP
+description: Run the Focsd MCP server over HTTP, on your machine, in a serverless function or in a Worker, with its rate limit and size caps.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+[`@focsd-dev/mcp`](/getting-started/ai-assistants/) runs over stdio by default. It can also serve the [streamable HTTP](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http) transport. Use HTTP when several people or tools share one server, or when your assistant can only reach a URL.
+
+The HTTP server offers the same tools and resources as stdio. They are read-only: no tool writes files, fetches URLs or runs code.
+
+## On your machine
+
+```sh
+npx -y @focsd-dev/mcp --http --port 3333 --host 127.0.0.1
+```
+
+The server answers at `http://127.0.0.1:3333/mcp`. `--port` defaults to `3333` and `--host` defaults to `127.0.0.1`, so only your machine can reach it. On a loopback host, the server refuses a request whose `Host` header is not `localhost`, `127.0.0.1` or `[::1]`, and a request from a browser page whose `Origin` is not one of those hosts. Together these checks block DNS rebinding from web pages.
+
+Connect Claude Code:
+
+```sh
+claude mcp add --transport http focsd http://127.0.0.1:3333/mcp
+```
+
+Other clients take the URL in their MCP configuration. The key differs per client:
+
+```jsonc
+// Cursor: .cursor/mcp.json
+{ "mcpServers": { "focsd": { "url": "http://127.0.0.1:3333/mcp" } } }
+```
+
+```jsonc
+// VS Code / GitHub Copilot: .vscode/mcp.json
+{ "servers": { "focsd": { "type": "http", "url": "http://127.0.0.1:3333/mcp" } } }
+```
+
+```jsonc
+// Windsurf: ~/.codeium/windsurf/mcp_config.json
+{ "mcpServers": { "focsd": { "serverUrl": "http://127.0.0.1:3333/mcp" } } }
+```
+
+Claude Desktop does not take a URL in `claude_desktop_config.json`: use the stdio setup from [AI assistants](/getting-started/ai-assistants/), or add a public HTTPS deployment under Settings → Connectors.
+
+To start it from your own Node code:
+
+```js
+import { startHttpServer } from '@focsd-dev/mcp/http/node';
+
+const { url, close } = await startHttpServer({ port: 3333 });
+```
+
+## In a serverless function
+
+`createHttpHandler(options)` from `@focsd-dev/mcp/http` returns a Fetch API handler, `(request) => Promise<Response>`. Mount it at a route on any platform whose functions take a web `Request`:
+
+```js
+// api/mcp.js
+import { createHttpHandler } from '@focsd-dev/mcp/http';
+
+const handler = createHttpHandler({
+  // Only when the platform itself sets X-Forwarded-For (see "Rate limit" below).
+  trustProxy: true,
+});
+
+export const POST = handler;
+export const GET = handler; // answered with 405: the server is stateless
+```
+
+## In a Worker
+
+```js
+import { createHttpHandler } from '@focsd-dev/mcp/http';
+
+const handler = createHttpHandler({
+  // The address the platform saw, which the client cannot forge.
+  clientKey: (request) => request.headers.get('cf-connecting-ip') ?? 'shared',
+});
+
+export default {
+  fetch(request) {
+    return new URL(request.url).pathname === '/mcp' ? handler(request) : new Response('Not found', { status: 404 });
+  },
+};
+```
+
+<Aside type="caution">
+The server imports its bundled component data as an ES module, so it needs no file system and no `nodejs_compat` flag; a bundler such as Wrangler includes the data with the handler. `@focsd-dev/mcp/http` itself uses only Web APIs (the Node entry, `@focsd-dev/mcp/http/node`, is the part that needs Node). Check that `tools/list` answers before you rely on it.
+</Aside>
+
+## Rate limit
+
+The handler keeps a token bucket in memory for each client: 60 requests a minute with a burst of 20. A client over the limit gets `429 Too Many Requests` with a `Retry-After` header in seconds. `focsd-mcp --http` only takes `--port` and `--host`, so to change the limit or the caps locally, start the server from your own code with `startHttpServer({ rateLimit: … })`. You can change or turn off the limit:
+
+```js
+createHttpHandler({ rateLimit: { perMinute: 120, burst: 40 } });
+createHttpHandler({ rateLimit: false });
+```
+
+The client key decides who shares a bucket:
+
+- With `focsd-mcp --http` and `startHttpServer`, the key is the socket address.
+- With `createHttpHandler` alone, every client shares one key unless you set one. Set `trustProxy: true` to key on the last `X-Forwarded-For` entry, the one your proxy appends, or pass `clientKey(request)`.
+- Without `trustProxy` or `clientKey`, all clients share one bucket: one noisy client can use up the burst for everyone. On a Worker or serverless host, pass `clientKey` (for example `(request) => request.headers.get('CF-Connecting-IP') ?? 'shared'`).
+- If many different keys arrive, only the first 10 000 get their own bucket. Further new keys share one overflow bucket, and keys already tracked are never evicted, so a client rotating keys cannot reset anyone else's limit.
+- `X-Forwarded-For` is ignored without `trustProxy`, so a client cannot dodge the limit by sending a fake one. Only set `trustProxy` behind a proxy that overwrites or appends the header.
+
+<Aside type="caution">
+The limit holds per instance. Serverless platforms run many instances, and each one counts separately. In production, also put the platform's own rate limiter or firewall rule in front of `/mcp`.
+</Aside>
+
+## Size caps
+
+| Cap | Default | Option | Over the cap |
+| --- | --- | --- | --- |
+| Request body | 64 KB | `maxBodyBytes` | `413 Payload Too Large`, before anything is parsed. |
+| Body read time | 10 s | `bodyTimeoutMs` | `408 Request Timeout` when the body arrives too slowly. |
+| Tool result or resource text | 64 KB | `maxResponseBytes` | The longest list is cut and the result is marked `truncated: true` with a hint to narrow the request. |
+
+The result cap also applies over stdio. Narrow a large request with the tool's own filters: a `category` for `list_components`, a `filter` for `get_tokens`, a `limit` for `search_components`.
+
+## Other options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `cors` | `false` | `{ origin: 'https://app.example' }` answers preflight requests and adds `Access-Control-Allow-Origin` for that origin. Leave it off unless a browser page calls the server. |
+| `allowedHosts` | none (loopback: `localhost`, `127.0.0.1`, `[::1]`) | Refuses a request whose `Host` header is not listed, with `403`. |
+| `allowedOrigins` | the `cors.origin` host, or none (loopback: `localhost`, `127.0.0.1`, `[::1]`) | Host names a browser page may call from. Refuses a request whose `Origin` header is present and not listed, with `403`. Requests without an `Origin`, as non-browser clients send, are not affected. With `cors: { origin: '*' }`, every origin is allowed. |
+| `token` | none | A secret of 16 or more characters. Every request must then send `Authorization: Bearer <token>`; others get `401` with `WWW-Authenticate: Bearer`. Failed tries count against the rate limit. With the CLI, set it in the `FOCSD_MCP_TOKEN` environment variable. |
+| `onerror` | none | Called with errors and refused requests, for your logs. It never changes the response. |
+
+The server only answers `POST`. `GET`, `PUT` and `DELETE` get `405` with `Allow: POST`, because the server keeps no session. Responses carry `Cache-Control: no-store` and `X-Content-Type-Options: nosniff`.
+
+By default there is no authentication: the server only serves public docs data, read-only. To keep a deployment to your own clients, set `token` (above) and give the clients the token, or put the server behind your platform's access control. Keep the token in a secret, never in code. For per-user access, the MCP spec describes OAuth-based [authorization](https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization).

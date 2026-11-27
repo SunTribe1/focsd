@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Loading overlay · Focsd test bench</title>
+    <script type="module" src="/src/loading.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Loading overlay"></pg-header>
+    <main class="pg-stack">
+      <focsd-button id="toggle">Toggle loading</focsd-button>
+      <focsd-loading-overlay id="lo">
+        <form id="f" class="pg-stack">
+          <focsd-text-field id="name" label="Team name" value="Platform"></focsd-text-field>
+          <focsd-button id="save">Save</focsd-button>
+        </form>
+      </focsd-loading-overlay>
+      <focsd-loading-overlay id="lo2" label="Saving changes"><p>Notes</p></focsd-loading-overlay>
+    </main>
+  </body>
+</html>

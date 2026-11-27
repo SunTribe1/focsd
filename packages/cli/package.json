@@ -1,0 +1,59 @@
+{
+  "name": "focsd",
+  "version": "1.0.0",
+  "description": "Copy Focsd components into your project to own their look, and keep them up to date: npx focsd add button.",
+  "license": "MIT",
+  "homepage": "https://focsd.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SunTribe1/focsd.git",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/SunTribe1/focsd/issues"
+  },
+  "keywords": [
+    "a11y",
+    "accessibility",
+    "cli",
+    "component-library",
+    "copy",
+    "design-system",
+    "framework-agnostic",
+    "free",
+    "frontend",
+    "lit",
+    "ui-components",
+    "ui-library",
+    "web-components"
+  ],
+  "type": "module",
+  "bin": {
+    "focsd": "src/cli.js"
+  },
+  "files": [
+    "src",
+    "templates",
+    "blocks"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "check": "tsc -p tsconfig.check.json",
+    "build": "node scripts/build-templates.mjs",
+    "prepack": "node scripts/build-templates.mjs",
+    "test": "node scripts/build-templates.mjs && vitest run"
+  },
+  "devDependencies": {
+    "@focsd-dev/components": "workspace:*",
+    "@playwright/test": "1.63.0",
+    "esbuild": "0.28.2",
+    "vitest": "5.0.3",
+    "@types/node": "24.19.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}

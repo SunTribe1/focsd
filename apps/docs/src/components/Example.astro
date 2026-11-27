@@ -1,0 +1,60 @@
+---
+import { Code } from '@astrojs/starlight/components';
+import Register from './Register.astro';
+import componentsPackage from '../../../../packages/components/package.json';
+import { codepenData, stackblitzFields } from '../lib/sandboxes.js';
+import { formatExampleHtml } from '../lib/format-example.js';
+
+interface Props {
+  slug: string;
+  title: string;
+  html: string;
+  script?: string | undefined;
+  imports?: { names: string[]; from: string }[] | undefined;
+  frame?: boolean | undefined;
+  height?: { desktop: number; mobile: number } | undefined;
+}
+
+const { slug, title, html, script, imports = [], frame = false, height } = Astro.props;
+const reserve = height ? `--focsd-preview-min: ${height.desktop}px; --focsd-preview-min-mobile: ${height.mobile}px` : undefined;
+const shownImports = imports.map(({ names, from }) => `import { ${names.join(', ')} } from '${from}';`).join('\n');
+const runImports = imports.length ? `const { ${imports.flatMap((i) => i.names).join(', ')} } = await window.focsdDocsReady;\n` : '';
+const shownScript = script && (shownImports ? `${shownImports}\n\n${script}` : script);
+const runScript = script && `${runImports}${script}`;
+const SCRIPT = '<' + 'script';
+const shownHtml = await formatExampleHtml(html);
+const code = script ? `${shownHtml}\n\n${SCRIPT} type="module">\n${shownScript}\n</${'script'}>` : shownHtml;
+const version = componentsPackage.version;
+const sandboxes = version !== '0.0.0' || (import.meta.env.FOCSD_SANDBOXES ?? process.env.FOCSD_SANDBOXES) === '1';
+const sandboxVersion = version === '0.0.0' ? 'latest' : version;
+const sandbox = { title, html: shownHtml, script: shownScript, version: sandboxVersion };
+---
+
+<div class="focsd-example not-content" data-example data-slug={slug}>
+  {frame ? (
+    <iframe class="focsd-example-frame" src={`/examples/${slug}/`} title={`${title} example`} loading="lazy" />
+  ) : (
+    <div class="focsd-example-preview" style={reserve} set:html={html} />
+  )}
+</div>
+<Code code={code} lang="html" title="HTML" />
+{sandboxes && (
+  <div class="focsd-example-sandboxes not-content">
+    <form method="post" action="https://codepen.io/pen/define" target="_blank">
+      <input type="hidden" name="data" value={codepenData(sandbox)} />
+      <button type="submit" aria-label={`Open in CodePen: ${title} example (opens in a new tab)`}>
+        Open in CodePen
+      </button>
+    </form>
+    <form method="post" action="https://stackblitz.com/run" target="_blank">
+      {stackblitzFields(sandbox).map(([name, value]) => (
+        <input type="hidden" name={name} value={value} />
+      ))}
+      <button type="submit" aria-label={`Open in StackBlitz: ${title} example (opens in a new tab)`}>
+        Open in StackBlitz
+      </button>
+    </form>
+  </div>
+)}
+{!frame && script && <script is:inline type="module" set:html={runScript} />}
+<Register />

@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>QR code · Focsd test bench</title>
+    <script>
+      // Runs before the module script defines the element, so the first warning is recorded too.
+      window.__log = [];
+      const warn = console.warn.bind(console);
+      console.warn = (...args) => {
+        window.__log.push({ type: 'warn', text: args.map(String).join(' ') });
+        warn(...args);
+      };
+    </script>
+    <script type="module" src="/src/qr-code.js"></script>
+  </head>
+  <body>
+    <pg-header heading="QR code"></pg-header>
+    <main class="pg-stack">
+      <focsd-qr-code id="q" value="https://focsd.dev" label="QR code for focsd.dev"></focsd-qr-code>
+      <focsd-qr-code
+        id="qh"
+        value="https://focsd.dev"
+        label="Focsd home page, high error correction"
+        size="200"
+        error-correction="H"
+      ></focsd-qr-code>
+      <focsd-qr-code id="qn" value="https://focsd.dev"></focsd-qr-code>
+      <focsd-qr-code id="ql" label="Too long"></focsd-qr-code>
+    </main>
+  </body>
+</html>

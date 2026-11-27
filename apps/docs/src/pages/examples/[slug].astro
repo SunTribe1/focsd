@@ -1,0 +1,49 @@
+---
+import '@focsd-dev/tokens/fonts.css';
+import '@focsd-dev/tokens/tokens.css';
+import '@focsd-dev/components/upgrade.css';
+import '@focsd-dev/tokens/presets.css';
+import { components } from '../../data/catalogue.js';
+import { examples } from '../../data/examples/index.js';
+import { examples as patterns } from '../../data/guides/patterns.js';
+import { framePaths } from '../../data/frames.js';
+
+export function getStaticPaths() {
+  return framePaths(components, examples, patterns);
+}
+
+const { name, html } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>{name} example · Focsd</title>
+    <script is:inline>
+      try {
+        document.documentElement.dataset.focsdTheme = parent.document.documentElement.dataset.focsdTheme || 'light';
+      } catch {
+        /* opened directly: tokens follow the system preference */
+      }
+    </script>
+    <style is:global>
+      body {
+        margin: 0;
+        padding: 1rem;
+        background: var(--focsd-ground);
+        color: var(--focsd-ink);
+        font-family: var(--focsd-font-sans);
+      }
+    </style>
+  </head>
+  <body>
+    <Fragment set:html={html} />
+    <script>
+      import '@focsd-dev/components';
+      import '@focsd-dev/data-grid';
+    </script>
+  </body>
+</html>

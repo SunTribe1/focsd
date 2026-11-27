@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tour · Focsd test bench</title>
+    <style>
+      .tour-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--focsd-space-3);
+        align-items: center;
+      }
+      .tour-spacer {
+        block-size: 150vh;
+      }
+    </style>
+    <script type="module" src="/src/tour.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Tour"></pg-header>
+    <main class="pg-stack">
+      <div class="tour-bar">
+        <focsd-button id="start">Take the tour</focsd-button>
+        <focsd-button id="search">Search</focsd-button>
+        <button id="page-action" type="button">Page action</button>
+        <output id="page-out"></output>
+      </div>
+      <div class="tour-spacer"></div>
+      <div class="tour-bar">
+        <focsd-tooltip text="Download the visible rows"><focsd-button id="export">Export</focsd-button></focsd-tooltip>
+      </div>
+      <focsd-tour id="tour"></focsd-tour>
+    </main>
+  </body>
+</html>

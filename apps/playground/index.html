@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Focsd test bench</title>
+    <script type="module" src="/src/main.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Focsd test bench">
+      <div class="pg-switches">
+        <label
+          >Theme
+          <select id="pg-theme">
+            <option value="">System</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+            <option value="contrast">High contrast</option>
+          </select>
+        </label>
+        <label
+          >Density
+          <select id="pg-density">
+            <option value="">Comfortable</option>
+            <option value="compact">Compact</option>
+          </select>
+        </label>
+      </div>
+    </pg-header>
+    <main id="pg-main">
+      <section aria-labelledby="sec-button">
+        <h2 id="sec-button">Button</h2>
+        <div class="pg-row" id="button-row">
+          <focsd-button id="btn-action" variant="action">Save changes</focsd-button>
+          <focsd-button id="btn-plain">Cancel</focsd-button>
+          <focsd-button id="btn-quiet" variant="quiet">Preview email</focsd-button>
+          <focsd-button id="btn-critical" variant="critical">Delete workspace</focsd-button>
+          <focsd-button id="btn-disabled" disabled>Export (no data yet)</focsd-button>
+        </div>
+        <p>Clicks: <output id="btn-count">0</output></p>
+        <form id="btn-form" class="pg-row">
+          <focsd-button id="btn-submit" type="submit" variant="action">Submit form</focsd-button>
+          <output id="btn-form-result">not submitted</output>
+        </form>
+      </section>
+      <section aria-labelledby="sec-text-field">
+        <h2 id="sec-text-field">Text field</h2>
+        <form id="tf-form" class="pg-stack">
+          <focsd-text-field
+            id="tf-name"
+            label="Workspace name"
+            name="workspace"
+            value="Northwind Studio"
+            hint="Shown on invoices and invitations."
+            required
+          ></focsd-text-field>
+          <focsd-text-field id="tf-email" label="Billing email" name="email" type="email" autocomplete="email" required></focsd-text-field>
+          <focsd-text-field id="tf-disabled" label="Workspace ID" name="wsid" value="ws_0042" disabled></focsd-text-field>
+          <div class="pg-row">
+            <focsd-button id="tf-submit" type="submit" variant="action">Save</focsd-button>
+            <focsd-button id="tf-reset" type="reset">Reset</focsd-button>
+          </div>
+          <output id="tf-result"></output>
+        </form>
+        <div class="pg-stack">
+          <focsd-text-field
+            id="tf-error"
+            label="Coupon code"
+            value="AUTUMN"
+            error="This code expired on 1 October. Try a current code."
+          ></focsd-text-field>
+        </div>
+      </section>
+      <section aria-labelledby="sec-dialog">
+        <h2 id="sec-dialog">Dialog</h2>
+        <div class="pg-row">
+          <focsd-button id="dlg-open">Remove member</focsd-button>
+          <output id="dlg-result">not opened</output>
+        </div>
+        <focsd-dialog id="dlg" headline="Remove Lukas Brandt?">
+          <p>Lukas loses access to 8 projects immediately. Their files stay in the workspace.</p>
+          <focsd-button slot="actions" data-dialog-close value="keep">Keep member</focsd-button>
+          <focsd-button slot="actions" variant="critical" data-dialog-close value="remove">Remove Lukas</focsd-button>
+        </focsd-dialog>
+      </section>
+      <section aria-labelledby="sec-tabs">
+        <h2 id="sec-tabs">Tabs</h2>
+        <focsd-tabs id="tabs" label="Workspace settings">
+          <focsd-tab>General</focsd-tab>
+          <focsd-tab>Members</focsd-tab>
+          <focsd-tab disabled>Billing</focsd-tab>
+          <focsd-tab>Security</focsd-tab>
+          <focsd-tab-panel><p>Name, region and default language for the workspace.</p></focsd-tab-panel>
+          <focsd-tab-panel><p>Invite people and change their roles.</p></focsd-tab-panel>
+          <focsd-tab-panel><p>Billing is managed by your organization.</p></focsd-tab-panel>
+          <focsd-tab-panel><p>Two-factor authentication and session length.</p></focsd-tab-panel>
+        </focsd-tabs>
+        <p>Selected index: <output id="tabs-result">0</output></p>
+      </section>
+      <section aria-labelledby="sec-select">
+        <h2 id="sec-select">Select</h2>
+        <form id="sel-form" class="pg-stack">
+          <focsd-select id="sel" label="Data region" name="region" value="eu">
+            <focsd-option value="eu">EU (Frankfurt)</focsd-option>
+            <focsd-option value="us">US (Virginia)</focsd-option>
+            <focsd-option value="ap" disabled>Asia Pacific (Sydney)</focsd-option>
+            <focsd-option value="uk">UK (London)</focsd-option>
+          </focsd-select>
+          <focsd-select id="sel-req" label="Default language" name="language" placeholder="Choose a language" required>
+            <focsd-option value="en">English</focsd-option>
+            <focsd-option value="de">Deutsch</focsd-option>
+            <focsd-option value="fr">Français</focsd-option>
+          </focsd-select>
+          <div class="pg-row">
+            <focsd-button id="sel-submit" type="submit" variant="action">Save</focsd-button>
+            <focsd-button id="sel-reset" type="reset">Reset</focsd-button>
+          </div>
+          <output id="sel-result"></output>
+        </form>
+      </section>
+      <!-- component sections are added per wave -->
+    </main>
+  </body>
+</html>

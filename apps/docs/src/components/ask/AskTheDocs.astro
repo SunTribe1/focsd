@@ -1,0 +1,63 @@
+---
+import symbol from '../../../../../docs/brand/logo/svg/focsd-symbol-ink.svg?raw';
+import '../../styles/ask.css';
+
+const mark = symbol.replace(/<title>.*?<\/title>/, '').replace(/fill="#[0-9A-Fa-f]{6}"/, 'fill="currentColor"');
+---
+
+<div class="ask not-content" data-ask>
+  <section id="ask-panel" class="ask-panel" role="dialog" aria-modal="false" aria-labelledby="ask-title" hidden>
+    <header class="ask-head">
+      <span class="ask-mark" aria-hidden="true" set:html={mark} />
+      <div class="ask-heading">
+        <h2 id="ask-title">Ask the docs</h2>
+      </div>
+      <div class="ask-actions">
+        <button
+          class="ask-icon-button"
+          type="button"
+          data-ask-minimize
+          aria-label="Minimize Ask the docs"
+          title="Minimize (keeps the conversation)"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 12h12" />
+          </svg>
+        </button>
+        <button
+          class="ask-icon-button"
+          type="button"
+          data-ask-close
+          aria-label="Close Ask the docs and end the conversation"
+          title="Close (ends the conversation)"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 6l12 12M18 6 6 18" />
+          </svg>
+        </button>
+      </div>
+    </header>
+    {/* The chat elements are created on first open (bot.js), so @focsd-dev/ai loads only then. */}
+    <div class="ask-body" data-ask-body>
+      <div class="ask-welcome">
+        <p class="ask-welcome-title">Hi, what are you building?</p>
+        <p>Ask about any component, theming, forms or frameworks. I answer with the right component, a snippet and a link to its docs.</p>
+      </div>
+    </div>
+  </section>
+  <button class="ask-launcher" type="button" data-ask-launcher aria-expanded="false" aria-controls="ask-panel">
+    <span class="ask-launcher-mark" aria-hidden="true" set:html={mark} />
+    <span class="ask-launcher-text">Ask the docs</span>
+  </button>
+</div>
+
+<script>
+  import { mountAsk } from './bot.js';
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-ask]')) {
+    // On docs pages it is rendered in the footer, inside the content column's stacking context:
+    // move it to the body so it floats above the sidebars.
+    if (root.parentElement !== document.body) document.body.append(root);
+    mountAsk(root);
+  }
+</script>

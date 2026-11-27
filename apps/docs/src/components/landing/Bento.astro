@@ -1,0 +1,241 @@
+---
+import { COMPONENT_COUNT } from '../../data/landing.js';
+
+interface Card {
+  id: string;
+  title: string;
+  lead: string;
+  docs: string;
+  docsLabel: string;
+}
+
+const cards = {
+  grid: {
+    id: 'grid',
+    title: 'Data grid',
+    lead: 'Sort, search, filter and edit. Arrow keys move from cell to cell.',
+    docs: '/components/data-grid/',
+    docsLabel: 'Data grid docs',
+  },
+  form: {
+    id: 'form',
+    title: 'Forms that explain themselves',
+    lead: 'Submit it empty: the summary lists each problem and links straight to the field.',
+    docs: '/getting-started/forms/',
+    docsLabel: 'Forms guide',
+  },
+  chart: {
+    id: 'chart',
+    title: 'Chart',
+    lead: 'Every chart is also a written summary and a data table.',
+    docs: '/components/chart/',
+    docsLabel: 'Chart docs',
+  },
+  dates: {
+    id: 'dates',
+    title: 'Date range picker',
+    lead: 'Type the dates, or pick both in one calendar.',
+    docs: '/components/date-range-picker/',
+    docsLabel: 'Date range picker docs',
+  },
+  command: {
+    id: 'command',
+    title: 'Command palette',
+    lead: 'Every action in your app, one search away.',
+    docs: '/components/command/',
+    docsLabel: 'Command palette docs',
+  },
+  editor: {
+    id: 'editor',
+    title: 'Rich text editor',
+    lead: 'Headings, lists and links. The output is always safe HTML.',
+    docs: '/components/rich-text/',
+    docsLabel: 'Rich text editor docs',
+  },
+  notify: {
+    id: 'notify',
+    title: 'Notification center',
+    lead: 'The unread count is in its name, and a burst is announced once.',
+    docs: '/components/notification-center/',
+    docsLabel: 'Notification center docs',
+  },
+  theme: {
+    id: 'theme',
+    title: 'Theme toggle',
+    lead: 'Light, dark or the system setting, for the page or a single panel.',
+    docs: '/components/theme-toggle/',
+    docsLabel: 'Theme toggle docs',
+  },
+} satisfies Record<string, Card>;
+---
+
+<section class="lp-section lp-bento-section" aria-labelledby="lp-bento-title">
+  <div class="lp-wrap">
+    <div class="lp-section-head">
+      <h2 id="lp-bento-title">Go ahead, try them.</h2>
+      <p>
+        These are live components, not screenshots. Click, type or tab through them, then copy the same markup from the docs. Eight here,{' '}
+        {COMPONENT_COUNT} in the library.
+      </p>
+    </div>
+    <div class="lp-bento">
+      <article class="lp-card lp-card-grid" aria-labelledby="lp-card-grid" data-lp-card>
+        <header class="lp-card-head">
+          <h3 id="lp-card-grid">{cards.grid.title}</h3>
+          <p>{cards.grid.lead}</p>
+        </header>
+        <div class="lp-card-demo lp-demo-grid">
+          <focsd-data-grid id="lp-grid" label="Invoices" page-size="5" quick-search></focsd-data-grid>
+        </div>
+        <a class="lp-card-link" href={cards.grid.docs}>
+          {cards.grid.docsLabel}
+        </a>
+      </article>
+
+      <article class="lp-card lp-card-form" aria-labelledby="lp-card-form" data-lp-card>
+        <header class="lp-card-head">
+          <h3 id="lp-card-form">{cards.form.title}</h3>
+          <p>{cards.form.lead}</p>
+        </header>
+        <form class="lp-card-demo lp-demo-form" id="lp-form">
+          <focsd-error-summary></focsd-error-summary>
+          <focsd-text-field
+            name="workspace"
+            label="Workspace name"
+            required
+            hint="Shown on invoices and invitations."
+            error-message="Enter a workspace name"
+          ></focsd-text-field>
+          <focsd-text-field
+            name="email"
+            type="email"
+            label="Work email"
+            required
+            autocomplete="email"
+            error-message="Enter a work email address, like ana@northwind.studio"
+          ></focsd-text-field>
+          <focsd-checkbox name="terms" required error-message="Accept the terms of service to create a workspace">
+            I accept the terms of service
+          </focsd-checkbox>
+          <div class="lp-demo-row">
+            <focsd-button type="submit" variant="action">
+              Create workspace
+            </focsd-button>
+            <focsd-button type="reset">Reset</focsd-button>
+          </div>
+          <p class="lp-demo-status" id="lp-form-status" role="status"></p>
+        </form>
+        <a class="lp-card-link" href={cards.form.docs}>
+          {cards.form.docsLabel}
+        </a>
+      </article>
+
+      <article class="lp-card lp-card-chart" aria-labelledby="lp-card-chart" data-lp-card>
+        <header class="lp-card-head">
+          <h3 id="lp-card-chart">{cards.chart.title}</h3>
+          <p>{cards.chart.lead}</p>
+        </header>
+        <div class="lp-card-demo lp-demo-chart">
+          <focsd-chart id="lp-chart" type="bar" label="Orders by channel, first half of 2026" x="month"></focsd-chart>
+        </div>
+        <a class="lp-card-link" href={cards.chart.docs}>
+          {cards.chart.docsLabel}
+        </a>
+      </article>
+
+      <article class="lp-card lp-card-editor" aria-labelledby="lp-card-editor" data-lp-card>
+        <header class="lp-card-head">
+          <h3 id="lp-card-editor">{cards.editor.title}</h3>
+          <p>{cards.editor.lead}</p>
+        </header>
+        <div class="lp-card-demo lp-demo-editor">
+          <focsd-rich-text
+            label="Release notes"
+            hint="Try Ctrl or Command + B"
+            value="<h2>Release 2.4</h2><p>Search is <strong>twice as fast</strong> on large workspaces, and results now show <em>where</em> each match was found.</p><h3>New</h3><ul><li>Dark mode for reports</li><li>Keyboard shortcuts in the editor</li><li>CSV export from any table</li></ul><h3>Fixed</h3><ol><li>Dates in the past no longer show as <code>Invalid date</code></li><li>Invites keep the role you picked</li></ol><p>Read the <a href='/components/rich-text/'>full changelog</a>.</p>"
+          ></focsd-rich-text>
+        </div>
+        <a class="lp-card-link" href={cards.editor.docs}>
+          {cards.editor.docsLabel}
+        </a>
+      </article>
+
+      <article class="lp-card lp-card-dates" aria-labelledby="lp-card-dates" data-lp-card>
+        <header class="lp-card-head">
+          <h3 id="lp-card-dates">{cards.dates.title}</h3>
+          <p>{cards.dates.lead}</p>
+        </header>
+        <div class="lp-card-demo">
+          <focsd-date-range-picker
+            label="Trip dates"
+            value-start="2026-05-04"
+            value-end="2026-05-08"
+            locale="en-GB"
+          ></focsd-date-range-picker>
+        </div>
+        <a class="lp-card-link" href={cards.dates.docs}>
+          {cards.dates.docsLabel}
+        </a>
+      </article>
+
+      <article class="lp-card lp-card-theme" aria-labelledby="lp-card-theme" data-lp-card>
+        <header class="lp-card-head">
+          <h3 id="lp-card-theme">{cards.theme.title}</h3>
+          <p>{cards.theme.lead}</p>
+        </header>
+        <div class="lp-card-demo lp-demo-stack">
+          <focsd-theme-toggle target="#lp-theme-target" storage-key-prefix="focsd-landing-" label="Card theme"></focsd-theme-toggle>
+          <div class="lp-theme-target" id="lp-theme-target">
+            <p>This panel follows the toggle.</p>
+            <focsd-switch checked>Weekly digest</focsd-switch>
+          </div>
+        </div>
+        <a class="lp-card-link" href={cards.theme.docs}>
+          {cards.theme.docsLabel}
+        </a>
+      </article>
+
+      <article class="lp-card lp-card-command" aria-labelledby="lp-card-command" data-lp-card>
+        <header class="lp-card-head">
+          <h3 id="lp-card-command">{cards.command.title}</h3>
+          <p>{cards.command.lead}</p>
+        </header>
+        <div class="lp-card-demo lp-demo-stack">
+          <focsd-button id="lp-command-open">Open command palette</focsd-button>
+          <p class="lp-demo-status" id="lp-command-status" role="status"></p>
+          <focsd-command id="lp-command">
+            <focsd-command-item value="new-project" group="Projects" shortcut="N">
+              New project
+            </focsd-command-item>
+            <focsd-command-item value="open-project" group="Projects">
+              Open project
+            </focsd-command-item>
+            <focsd-command-item value="invite" group="People">
+              Invite a member
+            </focsd-command-item>
+            <focsd-command-item value="billing" group="Settings">
+              Billing settings
+            </focsd-command-item>
+          </focsd-command>
+        </div>
+        <a class="lp-card-link" href={cards.command.docs}>
+          {cards.command.docsLabel}
+        </a>
+      </article>
+
+      <article class="lp-card lp-card-notify" aria-labelledby="lp-card-notify" data-lp-card>
+        <header class="lp-card-head">
+          <h3 id="lp-card-notify">{cards.notify.title}</h3>
+          <p>{cards.notify.lead}</p>
+        </header>
+        <div class="lp-card-demo lp-demo-row">
+          <focsd-notification-center id="lp-notify"></focsd-notification-center>
+          <focsd-button id="lp-notify-add">Add a notification</focsd-button>
+        </div>
+        <a class="lp-card-link" href={cards.notify.docs}>
+          {cards.notify.docsLabel}
+        </a>
+      </article>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Segmented control · Focsd test bench</title>
+    <script type="module" src="/src/segmented.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Segmented control"></pg-header>
+    <main class="pg-stack">
+      <section class="pg-stack" aria-labelledby="form-heading">
+        <h2 id="form-heading">In a form</h2>
+        <form id="form" class="pg-stack">
+          <focsd-segmented-control id="view" label="Calendar view" name="view" value="week" hint="Changes the calendar at once">
+            <focsd-segment value="day">Day</focsd-segment>
+            <focsd-segment value="week">Week</focsd-segment>
+            <focsd-segment value="month" disabled>Month</focsd-segment>
+            <focsd-segment value="year">Year</focsd-segment>
+          </focsd-segmented-control>
+          <focsd-segmented-control id="plan" label="Billing" name="billing" required>
+            <focsd-segment value="monthly">Monthly</focsd-segment>
+            <focsd-segment value="yearly">Yearly</focsd-segment>
+          </focsd-segmented-control>
+          <div class="pg-row">
+            <focsd-button type="submit" id="submit">Submit</focsd-button>
+            <focsd-button type="reset">Reset</focsd-button>
+          </div>
+          <output id="out" for="view plan" aria-live="polite"></output>
+        </form>
+      </section>
+
+      <section class="pg-stack" aria-labelledby="sizes-heading">
+        <h2 id="sizes-heading">Sizes and icons</h2>
+        <focsd-segmented-control id="small" label="Density" size="s" value="compact">
+          <focsd-segment value="compact">Compact</focsd-segment>
+          <focsd-segment value="cozy">Cozy</focsd-segment>
+        </focsd-segmented-control>
+        <focsd-segmented-control id="layout" label="Layout" size="l" value="list">
+          <focsd-segment value="list" icon="menu">List</focsd-segment>
+          <focsd-segment value="board" icon="calendar">Calendar</focsd-segment>
+        </focsd-segmented-control>
+      </section>
+
+      <section class="pg-stack" aria-labelledby="narrow-heading">
+        <h2 id="narrow-heading">Narrow container</h2>
+        <div id="narrow" style="inline-size: 16rem">
+          <focsd-segmented-control id="stacked" label="Sort by" value="newest">
+            <focsd-segment value="newest">Newest first</focsd-segment>
+            <focsd-segment value="oldest">Oldest first</focsd-segment>
+            <focsd-segment value="popular">Most popular</focsd-segment>
+          </focsd-segmented-control>
+        </div>
+      </section>
+
+      <section class="pg-stack" aria-labelledby="rtl-heading" dir="rtl">
+        <h2 id="rtl-heading">Right to left</h2>
+        <focsd-segmented-control id="rtl" label="Shift" value="b">
+          <focsd-segment value="a">Morning</focsd-segment>
+          <focsd-segment value="b">Noon</focsd-segment>
+          <focsd-segment value="c">Night</focsd-segment>
+        </focsd-segmented-control>
+      </section>
+    </main>
+  </body>
+</html>

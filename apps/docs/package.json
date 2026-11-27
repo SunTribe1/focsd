@@ -1,0 +1,40 @@
+{
+  "name": "@focsd-dev/docs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --port 4321",
+    "build": "astro build",
+    "preview": "astro preview --port 4322",
+    "test:e2e": "playwright test",
+    "serve:dist": "vite preview --outDir dist --strictPort",
+    "test": "node --test test/*.test.mjs",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "0.42.5",
+    "@focsd-dev/ai": "workspace:*",
+    "@focsd-dev/charts": "workspace:*",
+    "@focsd-dev/components": "workspace:*",
+    "@focsd-dev/data-grid": "workspace:*",
+    "@focsd-dev/editor": "workspace:*",
+    "@focsd-dev/mcp": "workspace:*",
+    "@focsd-dev/primitives": "workspace:*",
+    "@focsd-dev/tokens": "workspace:*",
+    "@focsd-dev/webmcp": "workspace:*",
+    "astro": "7.3.5",
+    "motion": "14.12.0",
+    "starlight-theme-black": "0.7.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.12",
+    "@axe-core/playwright": "4.13.0",
+    "@playwright/test": "1.63.0",
+    "ajv": "8.20.0",
+    "parse5": "8.0.1",
+    "prettier": "3.9.9",
+    "shiki": "4.5.0",
+    "typescript": "npm:@typescript/typescript6@6.0.2",
+    "vite": "8.3.2"
+  }
+}

@@ -1,0 +1,214 @@
+{
+  "sys": {
+    "color": {
+      "$type": "color",
+      "ground": {
+        "$value": "{ref.color.graphite.97}"
+      },
+      "surface": {
+        "$value": "{ref.color.graphite.100}"
+      },
+      "surface-sunk": {
+        "$value": "{ref.color.graphite.95}"
+      },
+      "surface-raised": {
+        "$value": "{ref.color.graphite.100}"
+      },
+      "ink": {
+        "$value": "{ref.color.graphite.21}"
+      },
+      "ink-muted": {
+        "$value": "{ref.color.graphite.45}"
+      },
+      "edge": {
+        "$value": "{ref.color.graphite.62}"
+      },
+      "edge-quiet": {
+        "$value": "{ref.color.graphite.88}"
+      },
+      "action": {
+        "$value": "{ref.color.graphite.21}"
+      },
+      "action-hover": {
+        "$value": "{ref.color.graphite.32}"
+      },
+      "action-press": {
+        "$value": "{ref.color.graphite.16}"
+      },
+      "on-action": {
+        "$value": "{ref.color.graphite.100}"
+      },
+      "route": {
+        "$value": "{ref.color.teal.45}"
+      },
+      "positive": {
+        "$value": "{ref.color.green.47}"
+      },
+      "positive-tint": {
+        "$value": "{ref.color.green.95}"
+      },
+      "caution": {
+        "$value": "{ref.color.amber.49}"
+      },
+      "caution-tint": {
+        "$value": "{ref.color.amber.96}"
+      },
+      "critical": {
+        "$value": "{ref.color.red.51}"
+      },
+      "critical-tint": {
+        "$value": "{ref.color.red.94}"
+      },
+      "focus-outer": {
+        "$value": "{ref.color.graphite.21}",
+        "$description": "Focus ring color: the ink, so it contrasts with any ground or surface."
+      },
+      "focus-inner": {
+        "$value": "{ref.color.graphite.97}",
+        "$description": "Focus ring gap: the page ground, between the element and the ring."
+      },
+      "scrim": {
+        "$value": "{ref.color.overlay.ink-48}"
+      },
+      "hatch": {
+        "$value": "{ref.color.overlay.ink-10}"
+      },
+      "info": {
+        "$value": "{ref.color.teal.45}",
+        "$description": "Informational tone (info alerts, tags and badges). Defaults to the link color."
+      },
+      "info-tint": {
+        "$value": "{ref.color.graphite.95}",
+        "$description": "Background for informational messages and tags."
+      },
+      "accent-1": {
+        "$value": "{ref.color.graphite.45}",
+        "$description": "Category color 1 of 8: avatars, colored tags and badges, navigation icons and chart series. Neutral in the default theme; colorful presets (Prismatic) give each its own hue."
+      },
+      "accent-1-tint": {
+        "$value": "{ref.color.graphite.95}",
+        "$description": "Soft background for category color 1."
+      },
+      "accent-2": {
+        "$value": "{ref.color.graphite.45}",
+        "$description": "Category color 2 of 8: avatars, colored tags and badges, navigation icons and chart series. Neutral in the default theme; colorful presets (Prismatic) give each its own hue."
+      },
+      "accent-2-tint": {
+        "$value": "{ref.color.graphite.95}",
+        "$description": "Soft background for category color 2."
+      },
+      "accent-3": {
+        "$value": "{ref.color.graphite.45}",
+        "$description": "Category color 3 of 8: avatars, colored tags and badges, navigation icons and chart series. Neutral in the default theme; colorful presets (Prismatic) give each its own hue."
+      },
+      "accent-3-tint": {
+        "$value": "{ref.color.graphite.95}",
+        "$description": "Soft background for category color 3."
+      },
+      "accent-4": {
+        "$value": "{ref.color.graphite.45}",
+        "$description": "Category color 4 of 8: avatars, colored tags and badges, navigation icons and chart series. Neutral in the default theme; colorful presets (Prismatic) give each its own hue."
+      },
+      "accent-4-tint": {
+        "$value": "{ref.color.graphite.95}",
+        "$description": "Soft background for category color 4."
+      },
+      "accent-5": {
+        "$value": "{ref.color.graphite.45}",
+        "$description": "Category color 5 of 8: avatars, colored tags and badges, navigation icons and chart series. Neutral in the default theme; colorful presets (Prismatic) give each its own hue."
+      },
+      "accent-5-tint": {
+        "$value": "{ref.color.graphite.95}",
+        "$description": "Soft background for category color 5."
+      },
+      "accent-6": {
+        "$value": "{ref.color.graphite.45}",
+        "$description": "Category color 6 of 8: avatars, colored tags and badges, navigation icons and chart series. Neutral in the default theme; colorful presets (Prismatic) give each its own hue."
+      },
+      "accent-6-tint": {
+        "$value": "{ref.color.graphite.95}",
+        "$description": "Soft background for category color 6."
+      },
+      "accent-7": {
+        "$value": "{ref.color.graphite.45}",
+        "$description": "Category color 7 of 8: avatars, colored tags and badges, navigation icons and chart series. Neutral in the default theme; colorful presets (Prismatic) give each its own hue."
+      },
+      "accent-7-tint": {
+        "$value": "{ref.color.graphite.95}",
+        "$description": "Soft background for category color 7."
+      },
+      "accent-8": {
+        "$value": "{ref.color.graphite.45}",
+        "$description": "Category color 8 of 8: avatars, colored tags and badges, navigation icons and chart series. Neutral in the default theme; colorful presets (Prismatic) give each its own hue."
+      },
+      "accent-8-tint": {
+        "$value": "{ref.color.graphite.95}",
+        "$description": "Soft background for category color 8."
+      }
+    },
+    "focus": {
+      "ring": {
+        "$description": "The focus ring (DESIGN.md): a 1px gap in the ground color and a 1px ink ring. Redeclared per theme so a themed subtree resolves its own colors.",
+        "$value": "0 0 0 1px var(--focsd-focus-inner), 0 0 0 2px var(--focsd-focus-outer)"
+      },
+      "ring-inset": {
+        "$description": "The same ring drawn inside the element, for rows and cells that sit flush in a scrolling container.",
+        "$value": "inset 0 0 0 1px var(--focsd-focus-outer), inset 0 0 0 2px var(--focsd-focus-inner)"
+      }
+    },
+    "border": {
+      "width": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1,
+          "unit": "px"
+        }
+      }
+    },
+    "shadow": {
+      "overlay": {
+        "$type": "shadow",
+        "$value": [
+          {
+            "color": "{ref.color.overlay.ink-28}",
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": {
+              "value": 12,
+              "unit": "px"
+            },
+            "blur": {
+              "value": 32,
+              "unit": "px"
+            },
+            "spread": {
+              "value": -8,
+              "unit": "px"
+            }
+          },
+          {
+            "color": "{ref.color.overlay.ink-12}",
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": {
+              "value": 2,
+              "unit": "px"
+            },
+            "blur": {
+              "value": 6,
+              "unit": "px"
+            },
+            "spread": {
+              "value": 0,
+              "unit": "px"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

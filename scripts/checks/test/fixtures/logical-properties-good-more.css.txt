@@ -1,0 +1,4 @@
+.a { scroll-margin-inline-start: 4px; inset: 0; margin: 0 auto; padding: 1px 2px 3px; }
+.b { margin: 0 2px 0 2px; inset: 0 1px 0 1px; padding: var(--a, 1px) 2px 0 2px; }
+.c { transform-origin: center; background-position: center top; }
+.d { --gap-left: 1px; }

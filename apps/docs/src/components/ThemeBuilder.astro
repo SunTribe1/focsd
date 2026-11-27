@@ -1,0 +1,428 @@
+---
+import resolved from '@focsd-dev/tokens/resolved.json';
+import presetData from '@focsd-dev/tokens/presets.json';
+import Register from './Register.astro';
+import { MONO_FONTS, NEUTRALS, SANS_FONTS, STATUSES } from '../scripts/theme-builder-palette.js';
+
+const THEMES = ['light', 'dark'] as const;
+const MAX_RADIUS = 16;
+
+const surface = (theme: string, name: string) => {
+  const token = resolved.find((r) => r.theme === theme && r.density === 'default' && r.name === name);
+
+  if (!token) throw new Error(`No ${theme} "${name}" token in @focsd-dev/tokens/resolved.json.`);
+
+  return token.hex;
+};
+
+const surfaces = Object.fromEntries(
+  THEMES.map((t) => [t, { ground: surface(t, 'ground'), surface: surface(t, 'surface'), route: surface(t, 'route') }]),
+);
+
+const defaults = { light: surface('light', 'action'), dark: surface('dark', 'action') };
+
+const text = { light: surface('light', 'on-action'), dark: surface('dark', 'on-action') };
+
+const token = (name: string) => {
+  const row = resolved.find((r) => r.theme === 'light' && r.density === 'default' && r.name === name);
+
+  if (!row) throw new Error(`No "${name}" token in @focsd-dev/tokens/resolved.json.`);
+
+  return row.value;
+};
+
+const fonts = { sans: token('font-sans'), mono: token('font-mono') };
+
+const controlHeights = Object.fromEntries(
+  resolved.filter((r) => r.theme === 'light' && r.name === 'control-height').map((r) => [r.density, r.value]),
+);
+
+const starts = { default: presetData.default, ...presetData.presets };
+
+const statusDefaults = Object.fromEntries(STATUSES.map((name) => [name, surface('light', name)]));
+
+const statusLabel = (name: string) => `${name[0].toUpperCase()}${name.slice(1)}`;
+
+const config = { starts, surfaces, text, themes: THEMES, maxRadius: MAX_RADIUS, fonts, controlHeights };
+
+const DEFAULT_CHECKS = [
+  ['Text on button', 4.5],
+  ['Text on hovered button', 4.5],
+  ['Text on pressed button', 4.5],
+  ['Links on the page', 4.5],
+  ['Links on cards', 4.5],
+  ['Button edge on the page', 3],
+  ['Button edge on cards', 3],
+  ['Hovered button edge', 3],
+  ['Pressed button edge', 3],
+];
+---
+
+<div class="focsd-builder not-content" data-config={JSON.stringify(config)}>
+  <form class="focsd-builder-controls" aria-label="Theme settings">
+    <focsd-select name="start" label="Start from" value="default">
+      {Object.entries(starts).map(([key, entry]) => (
+        <focsd-option value={key}>{entry.label}</focsd-option>
+      ))}
+    </focsd-select>
+
+    <focsd-fieldset label="Color" class="focsd-builder-group">
+      <focsd-color-picker name="light" label="Brand color, light theme" value={defaults.light}></focsd-color-picker>
+      <focsd-color-picker name="dark" label="Brand color, dark theme" value={defaults.dark}></focsd-color-picker>
+      <focsd-select name="neutral" label="Neutral tint" hint="Grounds, cards, text and edges" value="none">
+        {Object.entries(NEUTRALS).map(([key, entry]) => (
+          <focsd-option value={key}>{entry.label}</focsd-option>
+        ))}
+      </focsd-select>
+      <focsd-checkbox name="links" class="focsd-builder-inline">
+        Links use the brand color
+      </focsd-checkbox>
+      <focsd-checkbox name="custom-status" class="focsd-builder-inline">
+        Custom status colors
+      </focsd-checkbox>
+      <div class="focsd-builder-statuses" data-statuses hidden>
+        {STATUSES.map((name) => (
+          <focsd-color-picker name={`status-${name}`} label={statusLabel(name)} value={statusDefaults[name]}></focsd-color-picker>
+        ))}
+      </div>
+    </focsd-fieldset>
+
+    <focsd-fieldset label="Typography" class="focsd-builder-group">
+      <focsd-select name="sans" label="Text font" value="default">
+        {Object.entries(SANS_FONTS).map(([key, entry]) => (
+          <focsd-option value={key}>{entry.label}</focsd-option>
+        ))}
+      </focsd-select>
+      <focsd-select name="mono" label="Code font" value="default">
+        {Object.entries(MONO_FONTS).map(([key, entry]) => (
+          <focsd-option value={key}>{entry.label}</focsd-option>
+        ))}
+      </focsd-select>
+    </focsd-fieldset>
+
+    <focsd-fieldset label="Shape and density" class="focsd-builder-group">
+      <focsd-number-field name="radius" label="Corner radius (px)" min="0" max={MAX_RADIUS} step="1" value="4"></focsd-number-field>
+      <focsd-select name="density" label="Density" value="default">
+        <focsd-option value="default">Default</focsd-option>
+        <focsd-option value="comfortable">Comfortable</focsd-option>
+        <focsd-option value="compact">Compact</focsd-option>
+      </focsd-select>
+    </focsd-fieldset>
+  </form>
+
+  <div class="focsd-builder-previews">
+    {THEMES.map((theme) => (
+      <section
+        class="focsd-builder-preview"
+        data-focsd-theme={theme}
+        data-testid={`preview-${theme}`}
+        aria-label={`${theme === 'light' ? 'Light' : 'Dark'} theme preview`}
+      >
+        <div class="focsd-builder-row">
+          <focsd-button variant="action">Save changes</focsd-button>
+          <focsd-button>Cancel</focsd-button>
+        </div>
+        <focsd-text-field label={`Project name (${theme})`} value="Focsd" hint="Shown on your profile" />
+        <focsd-alert tone="critical">This name is already taken.</focsd-alert>
+        <p class="focsd-builder-mono">
+          <code>npm install @focsd-dev/components</code>
+        </p>
+        <div class="focsd-builder-row">
+          <focsd-checkbox checked>Email me updates</focsd-checkbox>
+          <focsd-switch checked>Autosave</focsd-switch>
+        </div>
+        <p>
+          Read the <a href="#theme-css-heading">generated CSS</a> below.
+        </p>
+        <table class="focsd-builder-checks" data-testid={`checks-${theme}`}>
+          <caption>Contrast, {theme} theme</caption>
+          <thead>
+            <tr>
+              <th scope="col">Pair</th>
+              <th scope="col">Ratio</th>
+              <th scope="col">Needs</th>
+              <th scope="col">Result</th>
+            </tr>
+          </thead>
+          {/* The default rows, so the table has its height before the script fills in the ratios. */}
+          <tbody>
+            {DEFAULT_CHECKS.map(([label, min]) => (
+              <tr>
+                <td>{label}</td>
+                <td>…</td>
+                <td>{min}:1</td>
+                <td>…</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+    ))}
+  </div>
+
+  <h2 id="theme-css-heading">Your CSS</h2>
+  <div class="focsd-builder-row">
+    <focsd-button data-copy>Copy CSS</focsd-button>
+    <focsd-button data-copy-json>Copy tokens (JSON)</focsd-button>
+    <focsd-button data-copy-agents>Copy for agents</focsd-button>
+    <span role="status" data-copy-status></span>
+  </div>
+  <pre class="focsd-builder-css" tabindex="0" aria-labelledby="theme-css-heading"><code data-testid="theme-css"></code></pre>
+</div>
+
+<Register />
+
+<script>
+  import { startFrom, agentMarkdown, checks, previewStyle, themeCss, themeJson, themeTokens } from '../scripts/theme-builder.js';
+  import { STATUSES } from '../scripts/theme-builder-palette.js';
+
+  type Theme = 'light' | 'dark';
+
+  type Surfaces = { ground: string; surface: string; route: string };
+
+  type Config = {
+    starts: Record<string, Parameters<typeof startFrom>[0]>;
+    surfaces: Record<Theme, Surfaces>;
+    text: { light: string; dark: string };
+    themes: Theme[];
+    maxRadius: number;
+    fonts: { sans: string; mono: string };
+    controlHeights: Record<string, string>;
+  };
+
+  const root = document.querySelector<HTMLElement>('.focsd-builder');
+
+  /** The builder's own markup: a missing piece is a bug in this component, so say which. */
+  const part = <T extends Element>(selector: string): T => {
+    const found = root?.querySelector<T>(selector);
+
+    if (!found) throw new Error(`Theme builder: no ${selector}.`);
+
+    return found;
+  };
+
+  if (root) {
+    const form = part<HTMLFormElement>('form');
+    const { starts, surfaces, text, themes, maxRadius, fonts, controlHeights }: Config = JSON.parse(root.dataset.config ?? '{}');
+    const output = part('[data-testid="theme-css"]');
+    let agentText = '';
+    let jsonText = '';
+
+    type Options = Parameters<typeof themeCss>[0];
+
+    const renderChecks = (theme: Theme, options: Options) => {
+      const body = part(`[data-testid="checks-${theme}"] tbody`);
+      body.replaceChildren(
+        ...checks(themeTokens(theme, options, surfaces), surfaces[theme]).map(({ label, ratio, min, pass }) => {
+          const row = document.createElement('tr');
+
+          for (const value of [label, `${ratio.toFixed(2)}:1`, `${min}:1`, pass ? 'Passes' : 'Fails']) {
+            const cell = document.createElement('td');
+            cell.textContent = value;
+            row.append(cell);
+          }
+
+          row.dataset.pass = String(pass);
+
+          return row;
+        }),
+      );
+    };
+
+    // Focsd form controls: each has `value` and takes part in FormData like a native one.
+    type ValueControl = HTMLElement & { value: string };
+
+    const field = <T extends HTMLElement = ValueControl>(name: string) => part<T>(`[name="${name}"]`);
+
+    /**
+     * Read the controls' own properties, not FormData: a Focsd control hands its value to the form
+     * in its next render, so FormData lags one frame behind a value that was just set.
+     */
+    const checked = (name: string) => field<HTMLElement & { checked: boolean }>(name).checked;
+
+    const update = () => {
+      const customStatus = checked('custom-status');
+
+      part<HTMLElement>('[data-statuses]').hidden = !customStatus;
+
+      const options: Options = {
+        light: field('light').value,
+        dark: field('dark').value,
+        radius: Math.min(maxRadius, Math.max(0, Number(field('radius').value) || 0)),
+        density: field('density').value,
+        links: checked('links'),
+        neutral: field('neutral').value,
+        statuses: customStatus ? Object.fromEntries(STATUSES.map((name) => [name, field(`status-${name}`).value])) : {},
+        sans: field('sans').value,
+        mono: field('mono').value,
+        text,
+        surfaces,
+      };
+
+      for (const theme of themes) {
+        const preview = part<HTMLElement>(`[data-testid="preview-${theme}"]`);
+        preview.setAttribute('style', previewStyle(theme, options));
+        preview.dataset.focsdDensity = options.density;
+        renderChecks(theme, options);
+      }
+
+      output.textContent = themeCss(options);
+      jsonText = themeJson(options);
+      agentText = agentMarkdown({ ...options, fonts, controlHeights });
+    };
+
+    /** Choosing a start fills the colors and radius, then everything recomputes as usual. */
+    const startSelect = field('start');
+
+    startSelect.addEventListener('change', () => {
+      const { light, dark, radius } = startFrom(starts[startSelect.value]);
+
+      field('light').value = light;
+      field('dark').value = dark;
+      field('radius').value = String(radius);
+      update();
+    });
+
+    form.addEventListener('input', update);
+    form.addEventListener('change', update);
+    form.addEventListener('submit', (event) => event.preventDefault());
+
+    /** Copy text to the clipboard and say so in the status line. */
+    const copy = async (getText: () => string, done: string) => {
+      const status = part('[data-copy-status]');
+
+      try {
+        await navigator.clipboard.writeText(getText());
+        status.textContent = done;
+      } catch {
+        status.textContent = 'Copy failed: select the text and copy it yourself.';
+      }
+    };
+
+    part('[data-copy]').addEventListener('click', () => copy(() => output.textContent ?? '', 'Copied.'));
+    part('[data-copy-json]').addEventListener('click', () => copy(() => jsonText, 'Copied the tokens as JSON.'));
+    part('[data-copy-agents]').addEventListener('click', () => copy(() => agentText, 'Copied for agents.'));
+
+    // The first read needs the controls upgraded: before that they have no `value` to read.
+    const controlTags = ['focsd-select', 'focsd-color-picker', 'focsd-number-field', 'focsd-checkbox', 'focsd-fieldset'];
+    Promise.all(controlTags.map((tag) => customElements.whenDefined(tag))).then(update);
+  }
+</script>
+
+<style>
+  .focsd-builder {
+    display: grid;
+    gap: var(--focsd-space-5);
+  }
+  .focsd-builder-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--focsd-space-4) var(--focsd-space-5);
+    align-items: end;
+  }
+  .focsd-builder-controls :is(focsd-select, focsd-number-field) {
+    min-inline-size: 11rem;
+  }
+  /* Each group is a row of its own: Color, Typography, then Shape and density. */
+  .focsd-builder-group {
+    flex: 1 1 100%;
+  }
+  .focsd-builder-group::part(items),
+  .focsd-builder-statuses {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--focsd-space-4) var(--focsd-space-5);
+    align-items: end;
+  }
+  .focsd-builder-statuses {
+    flex: 1 1 100%;
+  }
+  /* Before the fieldset upgrades, lay its controls out as its items part will (no jump on upgrade). */
+  .focsd-builder-group:not(:defined) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--focsd-space-4) var(--focsd-space-5);
+    align-items: end;
+    /* The legend row it will draw, and the settled height of each group at desktop width (minimums:
+       on narrow screens the controls wrap taller anyway). */
+    padding-block-start: 2.4375rem;
+    min-block-size: 6.5rem;
+  }
+  .focsd-builder-group[label='Color']:not(:defined) {
+    min-block-size: 11.1875rem;
+  }
+  .focsd-builder-statuses[hidden] {
+    display: none;
+  }
+  .focsd-builder-mono {
+    margin: 0;
+  }
+  /* The preview's own code colors, not the docs page's. */
+  .focsd-builder-mono code {
+    padding: var(--focsd-space-1) var(--focsd-space-2);
+    border-radius: var(--focsd-radius-tag);
+    background: var(--focsd-surface-sunk);
+    color: var(--focsd-ink);
+    font-family: var(--focsd-font-mono);
+  }
+  /* The checkbox sits on the same line as the inputs beside it (the row aligns on its bottom edge). */
+  .focsd-builder-controls .focsd-builder-inline {
+    align-self: end;
+    display: flex;
+    align-items: center;
+    min-block-size: var(--focsd-control-height);
+  }
+  .focsd-builder-previews {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+    gap: var(--focsd-space-4);
+  }
+  .focsd-builder-preview {
+    display: grid;
+    gap: var(--focsd-space-4);
+    align-content: start;
+    padding: var(--focsd-space-5);
+    border: var(--focsd-border-width) solid var(--focsd-edge);
+    border-radius: var(--focsd-radius-surface);
+    background: var(--focsd-ground);
+    color: var(--focsd-ink);
+    font-family: var(--focsd-font-sans);
+  }
+  .focsd-builder-preview a {
+    color: var(--focsd-route);
+  }
+  .focsd-builder-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--focsd-space-3);
+    align-items: center;
+  }
+  .focsd-builder-checks {
+    inline-size: 100%;
+    border-collapse: collapse;
+    font-size: var(--focsd-text-small-size);
+  }
+  .focsd-builder-checks caption {
+    text-align: start;
+    font-weight: var(--focsd-text-label-weight);
+    padding-block-end: var(--focsd-space-1);
+  }
+  /* Global: the script builds the result rows, which do not carry Astro's scoped class. */
+  .focsd-builder-checks :global(:is(th, td)) {
+    padding: var(--focsd-space-1) var(--focsd-space-2) var(--focsd-space-1) 0;
+    text-align: start;
+    border-block-end: var(--focsd-border-width) solid var(--focsd-edge-quiet);
+  }
+  .focsd-builder-checks :global(tr[data-pass='false'] td:last-child) {
+    color: var(--focsd-critical);
+    font-weight: var(--focsd-text-subheading-weight);
+  }
+  /* A fixed height (the generated CSS is always longer): the box does not grow when the script fills it. */
+  .focsd-builder-css {
+    overflow: auto;
+    block-size: 28rem;
+    padding: var(--focsd-space-4);
+    border: var(--focsd-border-width) solid var(--sl-color-gray-5);
+    font-size: var(--focsd-text-small-size);
+  }
+</style>

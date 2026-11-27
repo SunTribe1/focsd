@@ -1,0 +1,9 @@
+.a { scroll-margin-left: 4px; }
+.b { scroll-padding-right: 4px; }
+.c { transform-origin: left center; }
+.d { background-position: right 4px top; }
+.e { object-position: left; }
+.f { inset: 0 auto auto 0; }
+.g { margin: 0 1px 0 2px; }
+.h { padding: var(--a, 1px) 2px 0 0; }
+.i { perspective-origin: right; }

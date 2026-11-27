@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json.schemastore.org/jscpd.json",
+  "pattern": "*/src/**",
+  "threshold": 1,
+  "minLines": 8,
+  "minTokens": 70,
+  "ignore": ["**/dist/**", "**/types/**", "**/*.d.ts", "**/phone-data.js", "**/lucide-paths.js", "**/qr-upstream.js"],
+  "reporters": ["console"],
+  "gitignore": true,
+  "absolute": false
+}

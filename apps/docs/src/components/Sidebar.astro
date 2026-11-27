@@ -1,0 +1,159 @@
+---
+import ThemeSidebar from 'starlight-theme-black/overrides/Sidebar.astro';
+---
+
+<div class="focsd-sidebar-filter" role="search">
+  <label for="focsd-sidebar-filter" class="sr-only">
+    Filter pages and components
+  </label>
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <circle cx="11" cy="11" r="8"></circle>
+    <path d="m21 21-4.3-4.3"></path>
+  </svg>
+  <input id="focsd-sidebar-filter" type="search" placeholder="Filter components…" autocomplete="off" spellcheck="false" />
+  <p class="focsd-sidebar-filter-empty" role="status" aria-live="polite"></p>
+</div>
+
+<ThemeSidebar />
+
+<script>
+  const input = document.querySelector<HTMLInputElement>('#focsd-sidebar-filter');
+  const status = document.querySelector<HTMLElement>('.focsd-sidebar-filter-empty');
+  const nav = input?.closest('nav, .sidebar-content, #starlight__sidebar') ?? document;
+
+  /** Lower case, accents dropped, so "Selección" finds "seleccion". */
+  const fold = (text: string) => text.normalize('NFD').replaceAll(/\p{M}/gu, '').toLowerCase().trim();
+
+  /** The group title of a link's nearest group, if any. */
+  const groupTitle = (link: Element) =>
+    link.closest('.container-sidebar-entry')?.querySelector(':scope > .entry-title, :scope > details > .entry-title')?.textContent ?? '';
+
+  /** Collapsed groups opened by the filter, closed again when it clears. */
+  const opened = new Set<HTMLDetailsElement>();
+
+  /** Show the links that match; returns how many do. */
+  const filterLinks = (query: string) => {
+    let shown = 0;
+
+    for (const link of nav.querySelectorAll<HTMLAnchorElement>('a.entry-link')) {
+      const match = !query || fold(link.textContent ?? '').includes(query) || fold(groupTitle(link)).includes(query);
+
+      link.closest('li')?.toggleAttribute('hidden', !match);
+
+      if (match) shown += 1;
+    }
+
+    return shown;
+  };
+
+  /** A group shows while any of its links do; nested groups first, so their parents see them. */
+  const filterGroups = (query: string) => {
+    for (const group of [...nav.querySelectorAll<HTMLElement>('.container-sidebar-entry')].reverse()) {
+      // A link's own row decides (an ancestor group's row is not hidden, so it cannot).
+      const visible = [...group.querySelectorAll('a.entry-link')].some((a) => !a.closest('li')?.hidden);
+      const item = group.tagName === 'LI' ? group : group.closest('li');
+
+      item?.toggleAttribute('hidden', Boolean(query) && !visible);
+
+      if (group instanceof HTMLDetailsElement && query && visible && !group.open) {
+        group.open = true;
+        opened.add(group);
+      }
+    }
+  };
+
+  /** Close the groups the filter opened. */
+  const closeOpened = () => {
+    for (const details of opened) details.open = false;
+    opened.clear();
+  };
+
+  const apply = () => {
+    const query = fold(input?.value ?? '');
+    const shown = filterLinks(query);
+
+    filterGroups(query);
+
+    if (!query) closeOpened();
+
+    if (status) status.textContent = query && !shown ? 'No pages match.' : '';
+  };
+
+  input?.addEventListener('input', apply);
+
+  input?.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape' || !input.value) return;
+    event.preventDefault();
+    input.value = '';
+    apply();
+  });
+</script>
+
+<style>
+  /* Stays at the top of the sidebar while it scrolls. */
+  .focsd-sidebar-filter {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: var(--focsd-space-2);
+    margin: var(--focsd-space-4) var(--focsd-space-2) 0;
+    padding: 0 var(--focsd-space-3);
+    border: var(--focsd-border-width) solid var(--focsd-edge-quiet);
+    border-radius: var(--focsd-radius-control);
+    background: var(--sl-color-bg-sidebar, var(--sl-color-bg));
+    color: var(--sl-color-gray-3);
+  }
+  .focsd-sidebar-filter:focus-within {
+    border-color: var(--sl-color-white);
+    box-shadow: var(--focsd-focus-ring);
+  }
+  .focsd-sidebar-filter svg {
+    inline-size: 1rem;
+    block-size: 1rem;
+  }
+  .focsd-sidebar-filter input {
+    min-inline-size: 0;
+    block-size: var(--focsd-control-height);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--sl-color-white);
+    font: inherit;
+    font-size: var(--sl-text-sm);
+    outline: none;
+  }
+  /* The box shows the focus ring; the input inside does not draw a second one. */
+  .focsd-sidebar-filter input:focus,
+  .focsd-sidebar-filter input:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+  .focsd-sidebar-filter input::placeholder {
+    color: var(--sl-color-gray-3);
+  }
+  .focsd-sidebar-filter-empty {
+    grid-column: 1 / -1;
+    margin: 0;
+    font-size: var(--sl-text-sm);
+  }
+  .focsd-sidebar-filter-empty:empty {
+    display: none;
+  }
+  /* Filtered-out pages and empty groups: the theme lays groups out with display: flex, which would
+     otherwise beat the hidden attribute. */
+  :global(.sidebar-content li[hidden]),
+  :global(nav li[hidden]) {
+    display: none !important;
+  }
+</style>

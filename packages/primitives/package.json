@@ -1,0 +1,88 @@
+{
+  "name": "@focsd-dev/primitives",
+  "version": "1.0.0",
+  "description": "Headless, accessible Focsd base classes (Lit). No visual styles beyond the accessibility floor.",
+  "license": "MIT",
+  "homepage": "https://focsd.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SunTribe1/focsd.git",
+    "directory": "packages/primitives"
+  },
+  "bugs": {
+    "url": "https://github.com/SunTribe1/focsd/issues"
+  },
+  "keywords": [
+    "a11y",
+    "accessibility",
+    "component-library",
+    "custom-elements",
+    "design-system",
+    "framework-agnostic",
+    "free",
+    "frontend",
+    "lit",
+    "ui",
+    "ui-components",
+    "ui-library",
+    "wcag",
+    "web-components"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "development": "./src/index.js",
+      "default": "./dist/index.js"
+    },
+    "./utils": {
+      "types": "./types/utils.d.ts",
+      "development": "./src/utils.js",
+      "default": "./dist/utils.js"
+    },
+    "./internal": {
+      "types": "./types/internal/index.d.ts",
+      "development": "./src/internal/index.js",
+      "default": "./dist/internal/index.js"
+    },
+    "./styles/*.js": {
+      "types": "./types/styles/*.d.ts",
+      "development": "./src/styles/*.js",
+      "default": "./dist/styles/*.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "src",
+    "types",
+    "LICENSE-lucide.txt",
+    "LICENSE-libphonenumber.txt"
+  ],
+  "scripts": {
+    "check": "tsc -p tsconfig.check.json",
+    "sync-floor": "node scripts/sync-floor.mjs",
+    "test": "vitest run && tsc -p test/types",
+    "prepack": "pnpm run build",
+    "build": "node ../../scripts/build-dist.mjs && node ../../scripts/emit-types.mjs",
+    "build:phone": "node scripts/build-phone-data.mjs"
+  },
+  "dependencies": {
+    "lit": "^3.3.3"
+  },
+  "devDependencies": {
+    "@focsd-dev/tokens": "workspace:*",
+    "happy-dom": "20.14.5",
+    "libphonenumber-js": "1.13.15",
+    "lucide": "1.52.0",
+    "vitest": "5.0.3"
+  },
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}

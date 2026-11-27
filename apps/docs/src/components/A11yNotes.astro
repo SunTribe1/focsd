@@ -1,0 +1,42 @@
+---
+import { inline } from '../data/markup.js';
+
+interface Props {
+  notes: string[];
+  keyboard?: [string, string][];
+  id: string;
+  level?: 3 | 4;
+}
+
+const { notes, keyboard = [], id, level = 3 } = Astro.props;
+const Heading = level === 4 ? 'h4' : 'h3';
+---
+
+<ul>
+  {notes.map((note) => (
+    <li set:html={inline(note)} />
+  ))}
+</ul>
+{keyboard.length > 0 && (
+  <>
+    <Heading id={id}>Keyboard</Heading>
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Key</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {keyboard.map(([key, action]) => (
+          <tr>
+            <td>
+              <kbd>{key}</kbd>
+            </td>
+            <td set:html={inline(action)} />
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </>
+)}

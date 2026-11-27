@@ -1,0 +1,50 @@
+---
+title: Choosing a select
+description: How focsd-select, focsd-combobox and focsd-multi-select differ, and which to pick by list length and how many values people choose.
+---
+
+All three read the same children: `focsd-option`s, optionally inside `focsd-option-group`s. They submit with forms, validate and reset like native controls, and every option feature works in every one of them.
+
+| | `focsd-select` | `focsd-combobox` | `focsd-multi-select` |
+| --- | --- | --- | --- |
+| Best for | Short lists (up to about 15) | Long lists people search | Several values from a long list |
+| Find an option | Type a letter to jump; `searchable` adds a filter box | Type to filter | Type to filter |
+| Several values | `multiple` | `multiple` | Always |
+| Groups | `focsd-option-group` | `focsd-option-group` | `focsd-option-group` |
+| Select all | `multiple select-all` | `multiple select-all` | `select-all` |
+| Maximum | `multiple max="3"` | `multiple max="3"` | `max="3"` |
+| Clear button | `clearable` | `clearable` | `clearable` |
+| Free text | No | `allow-custom` | No |
+| Chosen values shown as | Text in the button ("3 selected") | Text in the input | Removable tags |
+
+## Groups
+
+`focsd-option-group` works like `<optgroup>`: a named group that screen readers announce, with a heading on screen. `disabled` on the group disables every option in it.
+
+```html
+<focsd-select label="Office">
+  <focsd-option-group label="Europe">
+    <focsd-option value="ber">Berlin</focsd-option>
+    <focsd-option value="par">Paris</focsd-option>
+  </focsd-option-group>
+  <focsd-option-group label="Americas" disabled>
+    <focsd-option value="nyc">New York</focsd-option>
+  </focsd-option-group>
+</focsd-select>
+```
+
+## Several values, with a limit
+
+```html
+<focsd-select label="Notify teams" name="teams" multiple searchable select-all max="3">…</focsd-select>
+<focsd-combobox label="Languages" name="languages" multiple select-all max="3" clearable>…</focsd-combobox>
+```
+
+The form receives one entry per chosen value. Once `max` is reached, the other options are disabled and a status message says so; Select all fills up to the limit and then offers Deselect all.
+
+## Which one?
+
+- A handful of options, one choice: `focsd-select`.
+- A long list, one choice: `focsd-combobox` (or `focsd-select searchable` when people know the list and mostly browse it).
+- Several choices people should see at a glance: `focsd-multi-select`, whose tags each have a remove button.
+- Several choices in a compact control: `focsd-select multiple`.

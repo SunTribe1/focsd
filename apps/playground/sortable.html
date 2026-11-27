@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sortable · Focsd test bench</title>
+    <style>
+      #scroller {
+        block-size: 10rem;
+        overflow: auto;
+      }
+    </style>
+    <script type="module" src="/src/sortable.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Sortable"></pg-header>
+    <main class="pg-stack pg-w-40">
+      <focsd-list id="l" label="Release checklist" sortable>
+        <focsd-list-item>Write notes</focsd-list-item>
+        <focsd-list-item>Design review</focsd-list-item>
+        <focsd-list-item>Run tests</focsd-list-item>
+        <focsd-list-item>Tag release</focsd-list-item>
+        <focsd-list-item>Announce</focsd-list-item>
+      </focsd-list>
+      <focsd-list id="lc" label="Locked order" sortable>
+        <focsd-list-item>Back up the database</focsd-list-item>
+        <focsd-list-item>Run migrations</focsd-list-item>
+        <focsd-list-item>Restart workers</focsd-list-item>
+      </focsd-list>
+      <form id="f" class="pg-stack">
+        <focsd-tag-input id="t" label="Skills" name="skills" value="CSS,HTML,Lit" sortable></focsd-tag-input>
+        <div class="pg-row">
+          <focsd-button type="submit" variant="action">Submit</focsd-button>
+        </div>
+      </form>
+      <output id="out"></output>
+      <div id="scroller">
+        <focsd-list id="long" label="Backlog" sortable></focsd-list>
+      </div>
+    </main>
+  </body>
+</html>

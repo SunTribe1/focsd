@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Virtual list · Focsd test bench</title>
+    <script type="module" src="/src/virtual-list.js"></script>
+    <style>
+      #fixed, #var {
+        block-size: 18rem;
+      }
+      #pick {
+        block-size: 14rem;
+      }
+    </style>
+  </head>
+  <body>
+    <pg-header heading="Virtual list"></pg-header>
+    <main class="pg-stack pg-w-40">
+      <focsd-virtual-list id="fixed" label="Products" item-height="36"></focsd-virtual-list>
+      <focsd-virtual-list id="var" label="Messages"></focsd-virtual-list>
+      <focsd-virtual-list id="pick" label="Recipients" selectable="multiple" item-height="36"></focsd-virtual-list>
+    </main>
+  </body>
+</html>

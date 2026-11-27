@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Settings · Northwind</title>
+    <!-- Tokens: adjust these two paths to where your server exposes @focsd-dev/tokens/dist (or import "@focsd-dev/tokens/tokens.css" in your bundler). -->
+    <link rel="stylesheet" href="/node_modules/@focsd-dev/tokens/dist/fonts.css" />
+    <link rel="stylesheet" href="/node_modules/@focsd-dev/tokens/dist/tokens.css" />
+    <!-- Applies the saved theme before first paint. CSP script-src hash: 'sha256-C2K4EpZbw+KtT6iuKenSdqPWVgO0OmPYfvgBBeiduRo=' -->
+    <!-- prettier-ignore -->
+    <script>(function(){try{var d=document.documentElement,s=localStorage,t=s.getItem("focsd-theme"),b=s.getItem("focsd-brand");/^(light|dark|contrast)$/.test(t)&&d.setAttribute("data-focsd-theme",t);/^(harbor|signal|mineral|prismatic)$/.test(b)&&d.setAttribute("data-focsd-brand",b)}catch(e){}})()</script>
+    <link rel="stylesheet" href="./settings.css" />
+    <script type="module" src="./settings.js"></script>
+  </head>
+  <body>
+    <focsd-app-shell nav-label="Workspace">
+      <focsd-header slot="header" collapse-below="0">
+        <a href="/" slot="brand">Northwind</a>
+        <focsd-theme-toggle slot="actions"></focsd-theme-toggle>
+      </focsd-header>
+      <focsd-sidebar slot="sidebar" label="Workspace">
+        <focsd-sidebar-item href="/projects" icon="package">Projects</focsd-sidebar-item>
+        <focsd-sidebar-item href="/schedule" icon="calendar">Schedule</focsd-sidebar-item>
+        <focsd-sidebar-item href="/search" icon="search">Search</focsd-sidebar-item>
+        <focsd-sidebar-item href="/settings" icon="settings" current>Settings</focsd-sidebar-item>
+      </focsd-sidebar>
+
+      <div class="settings">
+        <h1>Settings</h1>
+        <p class="lede">Changes apply to your account on every device.</p>
+        <p class="lede">This is a sample page: Save sends nothing until you replace the sample handler in settings.js.</p>
+
+        <!-- Placeholder action: point it at your own endpoint. settings.js cancels the submit and sends nothing; wire your own save in settings.js. -->
+        <form id="settings-form" action="" method="post" novalidate>
+          <focsd-error-summary headline="There is a problem" manual></focsd-error-summary>
+
+          <focsd-tabs label="Settings sections">
+            <focsd-tab>Profile</focsd-tab>
+            <focsd-tab>Notifications</focsd-tab>
+            <focsd-tab>Security</focsd-tab>
+
+            <focsd-tab-panel>
+              <div class="stack">
+                <focsd-text-field
+                  id="name"
+                  name="name"
+                  label="Full name"
+                  label-position="start"
+                  autocomplete="name"
+                  value="Maya Okafor"
+                  required
+                ></focsd-text-field>
+                <focsd-text-field
+                  id="email"
+                  name="email"
+                  label="Email"
+                  label-position="start"
+                  type="email"
+                  autocomplete="email"
+                  value="maya@northwind.example"
+                  hint="We send receipts and sign-in codes here."
+                  required
+                ></focsd-text-field>
+                <focsd-select id="timezone" name="timezone" label="Time zone" label-position="start" value="america-chicago">
+                  <focsd-option value="america-new-york">Eastern Time (New York)</focsd-option>
+                  <focsd-option value="america-chicago">Central Time (Chicago)</focsd-option>
+                  <focsd-option value="america-denver">Mountain Time (Denver)</focsd-option>
+                  <focsd-option value="america-los-angeles">Pacific Time (Los Angeles)</focsd-option>
+                </focsd-select>
+              </div>
+            </focsd-tab-panel>
+
+            <focsd-tab-panel>
+              <div class="stack">
+                <focsd-fieldset label="Email me about" hint="Security alerts are always sent.">
+                  <div class="stack">
+                    <focsd-switch name="notify-comments" checked>Comments and mentions</focsd-switch>
+                    <focsd-switch name="notify-digest" checked>A weekly summary of my projects</focsd-switch>
+                    <focsd-switch name="notify-billing">Receipts and billing changes</focsd-switch>
+                    <focsd-switch name="notify-news">Product news</focsd-switch>
+                  </div>
+                </focsd-fieldset>
+                <focsd-select name="digest-day" label="Send the summary on" label-position="start" value="monday">
+                  <focsd-option value="monday">Monday</focsd-option>
+                  <focsd-option value="friday">Friday</focsd-option>
+                </focsd-select>
+              </div>
+            </focsd-tab-panel>
+
+            <focsd-tab-panel>
+              <div class="stack">
+                <focsd-switch name="two-factor" checked>Ask for a code when I sign in on a new device</focsd-switch>
+                <focsd-select
+                  name="idle-timeout"
+                  label="Sign me out after"
+                  label-position="start"
+                  value="1h"
+                  hint="Applies when this device is idle."
+                >
+                  <focsd-option value="15m">15 minutes</focsd-option>
+                  <focsd-option value="1h">1 hour</focsd-option>
+                  <focsd-option value="1d">1 day</focsd-option>
+                </focsd-select>
+              </div>
+            </focsd-tab-panel>
+          </focsd-tabs>
+
+          <div class="actions">
+            <focsd-button type="submit" variant="action">Save changes</focsd-button>
+            <p id="save-status" class="status" role="status"></p>
+          </div>
+        </form>
+      </div>
+    </focsd-app-shell>
+  </body>
+</html>

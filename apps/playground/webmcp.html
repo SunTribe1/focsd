@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WebMCP · Focsd test bench</title>
+    <script type="module" src="/src/webmcp.js"></script>
+  </head>
+  <body>
+    <pg-header heading="WebMCP"></pg-header>
+    <main class="pg-stack pg-w-36">
+      <form id="book" toolname="book-table" tooldescription="Book a table at the restaurant." toolautosubmit class="pg-stack">
+        <focsd-text-field label="Name" name="name" required toolparamdescription="Name for the booking"></focsd-text-field>
+        <focsd-text-field label="Email" name="email" type="email" required></focsd-text-field>
+        <focsd-password-field label="Account password" name="password"></focsd-password-field>
+        <focsd-number-field label="Guests" name="guests" min="1" max="12" required></focsd-number-field>
+        <focsd-date-picker label="Date" name="date" min="2026-01-01"></focsd-date-picker>
+        <focsd-time-field label="Time" name="time"></focsd-time-field>
+        <focsd-select label="Area" name="area" value="inside">
+          <focsd-option-group label="Indoors"
+            ><focsd-option value="inside">Dining room</focsd-option><focsd-option value="bar">Bar</focsd-option></focsd-option-group
+          >
+          <focsd-option value="terrace">Terrace</focsd-option>
+        </focsd-select>
+        <focsd-multi-select label="Dietary needs" name="diet" max="2">
+          <focsd-option value="vegan">Vegan</focsd-option><focsd-option value="gluten">Gluten free</focsd-option
+          ><focsd-option value="nuts">Nut allergy</focsd-option>
+        </focsd-multi-select>
+        <focsd-radio-group label="Seating" name="seating"
+          ><focsd-radio value="booth">Booth</focsd-radio><focsd-radio value="table">Table</focsd-radio></focsd-radio-group
+        >
+        <focsd-checkbox name="highchair">High chair</focsd-checkbox>
+        <focsd-switch name="reminder">Text me a reminder</focsd-switch>
+        <focsd-slider label="Budget" name="budget" range min="0" max="200" value-low="20" value-high="80"></focsd-slider>
+        <focsd-rating label="Last visit" name="rating" max="5"></focsd-rating>
+        <focsd-textarea label="Notes" name="notes"></focsd-textarea>
+        <focsd-file-upload label="Menu requests" name="files"></focsd-file-upload>
+        <input type="hidden" name="source" value="web" />
+        <focsd-button type="submit" variant="action">Book</focsd-button>
+      </form>
+      <output id="booked"></output>
+
+      <form id="contact" toolname="contact-us" tooldescription="Send a message to the team." class="pg-stack">
+        <focsd-text-field label="Subject" name="subject" required></focsd-text-field>
+        <focsd-button type="submit" variant="action">Send</focsd-button>
+      </form>
+    </main>
+  </body>
+</html>

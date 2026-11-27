@@ -1,0 +1,105 @@
+---
+---
+
+<script>
+  import type { WebMCPTool } from '@focsd-dev/webmcp';
+
+  const THEMES = ['light', 'dark', 'contrast'] as const;
+
+  const context = document.modelContext ?? navigator.modelContext;
+
+  if (context) {
+    const [{ createCatalog }, { default: data }, { enableWebMCP }] = await Promise.all([
+      import('@focsd-dev/mcp/core'),
+      import('@focsd-dev/mcp/data'),
+      import('@focsd-dev/webmcp'),
+    ]);
+
+    const catalog = createCatalog(data);
+    const pages = new Set(JSON.parse(document.getElementById('focsd-agent-pages')?.textContent ?? '[]'));
+
+    /** Docs page for a tag (sub-elements such as focsd-option live on their parent's page). */
+    const urlOf = (tag: string) => {
+      const c = catalog.getComponent(tag);
+      const slug = (c?.partOf ?? c?.tag ?? tag).replace(/^focsd-/, '');
+
+      return pages.has(slug) ? `/components/${slug}/` : null;
+    };
+
+    const READ = { readOnlyHint: true };
+    const { defineTool } = enableWebMCP();
+
+    const tools: WebMCPTool[] = [
+      {
+        name: 'search_components',
+        description: 'Find Focsd components for a need in plain words, e.g. "dropdown with search" or "draggable card". Returns tags, summaries and docs links.',
+        inputSchema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] },
+        annotations: READ,
+        execute: ({ query }) => {
+          // The schema requires a string, but a client may still omit it: never search for "undefined".
+          // Only a string equals its own String() form.
+          const text = String(query);
+
+          if (text !== query) return { ok: false, error: 'search_components needs a "query" string, e.g. "dropdown with search".' };
+
+          return { matches: catalog.searchComponents(text).map((m) => ({ ...m, url: urlOf(m.tag) })) };
+        },
+      },
+      {
+        name: 'get_component',
+        description: "Full reference for one Focsd component: attributes, events, slots, parts, an example, accessibility notes and keyboard support. Accepts 'focsd-select', 'select' or 'FocsdSelect'.",
+        inputSchema: { type: 'object', properties: { tag: { type: 'string' } }, required: ['tag'] },
+        annotations: READ,
+        execute: ({ tag }) => {
+          const c = catalog.getComponent(tag);
+
+          if (!c) return { ok: false, error: `No component "${tag}". Closest: ${catalog.suggestTags(tag).join(', ')}.` };
+
+          return { ok: true, url: urlOf(c.tag), markdown: catalog.componentMarkdown(c) };
+        },
+      },
+      {
+        name: 'open_component_page',
+        description: "Open the documentation page for a Focsd component in this tab, so the person can see it.",
+        inputSchema: { type: 'object', properties: { tag: { type: 'string' } }, required: ['tag'] },
+        // It changes the page, but nothing the person cannot undo with Back.
+        annotations: { readOnlyHint: false },
+        execute: ({ tag }) => {
+          const url = urlOf(catalog.normalizeTag(tag));
+
+          if (!url) return { ok: false, error: `No page for "${tag}".` };
+          location.assign(url);
+
+          return { ok: true, url };
+        },
+      },
+      {
+        name: 'get_setup',
+        description: 'Install command and a minimal example for HTML, React, Vue, Svelte or Angular.',
+        inputSchema: { type: 'object', properties: { framework: { type: 'string', enum: [...catalog.FRAMEWORKS] } } },
+        annotations: READ,
+        execute: ({ framework }) => catalog.getSetup(catalog.FRAMEWORKS.find((name) => name === framework)),
+      },
+      {
+        name: 'get_tokens',
+        description: 'Focsd design tokens (CSS custom properties) and their values, filtered by part of the name (action, space, radius, text…).',
+        inputSchema: { type: 'object', properties: { filter: { type: 'string' }, theme: { type: 'string', enum: ['light', 'dark', 'contrast'] } } },
+        annotations: READ,
+        execute: ({ filter, theme }) => ({ tokens: catalog.getTokens({ filter: filter === undefined ? undefined : String(filter), theme: THEMES.find((name) => name === theme) }) }),
+      },
+      {
+        name: 'check_markup',
+        description: 'Check markup that uses Focsd for unknown elements or attributes and for controls without an accessible name.',
+        inputSchema: { type: 'object', properties: { html: { type: 'string' } }, required: ['html'] },
+        annotations: READ,
+        execute: ({ html }) => {
+          const issues = catalog.validateMarkup(html);
+
+          return { valid: issues.length === 0, issues };
+        },
+      },
+    ];
+
+    for (const tool of tools) defineTool(tool);
+  }
+</script>

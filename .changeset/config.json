@@ -1,0 +1,25 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.1.1/schema.json",
+  "changelog": "@changesets/cli/changelog",
+  "commit": false,
+  "fixed": [
+    [
+      "@focsd-dev/tokens",
+      "@focsd-dev/primitives",
+      "@focsd-dev/components",
+      "@focsd-dev/data-grid",
+      "@focsd-dev/editor",
+      "@focsd-dev/charts",
+      "@focsd-dev/ai",
+      "@focsd-dev/mcp",
+      "@focsd-dev/webmcp",
+      "@focsd-dev/react",
+      "focsd"
+    ]
+  ],
+  "linked": [],
+  "access": "public",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": ["@focsd-dev/docs", "@focsd-dev/playground"]
+}

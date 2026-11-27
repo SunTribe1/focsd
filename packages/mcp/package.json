@@ -1,0 +1,104 @@
+{
+  "name": "@focsd-dev/mcp",
+  "version": "1.0.0",
+  "description": "Focsd MCP server: lets AI coding assistants look up components, design tokens and setup, and check generated markup.",
+  "license": "MIT",
+  "homepage": "https://focsd.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SunTribe1/focsd.git",
+    "directory": "packages/mcp"
+  },
+  "bugs": {
+    "url": "https://github.com/SunTribe1/focsd/issues"
+  },
+  "keywords": [
+    "a11y",
+    "accessibility",
+    "ai",
+    "component-library",
+    "custom-elements",
+    "design-system",
+    "framework-agnostic",
+    "free",
+    "frontend",
+    "lit",
+    "mcp",
+    "ui",
+    "ui-components",
+    "ui-library",
+    "wcag",
+    "web-components"
+  ],
+  "type": "module",
+  "bin": {
+    "focsd-mcp": "./src/cli.js"
+  },
+  "main": "./src/server.js",
+  "module": "./src/server.js",
+  "types": "./types/server.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/server.d.ts",
+      "default": "./src/server.js"
+    },
+    "./catalog": {
+      "types": "./types/catalog.d.ts",
+      "default": "./src/catalog.js"
+    },
+    "./core": {
+      "types": "./types/core.d.ts",
+      "default": "./src/core.js"
+    },
+    "./http": {
+      "types": "./types/http.d.ts",
+      "default": "./src/http.js"
+    },
+    "./http/node": {
+      "types": "./types/node-http.d.ts",
+      "default": "./src/node-http.js"
+    },
+    "./data": {
+      "types": "./data.d.ts",
+      "default": "./data/focsd.json"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "data",
+    "data.d.ts",
+    "src",
+    "types"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "check": "tsc -p tsconfig.check.json",
+    "prepack": "pnpm run build",
+    "build": "node scripts/build-data.mjs && node ../../scripts/emit-types.mjs",
+    "test": "vitest run && tsc -p test/types"
+  },
+  "dependencies": {
+    "@focsd-dev/tokens": "workspace:*",
+    "@modelcontextprotocol/server": "^2.3.1",
+    "parse5": "^8.0.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@focsd-dev/ai": "workspace:*",
+    "@focsd-dev/charts": "workspace:*",
+    "@focsd-dev/components": "workspace:*",
+    "@focsd-dev/data-grid": "workspace:*",
+    "@focsd-dev/editor": "workspace:*",
+    "@modelcontextprotocol/client": "2.3.1",
+    "@types/node": "24.19.1",
+    "typescript": "7.0.2",
+    "vitest": "5.0.3"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}

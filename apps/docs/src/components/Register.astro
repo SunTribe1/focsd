@@ -1,0 +1,23 @@
+---
+---
+
+<script>
+  import * as components from '@focsd-dev/components';
+  import * as grid from '@focsd-dev/data-grid';
+
+  // The AI kit is not in the components bundle: any of its elements on the page loads it, and its exports
+  // (createChat and the transports) reach the guide examples through the resolver below.
+  const AI_ELEMENTS =
+    'focsd-chat-thread, focsd-chat-message, focsd-composer, focsd-streaming-text, focsd-tool-call, focsd-reasoning, focsd-prompt-suggestions, focsd-message-actions, focsd-attachment-tile, focsd-source-chip, focsd-file-changes';
+
+  const ai = document.querySelector(AI_ELEMENTS) ? await import('@focsd-dev/ai') : {};
+
+  // The editor is large (ProseMirror): load it only on pages that use it.
+  if (document.querySelector('focsd-rich-text')) import('@focsd-dev/editor');
+
+  if (document.querySelector('focsd-chart, focsd-sparkline, focsd-gauge')) import('@focsd-dev/charts');
+
+  // Examples whose code imports from the packages receive the same exports here (inline scripts
+  // cannot import bare package names).
+  window.__focsdDocsResolve?.({ ...components, ...grid, ...ai });
+</script>

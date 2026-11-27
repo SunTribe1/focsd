@@ -1,0 +1,50 @@
+---
+import { PRESETS, THEME_COUNT, inWords } from '../../data/landing.js';
+
+const names = ['Wayfinding', ...PRESETS.map((p) => p[0].toUpperCase() + p.slice(1))];
+---
+
+<section class="lp-section" aria-labelledby="lp-theme-title">
+  <div class="lp-wrap">
+    <div class="lp-section-head">
+      <h2 id="lp-theme-title">Your brand, not ours</h2>
+      <p>
+        Design tokens are CSS custom properties. Start from one of {inWords(THEME_COUNT)} presets ({names.join(', ')}), then change one
+        token or all of them. Light, dark and high contrast keep working, and every preset passes the WCAG 2.2 AA contrast checks.
+      </p>
+    </div>
+    <div class="lp-theme" data-lp-reveal>
+      <div class="lp-theme-picker">
+        <focsd-theme-picker target="#lp-preset-stage" storage-key-prefix="focsd-landing-" label="Theme preset"></focsd-theme-picker>
+        <p class="lp-theme-links">
+          Preview them on every component in the <a href="/components/">gallery</a>, or build your own in the{' '}
+          <a href="/foundations/theme-builder/">theme builder</a>.
+        </p>
+      </div>
+      <div class="lp-preset-stage" id="lp-preset-stage">
+        <div class="lp-preset-head">
+          <div>
+            <h3>Billing</h3>
+            <p>Northwind Studio, Team plan</p>
+          </div>
+          <focsd-badge tone="positive">Active</focsd-badge>
+        </div>
+        <div class="lp-preset-grid">
+          <focsd-text-field label="Billing email" value="finance@northwind.studio"></focsd-text-field>
+          <focsd-select label="Billing cycle" value="annual">
+            <focsd-option value="monthly">Monthly</focsd-option>
+            <focsd-option value="annual">Annual (2 months free)</focsd-option>
+          </focsd-select>
+        </div>
+        <focsd-switch checked>Email me each invoice</focsd-switch>
+        <div class="lp-demo-row">
+          <focsd-button variant="action">Save billing details</focsd-button>
+          <focsd-button>Download invoices</focsd-button>
+        </div>
+        <p class="lp-preset-note">
+          Next invoice on January 1, 2027. <a href="/foundations/presets/">About presets</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

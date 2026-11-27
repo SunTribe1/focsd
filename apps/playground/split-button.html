@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Split button · Focsd test bench</title>
+    <script type="module" src="/src/split-button.js"></script>
+  </head>
+  <body>
+    <pg-header heading="Split button"></pg-header>
+    <main class="pg-stack">
+      <focsd-split-button id="sb" label="Save" variant="action">
+        <focsd-menu-item value="draft">Save as draft</focsd-menu-item>
+        <focsd-menu-item value="template">Save as template</focsd-menu-item>
+        <focsd-menu-item value="archive" disabled>Archive</focsd-menu-item>
+      </focsd-split-button>
+      <focsd-split-button id="sbd" label="Save" variant="action" disabled>
+        <focsd-menu-item value="draft">Save as draft</focsd-menu-item>
+        <focsd-menu-item value="template">Save as template</focsd-menu-item>
+        <focsd-menu-item value="archive" disabled>Archive</focsd-menu-item>
+      </focsd-split-button>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,66 @@
+---
+title: Usage in HTML
+description: "Attributes, properties, events, slots and styling: how Focsd elements behave."
+---
+
+Focsd elements are standard [custom elements](https://developer.mozilla.org/docs/Web/API/Web_components/Using_custom_elements). If you know HTML, you already know how to use them.
+
+## Attributes and properties
+
+Set configuration as attributes in markup, or as properties from JavaScript. Boolean attributes are on when present.
+
+```html
+<focsd-text-field label="Billing email" type="email" required></focsd-text-field>
+
+<script type="module">
+  const field = document.querySelector('focsd-text-field');
+  field.value = 'billing@northwind.example';
+  field.disabled = true;
+</script>
+```
+
+Data that does not fit in an attribute, such as table rows, is set as a property only. Each component page lists these under **JavaScript properties**.
+
+## Events
+
+Components fire standard DOM events. A native name means the native meaning: value controls fire `input` while the user edits and `change` when they commit, and `toggle`, `close` and `cancel` mean what they mean on `<details>` and `<dialog>`. Every other event is named `focsd-*`, such as `focsd-select` or `focsd-sort`, and carries its details in `event.detail` (typed in TypeScript). See [the event naming rule](https://github.com/SunTribe1/focsd/blob/main/docs/events.md).
+
+```js
+document.querySelector('focsd-select').addEventListener('change', (event) => {
+  console.log(event.target.value);
+});
+```
+
+## Slots
+
+Content goes into slots. Most components have a default slot, and some have named slots such as `actions` or `trigger`:
+
+```html
+<focsd-dialog headline="Remove Lukas Brandt?">
+  <p>Lukas loses access to 8 projects immediately.</p>
+  <focsd-button slot="actions" data-dialog-close>Keep member</focsd-button>
+  <focsd-button slot="actions" variant="critical" data-dialog-close value="remove">Remove Lukas</focsd-button>
+</focsd-dialog>
+```
+
+## Styling
+
+1. **Tokens** change the whole system: colors, type, spacing, radius. See [Theming and tokens](/foundations/theming/).
+2. **CSS parts** reach inside one component: `focsd-button::part(control) { text-transform: uppercase; }`. Each component page lists its parts.
+3. **Layout** of the host element is yours: `focsd-card { max-inline-size: 30rem; }`.
+
+Component internals live in shadow DOM, so your page CSS never breaks them by accident, and theirs never leaks into your page.
+
+## Methods
+
+Overlays expose methods such as `show()` and `close()`. Pass the element that opened a dialog to `show(opener)` so focus returns to it in every browser.
+
+## Phones and the on-screen keyboard
+
+Lists in selects, comboboxes, menus and the command palette never grow taller than half the visible screen. While one is open, the library tracks the visible height, so lists shrink when the on-screen keyboard opens. A list opened inside a scrolling panel stays attached to its trigger as the panel scrolls, and scrolling to the end of a list does not scroll the page behind it.
+
+For forms on phones, let the keyboard resize the page instead of covering it:
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content" />
+```

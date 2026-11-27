@@ -1,0 +1,45 @@
+/* Layout only. Color, type and spacing come from @focsd-dev/tokens. */
+body {
+  margin: 0;
+  font-family: var(--focsd-font-sans, system-ui, sans-serif);
+  color: var(--focsd-ink);
+  background: var(--focsd-ground);
+}
+
+.settings {
+  max-inline-size: 44rem;
+  display: grid;
+  gap: var(--focsd-space-5);
+}
+
+.settings h1,
+.settings .lede {
+  margin: 0;
+}
+
+.lede {
+  color: var(--focsd-ink-muted);
+}
+
+form {
+  display: grid;
+  gap: var(--focsd-space-5);
+}
+
+.stack {
+  display: grid;
+  gap: var(--focsd-space-5);
+  padding-block-start: var(--focsd-space-5);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--focsd-space-4);
+}
+
+.status {
+  margin: 0;
+  color: var(--focsd-ink-muted);
+}
