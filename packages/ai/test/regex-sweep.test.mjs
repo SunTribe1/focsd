@@ -20,6 +20,11 @@ const N = 100_000;
 // loaded machine (50 ms failed about one run in three) and still catches it.
 const BOUND_MS = 150;
 
+// Each case times several 100k-character inputs; alongside other packages' suites one took 6 s, past
+// vitest's 5 s default. The speed bound above is what the test checks; this only stops a slow machine
+// from failing it.
+const SWEEP_TIMEOUT = 30_000;
+
 /** Regex literals in a source file, as [pattern, flags]. */
 function regexesIn(/** @type {string} */ file) {
   const ast = parseJs(readFileSync(join(SRC, file), 'utf8'), { ecmaVersion: 'latest', sourceType: 'module' });
@@ -103,12 +108,16 @@ it('finds the regexes it sweeps', () => {
   expect(REGEXES.length).toBeGreaterThan(12);
 });
 
-it.each(REGEXES)('%s /%s/%s is linear on 100k-character adversarial input', (_file, pattern, flags) => {
-  // `split` tries the pattern at every position, the worst case of test/exec/replace/split.
-  const re = new RegExp(pattern, flags.replaceAll(/[gy]/g, ''));
+it.each(REGEXES)(
+  '%s /%s/%s is linear on 100k-character adversarial input',
+  (_file, pattern, flags) => {
+    // `split` tries the pattern at every position, the worst case of test/exec/replace/split.
+    const re = new RegExp(pattern, flags.replaceAll(/[gy]/g, ''));
 
-  expect(slowest(INPUTS, (s) => s.split(re))).toBeLessThan(limit());
-});
+    expect(slowest(INPUTS, (s) => s.split(re))).toBeLessThan(limit());
+  },
+  SWEEP_TIMEOUT,
+);
 
 it.each([
   ['heading with a run of spaces', `# a${' '.repeat(N)}x`],
@@ -125,9 +134,13 @@ it.each([
   ['quote markers', '> '.repeat(N / 2)],
   ['link target with spaces', `[a](${' '.repeat(N)}x)`],
   ['carriage returns', '\r'.repeat(N)],
-])('parse: %s finishes in < 50 ms', (_name, source) => {
-  expect(slowest([source], parse)).toBeLessThan(limit());
-});
+])(
+  'parse: %s finishes in < 50 ms',
+  (_name, source) => {
+    expect(slowest([source], parse)).toBeLessThan(limit());
+  },
+  SWEEP_TIMEOUT,
+);
 
 /** A body that delivers `text` in reads of `size` bytes. */
 function body(/** @type {string} */ text, /** @type {number} */ size) {
