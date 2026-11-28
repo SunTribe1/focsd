@@ -36,6 +36,11 @@ pnpm test                                   # unit tests, type tests, bundle-siz
 pnpm --filter @focsd-dev/playground test:e2e   # browser tests in Chromium, Firefox and WebKit (with axe)
 ```
 
+To run what CI runs, from a clean checkout of your last commit, use `pnpm ci:local`. Leftover build output
+and dev servers in your working copy cannot make it pass where CI would fail. It takes about as long as CI;
+`pnpm ci:local --fast` stops before the browser suites, and `--browsers=firefox,webkit` picks engines. The
+visual job runs only on Linux, where its baselines were recorded.
+
 `apps/playground` is the **Focsd test bench**: plain pages that load every component in known states so the
 end-to-end, accessibility and visual suites have something stable to drive. It is for contributors, not a demo.
 Where people browse and try components and themes is the components gallery, `/components/` on the docs site
