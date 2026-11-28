@@ -17,6 +17,8 @@ jobs:
     name: Version pull request or publish to npm
     runs-on: ubuntu-latest
     permissions:
+      # actions: write starts the full CI on the Version packages branch (below).
+      actions: write
       contents: write
       pull-requests: write
       id-token: write # npm provenance
@@ -76,6 +78,21 @@ jobs:
           # "Version packages" pull request; with the default token, CI does not run on it.
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
           NPM_CONFIG_PROVENANCE: 'true'
+      # GitHub starts no workflow for a push made with the built-in token, except workflow_dispatch. So
+      # start the full CI (every engine, coverage) on the Version packages branch: its "CI result" check
+      # is required, and nothing is published without the whole suite. With RELEASE_TOKEN the push
+      # starts CI by itself.
+      - name: Run the full CI on the Version packages pull request
+        if: steps.changesets.outputs.hasChangesets == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HAS_RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN != '' }}
+        run: |
+          if [ "$HAS_RELEASE_TOKEN" = "true" ]; then
+            echo "RELEASE_TOKEN pushed the branch, so CI starts by itself."
+            exit 0
+          fi
+          gh workflow run ci.yml --ref changeset-release/main
       # Decides for itself whether a version went out: changesets/action 1.x looks for "New tag:" lines
       # that Changesets 3 no longer prints, so its `published` output stays false. Safe to rerun.
       - name: Create the GitHub release for this version
