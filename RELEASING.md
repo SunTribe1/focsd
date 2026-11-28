@@ -45,7 +45,7 @@ Protect `main` with a ruleset (Settings → Rules → Rulesets): require a pull 
 
 - **General → Pull Requests:** allow squash merging only, with the pull request title as the commit message; turn on "Always suggest updating pull request branches", "Allow auto-merge" and "Automatically delete head branches".
 - **Actions → General:** workflow permissions "Read repository contents"; allow GitHub Actions to create pull requests (the Release workflow opens the "Version packages" pull request); require approval for workflows from first-time contributors.
-- **Rules → Rulesets:** besides `main`, a tag ruleset for `v*` that only maintainers can create, update or delete.
+- **Rules → Rulesets:** besides `main`, a tag ruleset for `v*` that restricts updates and deletions (not creation: the Release workflow creates the tag).
 - **Security:** private vulnerability reporting, Dependabot alerts and security updates, secret scanning with push protection, and CodeQL default setup.
 - **npm:** for each package, trusted publishing for `SunTribe1/focsd`, workflow `release.yml`, allowed to run `npm publish`; then delete `NPM_TOKEN`. Trusted publishing also adds the provenance attestation.
 
