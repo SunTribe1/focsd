@@ -27,7 +27,7 @@ Before publishing, `pnpm check:packages` builds and packs every package and runs
 | `CLOUDFLARE_API_TOKEN` | Docs | A token with **Cloudflare Pages: Edit**. |
 | `CLOUDFLARE_ACCOUNT_ID` | Docs | Shown on the Cloudflare dashboard's overview. |
 | `NPM_TOKEN` | Release | **First publish only.** A granular token with publish rights for `@focsd-dev/*` and `focsd`. Delete it once trusted publishing is set up. |
-| `RELEASE_TOKEN` | Release | Optional. A fine-grained token with Contents and Pull requests (read and write), so CI runs on the "Version packages" pull request. |
+| `RELEASE_TOKEN` | Release | Optional. A fine-grained token with Contents and Pull requests (read and write). Without it the Release workflow starts the full CI on the "Version packages" pull request itself (workflow_dispatch). |
 
 ### npm trusted publishing (no long-lived token)
 
@@ -39,9 +39,15 @@ npm lets a package trust this repository's Release workflow, which then publishe
 
 ### Branch protection
 
-Protect `main` (Settings → Rules): require a pull request and these checks: `Secret scan (full history)`, `Commit messages`, `Lint, types, unit tests and size budgets`, `End-to-end coverage of the packages (Chromium)`, `Components in Chromium`, `Components in Firefox`, `Components in WebKit` and `Docs site`. Add `Visual regression (Chromium, Linux baselines)` once the Linux baselines are on `main`.
+Protect `main` with a ruleset (Settings → Rules → Rulesets): require a pull request, require the status check **`CI result`** (the one job that sums up CI; jobs the plan skips count as passed), require branches to be up to date before merging, and block force pushes and deletion. Requiring an up-to-date branch is what lets CI on `main` skip the browser suites: the pull request already ran them on the same tree. The other repository settings are under "Repository settings" below.
 
-Also turn on private vulnerability reporting (Security tab) and Discussions.
+### Repository settings
+
+- **General → Pull Requests:** allow squash merging only, with the pull request title as the commit message; turn on "Always suggest updating pull request branches", "Allow auto-merge" and "Automatically delete head branches".
+- **Actions → General:** workflow permissions "Read repository contents"; allow GitHub Actions to create pull requests (the Release workflow opens the "Version packages" pull request); require approval for workflows from first-time contributors.
+- **Rules → Rulesets:** besides `main`, a tag ruleset for `v*` that restricts updates and deletions (not creation: the Release workflow creates the tag).
+- **Security:** private vulnerability reporting, Dependabot alerts and security updates, secret scanning with push protection, and CodeQL default setup.
+- **npm:** for each package, trusted publishing for `SunTribe1/focsd`, workflow `release.yml`, allowed to run `npm publish`; then delete `NPM_TOKEN`. Trusted publishing also adds the provenance attestation.
 
 ### Visual baselines
 

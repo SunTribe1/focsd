@@ -35,7 +35,7 @@
     "@focsd-dev/mcp#build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/docs/components-catalogue.md", "$TURBO_ROOT$/apps/docs/src/data/examples/**"],
-      "outputs": ["data/**"]
+      "outputs": ["data/**", "types/**"]
     }
   }
 }

@@ -1,9 +1,19 @@
 name: CI
 
+# How much runs (see "What runs when" in CONTRIBUTING.md):
+#   pull request   lint, types and unit tests of the affected packages; browser jobs in Chromium only,
+#                  and only when the change touches code the browsers test
+#   push to main   lint, types, all unit tests and packaging: the pull request already ran the rest on
+#                  the same tree (branch protection requires it to be up to date), so releases are quick
+#   full           every job in every engine, with coverage: nightly, on demand, and on the "Version
+#                  packages" pull request, so nothing is published without the full suite
 on:
   pull_request:
   push:
     branches: [main]
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -13,6 +23,27 @@ permissions:
   contents: read
 
 jobs:
+  changes:
+    name: What to run
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      full: ${{ steps.plan.outputs.full }}
+      browsers: ${{ steps.plan.outputs.browsers }}
+      docs: ${{ steps.plan.outputs.docs }}
+      engines: ${{ steps.plan.outputs.engines }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+      - id: plan
+        env:
+          EVENT: ${{ github.event_name }}
+          HEAD_REF: ${{ github.head_ref }}
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: node scripts/ci-plan.mjs >> "$GITHUB_OUTPUT"
+
   secrets:
     name: Secret scan (full history)
     runs-on: ubuntu-latest
@@ -56,10 +87,14 @@ jobs:
 
   check:
     name: Lint, types, unit tests and size budgets
+    needs: changes
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          # turbo --affected compares the pull request with its base branch.
+          fetch-depth: 0
       - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
@@ -76,15 +111,20 @@ jobs:
       - run: pnpm --filter ./packages/cli exec playwright install --with-deps chromium
       # Two packages at a time: the timing tests (chart render cost, data grid pipeline) starve when
       # every package's suite shares the runner's four cores at once.
-      - run: pnpm exec turbo run test --filter="./packages/*" --concurrency=2
+      # On a pull request, only the packages it changes and the packages that depend on them.
+      - name: Unit tests
+        env:
+          AFFECTED: ${{ github.event_name == 'pull_request' && needs.changes.outputs.full != 'true' && '--affected' || '' }}
+        run: pnpm exec turbo run test --filter="./packages/*" --concurrency=2 $AFFECTED
       # The docs site's own unit tests (CSP hashes, sandboxes) are plain node:test files.
       - run: pnpm --filter @focsd-dev/docs test
 
   visual:
     name: Visual regression (Chromium, Linux baselines)
     # The browser jobs start only once lint, types and unit tests pass: a failure there means a fix
-    # and a new run anyway.
-    needs: check
+    # and a new run anyway. They run only when the change touches what they test.
+    needs: [changes, check]
+    if: needs.changes.outputs.browsers == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     # The same image as the "Update visual baselines" workflow, so the screenshots match pixel for pixel.
@@ -120,7 +160,9 @@ jobs:
 
   coverage:
     name: End-to-end coverage of the packages (Chromium)
-    needs: check
+    # About 35 minutes, so only on a full run (nightly and the Version packages pull request).
+    needs: [changes, check]
+    if: needs.changes.outputs.full == 'true'
     runs-on: ubuntu-latest
     # About 30 minutes on a hosted runner with coverage on; the limit leaves headroom.
     timeout-minutes: 50
@@ -143,17 +185,17 @@ jobs:
 
   playground:
     name: Components in ${{ matrix.label }}
-    needs: check
+    needs: [changes, check]
+    if: needs.changes.outputs.browsers == 'true'
     runs-on: ubuntu-latest
-    # One job per engine, in parallel: the three together (about 5,700 tests) ran past an hour.
-    timeout-minutes: 45
+    # One job per engine, in parallel: the three together (about 5,700 tests) ran past an hour. One
+    # engine takes 20 to 45 minutes depending on the runner, so the limit leaves headroom.
+    timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - { browser: chromium, label: Chromium, projects: --project=chromium --project=chrome-webmcp }
-          - { browser: firefox, label: Firefox, projects: --project=firefox }
-          - { browser: webkit, label: WebKit, projects: --project=webkit }
+        # Chromium on a pull request; Chromium, Firefox and WebKit on a full run (scripts/ci-plan.mjs).
+        include: ${{ fromJSON(needs.changes.outputs.engines) }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
@@ -176,7 +218,8 @@ jobs:
 
   smoke:
     name: Packed install and SSR hydration (Chromium)
-    needs: check
+    needs: [changes, check]
+    if: needs.changes.outputs.browsers == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -198,7 +241,8 @@ jobs:
 
   docs:
     name: Docs site
-    needs: check
+    needs: [changes, check]
+    if: needs.changes.outputs.docs == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -211,3 +255,21 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter @focsd-dev/docs exec playwright install --with-deps chromium firefox webkit
       - run: pnpm --filter @focsd-dev/docs test:e2e
+
+  # The one check branch protection requires. Jobs that the plan skips count as passed; a failed or
+  # cancelled one fails this, so a pull request cannot merge past it.
+  result:
+    name: CI result
+    needs: [changes, secrets, commits, check, visual, coverage, playground, smoke, docs]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - env:
+          RESULTS: ${{ toJSON(needs.*.result) }}
+        run: |
+          echo "Job results: $RESULTS"
+          if echo "$RESULTS" | grep -qE '"(failure|cancelled)"'; then
+            echo "::error::A CI job failed or was cancelled."
+            exit 1
+          fi

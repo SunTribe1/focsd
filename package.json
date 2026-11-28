@@ -20,6 +20,7 @@
     "test:e2e": "turbo run test:e2e --concurrency=1",
     "check": "pnpm lint && pnpm format:check && pnpm spell && node scripts/check-release.mjs && node scripts/check-counts.mjs && node scripts/checks/api-compat.mjs && node scripts/build-sr-checklist.mjs --check && node scripts/checks/visible-strings.mjs && node scripts/checks/logical-properties.mjs && pnpm knip && pnpm dup && node --test \"scripts/checks/test/*.test.mjs\" && turbo run check && pnpm check:lit",
     "check:lit": "turbo run build --filter=@focsd-dev/ai --filter=@focsd-dev/charts --filter=@focsd-dev/components --filter=@focsd-dev/data-grid --filter=@focsd-dev/editor --output-logs=errors-only && node scripts/checks/lit-analyzer.mjs",
+    "ci:local": "node scripts/ci-local.mjs",
     "check:packages": "turbo run build --filter=\"./packages/*\" --output-logs=errors-only && node scripts/check-packages.mjs",
     "knip": "knip --no-progress",
     "dup": "jscpd packages",
