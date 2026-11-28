@@ -13,6 +13,16 @@ body {
   font-size: var(--focsd-text-body-size);
   line-height: var(--focsd-text-body-line-height);
 }
+/* The test pages' own plain buttons (not Focsd components) take the theme's colors. Left to the
+   browser, Linux WebKit paints them from the GTK theme, which ignores color-scheme: dark, so they
+   failed contrast in the dark theme there (Safari and the other engines follow the theme). */
+:where(button) {
+  border: var(--focsd-border-width) solid var(--focsd-edge);
+  border-radius: var(--focsd-radius-control);
+  background: var(--focsd-surface);
+  color: var(--focsd-ink);
+  font: inherit;
+}
 .pg-header {
   display: flex;
   flex-wrap: wrap;

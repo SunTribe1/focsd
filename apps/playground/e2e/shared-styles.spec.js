@@ -126,7 +126,9 @@ test('a non-modal sheet sits above sticky headers and in-flow panels (Q21)', asy
       // The panel can run past the bottom of the viewport; test a point in its visible part.
       const hit = document.elementFromPoint(panel.left + panel.width / 2, (panel.top + Math.min(panel.bottom, innerHeight)) / 2);
 
-      return hit?.id || hit?.localName;
+      // The point can land on the sheet's own slotted content (its paragraph) rather than the host;
+      // where depends on how far the slide-in has run. Either way the sheet is on top.
+      return sheet.contains(hit) ? 'nm' : hit?.id || hit?.localName;
     }, sheetZ);
 
   expect(await topAt(null)).toBe('nm');

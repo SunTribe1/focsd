@@ -16,6 +16,8 @@ const FLOOR = { lines: 94, statements: 91, functions: 91, branches: 75 };
  * ratchet upwards. Every package with coverage needs a row, so a new package cannot slip past.
  */
 const PACKAGE_FLOOR = {
+  // Measured on CI on 2026-11-28 (its first coverage run), minus 1.0 point.
+  ai: { lines: 81.4, statements: 78.7, functions: 72.9, branches: 62.3 },
   charts: { lines: 95.9, statements: 92.6, functions: 83.7, branches: 79.6 },
   components: { lines: 99.0, statements: 99.0, functions: 99.0, branches: 50.6 },
   'data-grid': { lines: 93.4, statements: 90.2, functions: 86.1, branches: 76.5 },

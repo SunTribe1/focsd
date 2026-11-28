@@ -125,8 +125,9 @@ test.describe('accessibility floor', () => {
       () => getComputedStyle(document.querySelector('focsd-probe').shadowRoot.querySelector('button')).boxShadow,
     );
 
-    expect(ring).toContain('rgb(242, 183, 5)');
-    expect(ring).toContain('rgb(20, 26, 24)');
+    // The ring is a 1px gap in the page color, then a 1px ink ring (DESIGN.md, 2026-11-26), from the
+    // fallbacks built into the floor CSS.
+    expect(ring).toBe('rgb(244, 246, 245) 0px 0px 0px 1px, rgb(20, 26, 24) 0px 0px 0px 2px');
   });
 
   test('forced colors swap the ring for a Highlight outline', async ({ page, browserName }) => {

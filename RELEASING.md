@@ -39,7 +39,7 @@ npm lets a package trust this repository's Release workflow, which then publishe
 
 ### Branch protection
 
-Protect `main` (Settings → Rules): require a pull request and these checks: `Secret scan (full history)`, `Commit messages`, `Lint, types, unit tests and size budgets`, `End-to-end coverage of the packages (Chromium)`, `Components in Chromium, Firefox and WebKit` and `Docs site`. Add `Visual regression (Chromium, Linux baselines)` once the Linux baselines are on `main`.
+Protect `main` (Settings → Rules): require a pull request and these checks: `Secret scan (full history)`, `Commit messages`, `Lint, types, unit tests and size budgets`, `End-to-end coverage of the packages (Chromium)`, `Components in Chromium`, `Components in Firefox`, `Components in WebKit` and `Docs site`. Add `Visual regression (Chromium, Linux baselines)` once the Linux baselines are on `main`.
 
 Also turn on private vulnerability reporting (Security tab) and Discussions.
 

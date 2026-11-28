@@ -16,7 +16,7 @@ for (const theme of ['light', 'dark']) {
     await page.waitForFunction(() => window.__ready);
     await expectTheme(page, theme);
     await page.evaluate(() => document.fonts.ready);
-    await expect(page.locator('main')).toHaveScreenshot(`notifications-${theme}.png`);
+    await expect(page.locator('main')).toHaveScreenshot(`notifications-main-${theme}.png`);
     await page.locator('#center [part~="trigger"]').click();
     await expect(page.locator('#center [part~="panel"]')).toHaveScreenshot(`notifications-panel-${theme}.png`);
   });

@@ -28,6 +28,6 @@ for (const theme of ['light', 'dark']) {
     await page.waitForFunction(() => window.__ready);
     await expectTheme(page, theme);
     await page.evaluate(() => document.fonts.ready);
-    await expect(page.locator('#bridge')).toHaveScreenshot(`image-compare-${theme}.png`);
+    await expect(page.locator('#bridge')).toHaveScreenshot(`image-compare-bridge-${theme}.png`);
   });
 }

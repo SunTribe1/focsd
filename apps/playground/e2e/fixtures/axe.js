@@ -43,7 +43,36 @@ export async function expectTheme(page, theme) {
   await expect(page.locator('html')).toHaveAttribute('data-focsd-theme', theme);
 }
 
+/**
+ * Wait for running transitions and animations with an end to finish (in the document and in every
+ * open shadow root). axe measures colors as painted: a panel still fading in, or a color still
+ * transitioning, fails contrast on a slow machine although it passes once it settles.
+ */
+async function settleAnimations(page) {
+  await page.evaluate(async () => {
+    const roots = [document, ...[...document.querySelectorAll('*')].flatMap((el) => (el.shadowRoot ? [el.shadowRoot] : []))];
+
+    // Only those due to end within 2 s: a long animation must not stall the test.
+    const ending = roots
+      .flatMap((root) => root.getAnimations())
+      .filter((animation) => {
+        const end = animation.effect?.getComputedTiming().endTime ?? Number.POSITIVE_INFINITY;
+        const now = Number(animation.currentTime ?? 0);
+
+        return Number.isFinite(end) && end - now <= 2000;
+      });
+
+    await Promise.all(ending.map((animation) => animation.finished.catch(() => {})));
+  });
+}
+
 export async function expectAxeClean(page) {
+  await settleAnimations(page);
   const results = await new AxeBuilder({ page }).withTags(TAGS).analyze();
-  expect(results.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).join(', ')}`)).toEqual([]);
+  // Each failing node with axe's own summary (for contrast: the two colors and the ratio it measured).
+  expect(
+    results.violations.map(
+      (v) => `${v.id}: ${v.nodes.map((n) => `${n.target.join(' ')} (${n.failureSummary?.replaceAll(/\s+/g, ' ').trim()})`).join(', ')}`,
+    ),
+  ).toEqual([]);
 }

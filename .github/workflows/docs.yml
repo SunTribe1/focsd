@@ -46,9 +46,14 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec turbo run build --filter=@focsd-dev/docs
-      # main deploys to production (focsd.dev); pull requests get a preview URL.
-      - uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd # v3.15.0
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy apps/docs/dist --project-name=focsd --branch=${{ github.head_ref || (github.event_name == 'workflow_dispatch' && github.ref_name) || 'main' }}
+      # main deploys to production (focsd.dev); pull requests get a preview URL. Wrangler runs from npm,
+      # pinned, outside the repository: cloudflare/wrangler-action installs it with `pnpm add` at the
+      # workspace root, which pnpm refuses. 3.114 (npm's "legacy" line) deploys straight to Pages.
+      - name: Deploy to Cloudflare Pages
+        working-directory: ${{ runner.temp }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          BRANCH: ${{ github.head_ref || (github.event_name == 'workflow_dispatch' && github.ref_name) || 'main' }}
+          DIST: ${{ github.workspace }}/apps/docs/dist
+        run: npx --yes wrangler@3.114.17 pages deploy "$DIST" --project-name=focsd --branch="$BRANCH"

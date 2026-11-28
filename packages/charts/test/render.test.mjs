@@ -99,7 +99,7 @@ describe('wave 18 types', () => {
 });
 
 describe('scatter render cost', () => {
-  it('renders 5,000 points with nothing focused in linear time (the first point is found once)', async () => {
+  it('renders 5,000 points with nothing focused in linear time (the first point is found once)', { timeout: 30_000 }, async () => {
     const many = Array.from({ length: 5000 }, (_, i) => ({ t: (i * 7919) % 5000, a: i % 97 }));
     const el = html`<focsd-chart label="Many" type="scatter" x="t" .data=${many}></focsd-chart>`;
     const started = performance.now();
@@ -107,7 +107,8 @@ describe('scatter render cost', () => {
     const ms = performance.now() - started;
 
     expect([...out.matchAll(/role="img"/g)]).toHaveLength(5000);
-    // Measured about 200 ms here, mostly string building; the quadratic version took 12 s. The bound is loose on purpose (CI noise).
-    expect(ms).toBeLessThan(1500);
+    // Measured about 200 ms on a laptop and 2.5 s on a busy CI runner, mostly string building; the
+    // quadratic version took 12 s. The bound only has to catch that, so it is loose on purpose.
+    expect(ms).toBeLessThan(6000);
   });
 });

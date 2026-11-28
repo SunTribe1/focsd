@@ -15,6 +15,6 @@ for (const theme of ['light', 'dark']) {
       await document.fonts.ready;
       await Promise.all([...document.querySelectorAll('focsd-sparkline, focsd-gauge')].map((e) => e.updateComplete));
     });
-    await expect(page).toHaveScreenshot(`charts-small-${theme}.png`, { fullPage: true });
+    await expect(page).toHaveScreenshot(`charts-small-full-${theme}.png`, { fullPage: true });
   });
 }

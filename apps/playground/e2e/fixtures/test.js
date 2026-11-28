@@ -58,8 +58,9 @@ export const test = base.extend({
   ],
 
   recordCoverage: [
-    async ({ page, browserName }, use) => {
-      const on = enabled && browserName === 'chromium';
+    async ({ page, browserName, javaScriptEnabled }, use) => {
+      // Coverage needs the debugger, which a page without JavaScript refuses.
+      const on = enabled && browserName === 'chromium' && javaScriptEnabled !== false;
 
       if (on) await page.coverage.startJSCoverage({ resetOnNavigation: false });
       await use();

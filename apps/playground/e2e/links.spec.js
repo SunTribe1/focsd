@@ -40,7 +40,8 @@ test('Ctrl or Command + click opens a new tab natively and never calls the handl
   await page.getByRole('link', { name: 'Reports' }).click({ modifiers: ['ControlOrMeta'] });
   const tab = await opened;
 
-  await tab.waitForLoadState();
+  // A new tab starts on about:blank; on a slow machine it can still be there after the first load.
+  await tab.waitForURL('**/app/reports');
   expect(new URL(tab.url()).pathname).toBe('/app/reports');
   await tab.close();
   await expect(page.locator('#calls')).toHaveText('0');

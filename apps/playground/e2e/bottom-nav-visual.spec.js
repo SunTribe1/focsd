@@ -14,6 +14,6 @@ for (const theme of ['light', 'dark']) {
     await page.waitForFunction(() => window.__ready);
     await expectTheme(page, theme);
     await page.evaluate(() => document.fonts.ready);
-    await expect(page.locator('#nav')).toHaveScreenshot(`bottom-nav-${theme}.png`);
+    await expect(page.locator('#nav')).toHaveScreenshot(`bottom-nav-bar-${theme}.png`);
   });
 }
